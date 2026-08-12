@@ -3,6 +3,7 @@
 #include <unordered_map>
 #include <memory>
 #include <vector>
+#include <unordered_set>
 
 #include "Aurora/Scene/Entity.h"
 #include "Aurora/ECS/ComponentPool.h"
@@ -11,12 +12,13 @@
 
 namespace Aurora
 {
+    class Scene;
 
     class Registry
     {
 
     public:
-        Entity CreateEntity();
+        Entity CreateEntity(Scene *scene);
 
         template <typename T, typename... Args>
         T &AddComponent(
@@ -36,6 +38,14 @@ namespace Aurora
 
         const std::vector<EntityID> &GetEntities() const;
 
+        bool IsPendingDestroy(EntityID entity) const;
+
+        void MarkPendingDestroy(EntityID entity);
+
+        void ClearPendingDestroy(EntityID entity);
+
+        void DestroyEntity(EntityID entity);
+
     private:
         template <typename T>
         ComponentPool<T> &GetPool();
@@ -49,6 +59,8 @@ namespace Aurora
             ComponentType,
             std::unique_ptr<IComponentPool>>
             m_ComponentPools;
+
+        std::unordered_set<EntityID> m_PendingDestroy;
     };
 
 }

@@ -9,6 +9,8 @@ namespace Aurora
 
     class Registry;
 
+    class Scene;
+
     class Entity
     {
 
@@ -17,7 +19,8 @@ namespace Aurora
 
         Entity(
             EntityID id,
-            Registry *registry);
+            Registry *registry,
+            Scene *scene = nullptr);
 
         EntityID GetID() const
         {
@@ -52,10 +55,14 @@ namespace Aurora
             return !(*this == other);
         }
 
+        void Destroy();
+
     private:
         EntityID m_ID = 0;
 
         Registry *m_Registry = nullptr;
+
+        Scene *m_Scene;
     };
 
 }

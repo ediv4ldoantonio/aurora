@@ -1,7 +1,5 @@
 #include "Aurora/ECS/SystemManager.h"
 
-#include "Aurora/ECS/Registry.h"
-
 namespace Aurora
 {
 

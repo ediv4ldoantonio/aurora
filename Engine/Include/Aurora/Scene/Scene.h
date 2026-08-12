@@ -25,9 +25,17 @@ namespace Aurora
         void RemoveParent(
             Entity child);
 
+        void DestroyEntity(Entity entity);
+
+        void ProcessDestroyQueue();
+
+        void DestroyEntityNow(
+            Entity entity);
+
     private:
         Registry m_Registry;
         SystemManager m_SystemManager;
+        std::vector<EntityID> m_DestroyQueue;
     };
 
 }

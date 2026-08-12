@@ -34,7 +34,7 @@ namespace Aurora
 
     Entity Scene::CreateEntity(const std::string &name)
     {
-        Entity entity = m_Registry.CreateEntity();
+        Entity entity = m_Registry.CreateEntity(this);
 
         entity.AddComponent<IDComponent>();
         entity.AddComponent<NameComponent>(name);
@@ -51,6 +51,8 @@ namespace Aurora
         m_SystemManager.Update(
             m_Registry,
             deltaTime);
+
+        ProcessDestroyQueue();
     }
 
     void Scene::OnRender()
@@ -100,5 +102,79 @@ namespace Aurora
             children.end());
 
         childRelationship.Parent = {};
+    }
+
+    void Scene::DestroyEntity(Entity entity)
+    {
+        m_DestroyQueue.push_back(entity);
+    }
+
+    void Scene::ProcessDestroyQueue()
+    {
+        for (EntityID id : m_DestroyQueue)
+        {
+            Entity entity(
+                id,
+                &m_Registry,
+                this);
+
+            DestroyEntityNow(entity);
+        }
+
+        m_DestroyQueue.clear();
+    }
+
+    void Scene::DestroyEntityNow(Entity entity)
+    {
+        if (!entity.IsValid())
+            return;
+
+        //---------------------------------------------------
+        // Destroy children first
+        //---------------------------------------------------
+
+        if (entity.HasComponent<RelationshipComponent>())
+        {
+            auto &relationship =
+                entity.GetComponent<RelationshipComponent>();
+
+            // Copy because recursion modifies the vector
+            std::vector<Entity> children =
+                relationship.Children;
+
+            for (auto child : children)
+            {
+                DestroyEntityNow(child);
+            }
+        }
+
+        //---------------------------------------------------
+        // Notify script
+        //---------------------------------------------------
+
+        if (entity.HasComponent<ScriptComponent>())
+        {
+            auto &script =
+                entity.GetComponent<ScriptComponent>();
+
+            if (script.Instance)
+            {
+                script.Instance->OnDestroy();
+
+                script.Instance.reset();
+            }
+        }
+
+        //---------------------------------------------------
+        // Remove from parent
+        //---------------------------------------------------
+
+        RemoveParent(entity);
+
+        //---------------------------------------------------
+        // Finally remove entity
+        //---------------------------------------------------
+
+        m_Registry.DestroyEntity(entity.GetID());
     }
 }

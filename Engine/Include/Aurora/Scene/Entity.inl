@@ -3,6 +3,7 @@
 #include <utility>
 
 #include "Aurora/ECS/Registry.h"
+#include "Aurora/Scene/Scene.h"
 
 namespace Aurora
 {

@@ -2,6 +2,7 @@
 
 #include <unordered_map>
 #include <utility>
+#include <algorithm>
 
 namespace Aurora
 {
@@ -11,6 +12,7 @@ namespace Aurora
 
     public:
         virtual ~IComponentPool() = default;
+        virtual void Remove(EntityID entity) = 0;
     };
 
     template <typename T>
@@ -24,14 +26,15 @@ namespace Aurora
             Args &&...args)
         {
 
-            m_Entities.push_back(entity);
-
-            auto [iterator, inserted] =
+            auto [it, inserted] =
                 m_Data.emplace(
                     entity,
                     T(std::forward<Args>(args)...));
 
-            return iterator->second;
+            if (inserted)
+                m_Entities.push_back(entity);
+
+            return it->second;
         }
 
         T &Get(
@@ -46,6 +49,19 @@ namespace Aurora
         {
 
             return m_Data.contains(entity);
+        }
+
+        void Remove(EntityID entity) override
+        {
+            m_Data.erase(entity);
+
+            auto it = std::find(
+                m_Entities.begin(),
+                m_Entities.end(),
+                entity);
+
+            if (it != m_Entities.end())
+                m_Entities.erase(it);
         }
 
     private:

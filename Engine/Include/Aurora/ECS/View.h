@@ -12,8 +12,11 @@ namespace Aurora
     {
 
     public:
-        View(Registry *registry)
-            : m_Registry(registry)
+        View(
+            Registry *registry,
+            Scene *scene = nullptr)
+            : m_Registry(registry),
+              m_Scene(scene)
         {
         }
 
@@ -29,6 +32,7 @@ namespace Aurora
 
     private:
         Registry *m_Registry = nullptr;
+        Scene *m_Scene = nullptr;
     };
 
 }
