@@ -1,6 +1,8 @@
 #pragma once
 
 #include <cstdint>
+#include <cstddef>
+#include <functional>
 
 namespace Aurora
 {
@@ -21,4 +23,16 @@ namespace Aurora
         uint64_t m_UUID;
     };
 
+}
+
+namespace std
+{
+    template <>
+    struct hash<Aurora::UUID>
+    {
+        size_t operator()(const Aurora::UUID &uuid) const noexcept
+        {
+            return hash<uint64_t>{}(uuid);
+        }
+    };
 }

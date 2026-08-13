@@ -3,6 +3,7 @@
 #include <Aurora/Input/Input.h>
 #include <Aurora/Renderer/Renderer2D.h>
 #include <Aurora/Scene/Entity.h>
+#include <Aurora/Scene/Components/IDComponent.h>
 #include "Aurora/Events/Event.h"
 
 #include <iostream>

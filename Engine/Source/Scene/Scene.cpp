@@ -36,10 +36,14 @@ namespace Aurora
     {
         Entity entity = m_Registry.CreateEntity(this);
 
-        entity.AddComponent<IDComponent>();
+        UUID uuid = entity.AddComponent<IDComponent>().ID;
         entity.AddComponent<NameComponent>(name);
         entity.AddComponent<TransformComponent>();
         entity.AddComponent<RelationshipComponent>();
+
+        m_EntityMap.emplace(
+            uuid,
+            entity.GetID());
 
         return entity;
     }
@@ -129,6 +133,11 @@ namespace Aurora
         if (!entity.IsValid())
             return;
 
+        UUID uuid =
+            entity.GetComponent<IDComponent>().ID;
+
+        m_EntityMap.erase(uuid);
+
         //---------------------------------------------------
         // Destroy children first
         //---------------------------------------------------
@@ -176,5 +185,18 @@ namespace Aurora
         //---------------------------------------------------
 
         m_Registry.DestroyEntity(entity.GetID());
+    }
+
+    Entity Scene::GetEntityByUUID(UUID uuid)
+    {
+        auto it = m_EntityMap.find(uuid);
+
+        if (it == m_EntityMap.end())
+            return {};
+
+        return Entity(
+            it->second,
+            &m_Registry,
+            this);
     }
 }
