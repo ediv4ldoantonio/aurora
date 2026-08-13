@@ -61,6 +61,8 @@ namespace Aurora
 
     void Scene::OnRender()
     {
+        Renderer2D::SetCamera(
+            &m_Camera);
         m_SystemManager.Render(
             m_Registry);
     }
@@ -198,5 +200,10 @@ namespace Aurora
             it->second,
             &m_Registry,
             this);
+    }
+
+    Camera2D &Scene::GetCamera()
+    {
+        return m_Camera;
     }
 }

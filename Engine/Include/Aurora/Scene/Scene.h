@@ -7,6 +7,7 @@
 #include "Aurora/Core/UUID.h"
 #include "Aurora/ECS/Registry.h"
 #include "Aurora/ECS/SystemManager.h"
+#include "Aurora/Renderer/Camera2D.h"
 
 namespace Aurora
 {
@@ -39,7 +40,11 @@ namespace Aurora
 
         Entity GetEntityByUUID(UUID uuid);
 
+        Camera2D &
+        GetCamera();
+
     private:
+        Camera2D m_Camera;
         Registry m_Registry;
         SystemManager m_SystemManager;
         std::unordered_map<Aurora::UUID, EntityID> m_EntityMap;

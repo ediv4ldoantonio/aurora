@@ -17,11 +17,19 @@ namespace Aurora
         const Vector2 &
         GetPosition() const;
 
+        void SetViewportSize(
+            const Vector2 &size);
+
+        const Vector2 &
+        GetViewportSize() const;
+
         Vector2 WorldToScreen(
             const Vector2 &worldPosition) const;
 
     private:
         Vector2 m_Position;
+
+        Vector2 m_ViewportSize;
     };
 
 }

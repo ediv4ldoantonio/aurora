@@ -14,6 +14,8 @@ SandboxLayer::SandboxLayer()
     m_Scene =
         std::make_shared<Aurora::Scene>();
 
+    m_Scene->GetCamera().SetPosition({0.0f, 0.0f});
+
     auto player =
         m_Scene->CreateEntity("Player");
 
@@ -27,7 +29,7 @@ SandboxLayer::SandboxLayer()
             Aurora::TransformComponent>();
 
     p_Transform.LocalTransform.Position =
-        {100, 100};
+        {0, 0};
 
     p_Transform.LocalTransform.Scale =
         {100, 200};
