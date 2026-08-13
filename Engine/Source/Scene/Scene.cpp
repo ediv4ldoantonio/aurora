@@ -1,4 +1,5 @@
 #include "Aurora/Scene/Scene.h"
+#include "Aurora/Scene/Entity.h"
 #include "Aurora/Renderer/Renderer2D.h"
 #include "Aurora/Scene/Components/SpriteComponent.h"
 #include "Aurora/Scene/Components/TransformComponent.h"
@@ -6,12 +7,13 @@
 #include "Aurora/Scene/Components/IDComponent.h"
 #include "Aurora/Scene/Components/NameComponent.h"
 #include "Aurora/Scene/Components/RelationshipComponent.h"
-#include <Aurora/Core/Logger.h>
-#include "Aurora/Scene/Scene.h"
-#include "Aurora/Scene/Entity.h"
 #include "Aurora/Systems/RenderSystem.h"
 #include "Aurora/Systems/ScriptSystem.h"
 #include "Aurora/Systems/TransformSystem.h"
+#include "Aurora/Events/EventDispatcher.h"
+#include "Aurora/Events/ApplicationEvents.h"
+#include "Aurora/Core/Logger.h"
+#include "Aurora/Input/Input.h"
 
 #include <algorithm>
 
@@ -51,6 +53,7 @@ namespace Aurora
     void Scene::OnUpdate(
         float deltaTime)
     {
+        UpdateCamera(deltaTime);
 
         m_SystemManager.Update(
             m_Registry,
@@ -65,6 +68,22 @@ namespace Aurora
             &m_Camera);
         m_SystemManager.Render(
             m_Registry);
+    }
+
+    void Scene::OnEvent(Event &event)
+    {
+        EventDispatcher dispatcher(event);
+
+        dispatcher.Dispatch<WindowResizeEvent>(
+            [this](WindowResizeEvent &e)
+            {
+                m_Camera.SetViewportSize(
+                    Vector2(
+                        static_cast<float>(e.GetWidth()),
+                        static_cast<float>(e.GetHeight())));
+
+                return false;
+            });
     }
 
     void Scene::SetParent(
@@ -205,5 +224,50 @@ namespace Aurora
     Camera2D &Scene::GetCamera()
     {
         return m_Camera;
+    }
+
+    void Scene::UpdateCamera(float dt)
+    {
+        constexpr float cameraSpeed = 300.0f;
+        float zoom = m_Camera.GetZoom();
+
+        Vector2 movement(0.0f, 0.0f);
+
+        if (Input::IsKeyPressed(Aurora::Key::A))
+        {
+            movement.x -= cameraSpeed;
+        }
+
+        if (Input::IsKeyPressed(Aurora::Key::D))
+        {
+            movement.x += cameraSpeed;
+        }
+
+        if (Input::IsKeyPressed(Aurora::Key::W))
+        {
+            movement.y -= cameraSpeed;
+        }
+
+        if (Input::IsKeyPressed(Aurora::Key::S))
+        {
+            movement.y += cameraSpeed;
+        }
+
+        if (Input::IsKeyPressed(Aurora::Key::Q))
+        {
+            zoom -= 1.0f * dt;
+        }
+
+        if (Input::IsKeyPressed(Aurora::Key::E))
+        {
+            zoom += 1.0f * dt;
+        }
+
+        zoom = std::max(0.1f, zoom);
+
+        m_Camera.SetZoom(zoom);
+
+        m_Camera.SetPosition(
+            m_Camera.GetPosition() + movement * dt);
     }
 }

@@ -89,6 +89,16 @@ namespace Aurora
 
                 break;
             }
+            case SDL_EVENT_WINDOW_RESIZED:
+            {
+                WindowResizeEvent event(
+                    static_cast<uint32_t>(sdlEvent.window.data1),
+                    static_cast<uint32_t>(sdlEvent.window.data2));
+
+                m_Specification.EventCallback(event);
+
+                break;
+            }
             }
         }
     }

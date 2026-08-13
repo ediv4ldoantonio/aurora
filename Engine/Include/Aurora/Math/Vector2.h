@@ -42,6 +42,13 @@ namespace Aurora
                 x * value,
                 y * value);
         }
+
+        Vector2 &operator*=(float value)
+        {
+            x *= value;
+            y *= value;
+            return *this;
+        }
     };
 
 }

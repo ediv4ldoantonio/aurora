@@ -23,6 +23,11 @@ namespace Aurora
         const Vector2 &
         GetViewportSize() const;
 
+        void SetZoom(
+            float zoom);
+
+        float GetZoom() const;
+
         Vector2 WorldToScreen(
             const Vector2 &worldPosition) const;
 
@@ -30,6 +35,8 @@ namespace Aurora
         Vector2 m_Position;
 
         Vector2 m_ViewportSize;
+
+        float m_Zoom;
     };
 
 }

@@ -8,6 +8,7 @@
 #include "Aurora/ECS/Registry.h"
 #include "Aurora/ECS/SystemManager.h"
 #include "Aurora/Renderer/Camera2D.h"
+#include "Aurora/Events/Event.h"
 
 namespace Aurora
 {
@@ -23,6 +24,8 @@ namespace Aurora
             float deltaTime);
 
         void OnRender();
+
+        void OnEvent(Event &event);
 
         void SetParent(
             Entity child,
@@ -42,6 +45,8 @@ namespace Aurora
 
         Camera2D &
         GetCamera();
+
+        void UpdateCamera(float dt);
 
     private:
         Camera2D m_Camera;

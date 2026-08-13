@@ -19,11 +19,6 @@ SandboxLayer::SandboxLayer()
     auto player =
         m_Scene->CreateEntity("Player");
 
-    auto weapon =
-        m_Scene->CreateEntity("Weapon");
-
-    m_Scene->SetParent(weapon, player);
-
     auto &p_Transform =
         player.GetComponent<
             Aurora::TransformComponent>();
@@ -32,26 +27,13 @@ SandboxLayer::SandboxLayer()
         {0, 0};
 
     p_Transform.LocalTransform.Scale =
-        {100, 200};
+        {200, 200};
 
-    auto &w_Transform =
-        weapon.GetComponent<
-            Aurora::TransformComponent>();
-
-    w_Transform.LocalTransform.Position =
-        {100, 100};
-
-    w_Transform.LocalTransform.Scale =
-        {50, 50};
-
-    player.AddComponent<Aurora::ScriptComponent>()
-        .Bind<PlayerMovement>();
+    // player.AddComponent<Aurora::ScriptComponent>()
+    //     .Bind<PlayerMovement>();
 
     player.AddComponent<
-        Aurora::SpriteComponent>(Aurora::Color::Red);
-
-    weapon.AddComponent<
-        Aurora::SpriteComponent>(Aurora::Color::Blue);
+        Aurora::SpriteComponent>(Aurora::Color::White);
 }
 
 void SandboxLayer::OnUpdate(float dt)
@@ -67,4 +49,5 @@ void SandboxLayer::OnRender()
 void SandboxLayer::OnEvent(
     Aurora::Event &event)
 {
+    m_Scene->OnEvent(event);
 }

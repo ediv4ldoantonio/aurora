@@ -21,17 +21,27 @@ namespace Aurora
         WindowResizeEvent(
             unsigned int width,
             unsigned int height)
-            : Width(width),
-              Height(height)
+            : width(width),
+              height(height)
         {
         }
 
-        unsigned int Width;
-        unsigned int Height;
+        unsigned int GetWidth()
+        {
+            return width;
+        }
+
+        unsigned int GetHeight()
+        {
+            return height;
+        }
 
         EVENT_CLASS_TYPE(WindowResize)
         EVENT_CLASS_CATEGORY(
             EventCategoryApplication)
+    private:
+        unsigned int width;
+        unsigned int height;
     };
 
 }
