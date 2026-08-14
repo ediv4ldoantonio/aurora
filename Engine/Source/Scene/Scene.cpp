@@ -23,6 +23,17 @@ namespace Aurora
 
     Scene::Scene()
     {
+        m_Camera.SetViewportSize(
+            {1280.0f, 720.0f});
+
+        m_Camera.SetPosition(
+            {0.0f, 0.0f});
+
+        m_Camera.SetZoom(
+            1.0f);
+
+        m_Camera.SetRotation(
+            45.0f * 3.14159265359f / 180.0f);
 
         m_SystemManager
             .AddSystem<RenderSystem>();
@@ -228,7 +239,7 @@ namespace Aurora
 
     void Scene::UpdateCamera(float dt)
     {
-        constexpr float cameraSpeed = 300.0f;
+        constexpr float cameraSpeed = 3000.0f;
         float zoom = m_Camera.GetZoom();
 
         Vector2 movement(0.0f, 0.0f);
@@ -260,7 +271,7 @@ namespace Aurora
 
         if (Input::IsKeyPressed(Aurora::Key::E))
         {
-            zoom += 1.0f * dt;
+            zoom *= 1.0f * dt;
         }
 
         zoom = std::max(0.1f, zoom);

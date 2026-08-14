@@ -37,19 +37,30 @@ namespace Aurora
         const TransformComponent &transform,
         const SpriteComponent &sprite)
     {
-        if (!s_Camera)
-        {
-            s_Renderer->DrawSprite(transform, sprite);
+        if (!s_Renderer)
             return;
-        }
 
-        TransformComponent cameraTransform = transform;
+        if (!s_Camera)
+            return;
 
-        cameraTransform.WorldTransform.Position =
-            s_Camera->WorldToScreen(transform.WorldTransform.Position);
+        TransformComponent renderTransform =
+            transform;
+
+        renderTransform.WorldTransform.Position =
+            s_Camera->WorldToScreen(
+                transform.WorldTransform.Position);
+
+        renderTransform.WorldTransform.Rotation -=
+            s_Camera->GetRotation();
+
+        renderTransform.WorldTransform.Scale.x *=
+            s_Camera->GetZoom();
+
+        renderTransform.WorldTransform.Scale.y *=
+            s_Camera->GetZoom();
 
         s_Renderer->DrawSprite(
-            cameraTransform,
+            renderTransform,
             sprite);
     }
 

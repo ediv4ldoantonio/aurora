@@ -5,8 +5,7 @@
 #include <Aurora/Scene/Entity.h>
 #include <Aurora/Scene/Components/IDComponent.h>
 #include "Aurora/Events/Event.h"
-
-#include <iostream>
+#include "Aurora/Math/Matrix4.h"
 
 SandboxLayer::SandboxLayer()
     : Layer("Sandbox")
@@ -24,7 +23,7 @@ SandboxLayer::SandboxLayer()
             Aurora::TransformComponent>();
 
     p_Transform.LocalTransform.Position =
-        {0, 0};
+        {100, 0};
 
     p_Transform.LocalTransform.Scale =
         {200, 200};
