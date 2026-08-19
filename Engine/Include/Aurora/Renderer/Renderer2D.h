@@ -5,7 +5,9 @@
 #include "Aurora/Renderer/RenderState.h"
 #include "Aurora/Scene/Components/SpriteComponent.h"
 #include "Aurora/Scene/Components/TransformComponent.h"
+#include "Aurora/Renderer/SpriteDrawCommand.h"
 
+#include <vector>
 #include <memory>
 
 namespace Aurora
@@ -35,10 +37,15 @@ namespace Aurora
 
         static RendererAPI *GetRendererAPI();
 
+        static void Flush();
+
     private:
         static RendererAPI *s_Renderer;
         static Camera2D *s_Camera;
         static RenderState s_RenderState;
+
+        static std::vector<SpriteDrawCommand>
+            s_SpriteCommands;
     };
 
 }

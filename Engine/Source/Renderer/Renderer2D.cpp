@@ -14,6 +14,9 @@ namespace Aurora
     RenderState
         Renderer2D::s_RenderState;
 
+    std::vector<SpriteDrawCommand>
+        Renderer2D::s_SpriteCommands;
+
     void Renderer2D::Init(
         RendererAPI *renderer)
     {
@@ -36,10 +39,17 @@ namespace Aurora
         s_Renderer->BeginFrame();
 
         RenderCommand::Clear();
+
+        s_SpriteCommands.clear();
     }
 
     void Renderer2D::EndFrame()
     {
+        Flush();
+
+        if (!s_Renderer)
+            return;
+
         s_Renderer->EndFrame();
     }
 
@@ -77,7 +87,8 @@ namespace Aurora
         command.Texture =
             sprite.Texture.get();
 
-        s_Renderer->DrawSprite(command);
+        s_SpriteCommands.push_back(
+            command);
     }
 
     void Renderer2D::SetCamera(
@@ -98,5 +109,20 @@ namespace Aurora
     RendererAPI *Renderer2D::GetRendererAPI()
     {
         return s_Renderer;
+    }
+
+    void Renderer2D::Flush()
+    {
+        if (!s_Renderer)
+            return;
+
+        for (const auto &command :
+             s_SpriteCommands)
+        {
+            s_Renderer->DrawSprite(
+                command);
+        }
+
+        s_SpriteCommands.clear();
     }
 }
