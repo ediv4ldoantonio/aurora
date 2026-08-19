@@ -40,6 +40,11 @@ namespace Aurora
     void Camera2D::SetZoom(
         float zoom)
     {
+        if (zoom <= 0.0f)
+        {
+            return;
+        }
+
         m_Zoom = zoom;
 
         RecalculateProjectionMatrix();

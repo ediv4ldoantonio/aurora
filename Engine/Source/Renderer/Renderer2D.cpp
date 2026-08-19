@@ -30,6 +30,11 @@ namespace Aurora
 
     void Renderer2D::BeginFrame()
     {
+        if (!s_Renderer)
+            return;
+
+        s_Renderer->BeginFrame();
+
         RenderCommand::Clear();
     }
 

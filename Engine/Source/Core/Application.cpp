@@ -32,8 +32,6 @@ namespace Aurora
 
             m_Window->OnUpdate();
 
-            Renderer2D::BeginFrame();
-
             for (auto &layer : m_LayerStack)
             {
                 layer->OnUpdate(
@@ -41,8 +39,6 @@ namespace Aurora
 
                 layer->OnRender();
             }
-
-            Renderer2D::EndFrame();
         }
 
         AURORA_LOG_INFO("Application loop exited");

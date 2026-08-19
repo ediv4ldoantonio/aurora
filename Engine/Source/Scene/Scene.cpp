@@ -1,6 +1,7 @@
 #include "Aurora/Scene/Scene.h"
 #include "Aurora/Scene/Entity.h"
 #include "Aurora/Renderer/Renderer2D.h"
+#include "Aurora/Renderer/RenderCommand.h"
 #include "Aurora/Scene/Components/SpriteComponent.h"
 #include "Aurora/Scene/Components/TransformComponent.h"
 #include "Aurora/Scene/Components/ScriptComponent.h"
@@ -91,6 +92,8 @@ namespace Aurora
                     Vector2(
                         static_cast<float>(e.GetWidth()),
                         static_cast<float>(e.GetHeight())));
+
+                RenderCommand::SetViewport(0, 0, e.GetWidth(), e.GetHeight());
 
                 return false;
             });

@@ -10,6 +10,7 @@ namespace Aurora
     void RenderSystem::OnRender(
         Registry &registry)
     {
+        Renderer2D::BeginFrame();
 
         auto view =
             registry.ViewEntities<
@@ -29,6 +30,8 @@ namespace Aurora
                 transform,
                 sprite);
         }
+
+        Renderer2D::EndFrame();
     }
 
 }
