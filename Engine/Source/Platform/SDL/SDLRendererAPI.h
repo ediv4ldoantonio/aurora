@@ -25,6 +25,14 @@ namespace Aurora
         void DrawSprite(
             const SpriteDrawCommand &command) override;
 
+        void Clear() override;
+
+        void SetViewport(
+            int x,
+            int y,
+            int width,
+            int height) override;
+
         void *GetNativeRenderer() override;
 
     private:

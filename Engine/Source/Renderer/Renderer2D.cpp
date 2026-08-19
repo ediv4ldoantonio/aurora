@@ -1,5 +1,6 @@
 #include "Aurora/Renderer/Renderer2D.h"
 #include "Aurora/Renderer/RendererAPI.h"
+#include "Aurora/Renderer/RenderCommand.h"
 
 namespace Aurora
 {
@@ -18,7 +19,8 @@ namespace Aurora
     {
         s_Renderer = renderer;
 
-        s_Renderer->Init();
+        RenderCommand::Init(
+            renderer);
     }
 
     void Renderer2D::Shutdown()
@@ -28,7 +30,7 @@ namespace Aurora
 
     void Renderer2D::BeginFrame()
     {
-        s_Renderer->BeginFrame();
+        RenderCommand::Clear();
     }
 
     void Renderer2D::EndFrame()

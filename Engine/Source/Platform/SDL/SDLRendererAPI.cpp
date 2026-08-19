@@ -163,8 +163,31 @@ namespace Aurora
         }
     }
 
+    void SDLRendererAPI::Clear()
+    {
+        SDL_RenderClear(m_Renderer);
+    }
+
     void *SDLRendererAPI::GetNativeRenderer()
     {
         return m_Renderer;
+    }
+
+    void SDLRendererAPI::SetViewport(
+        int x,
+        int y,
+        int width,
+        int height)
+    {
+        SDL_Rect viewport;
+
+        viewport.x = x;
+        viewport.y = y;
+        viewport.w = width;
+        viewport.h = height;
+
+        SDL_SetRenderViewport(
+            m_Renderer,
+            &viewport);
     }
 }

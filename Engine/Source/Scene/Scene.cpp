@@ -32,8 +32,7 @@ namespace Aurora
         m_Camera.SetZoom(
             1.0f);
 
-        m_Camera.SetRotation(
-            45.0f * 3.14159265359f / 180.0f);
+        m_Camera.SetRotation(0);
 
         m_SystemManager
             .AddSystem<RenderSystem>();
@@ -271,7 +270,7 @@ namespace Aurora
 
         if (Input::IsKeyPressed(Aurora::Key::E))
         {
-            zoom *= 1.0f * dt;
+            zoom += 1.0f * dt;
         }
 
         zoom = std::max(0.1f, zoom);
