@@ -10,6 +10,9 @@ namespace Aurora
     Camera2D *
         Renderer2D::s_Camera = nullptr;
 
+    RenderState
+        Renderer2D::s_RenderState;
+
     void Renderer2D::Init(
         RendererAPI *renderer)
     {
@@ -43,31 +46,46 @@ namespace Aurora
         if (!s_Camera)
             return;
 
-        TransformComponent renderTransform =
-            transform;
+        SpriteDrawCommand command;
 
-        renderTransform.WorldTransform.Position =
+        command.Position =
             s_Camera->WorldToScreen(
                 transform.WorldTransform.Position);
 
-        renderTransform.WorldTransform.Rotation -=
-            s_Camera->GetRotation();
+        command.Size =
+            transform.WorldTransform.Scale;
 
-        renderTransform.WorldTransform.Scale.x *=
+        command.Size.x *=
             s_Camera->GetZoom();
 
-        renderTransform.WorldTransform.Scale.y *=
+        command.Size.y *=
             s_Camera->GetZoom();
 
-        s_Renderer->DrawSprite(
-            renderTransform,
-            sprite);
+        command.Rotation =
+            transform.WorldTransform.Rotation - s_Camera->GetRotation();
+
+        command.Tint =
+            sprite.Tint;
+
+        command.Texture =
+            sprite.Texture.get();
+
+        s_Renderer->DrawSprite(command);
     }
 
     void Renderer2D::SetCamera(
         Camera2D *camera)
     {
         s_Camera = camera;
+
+        if (!s_Camera)
+            return;
+
+        s_RenderState.ViewMatrix =
+            s_Camera->GetViewMatrix();
+
+        s_RenderState.ProjectionMatrix =
+            s_Camera->GetProjectionMatrix();
     }
 
     RendererAPI *Renderer2D::GetRendererAPI()

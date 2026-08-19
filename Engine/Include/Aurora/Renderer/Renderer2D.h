@@ -2,6 +2,7 @@
 
 #include "Aurora/Math/Vector2.h"
 #include "Aurora/Renderer/Camera2D.h"
+#include "Aurora/Renderer/RenderState.h"
 #include "Aurora/Scene/Components/SpriteComponent.h"
 #include "Aurora/Scene/Components/TransformComponent.h"
 
@@ -37,6 +38,7 @@ namespace Aurora
     private:
         static RendererAPI *s_Renderer;
         static Camera2D *s_Camera;
+        static RenderState s_RenderState;
     };
 
 }

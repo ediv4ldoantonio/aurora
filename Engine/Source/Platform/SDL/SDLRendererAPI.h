@@ -23,8 +23,7 @@ namespace Aurora
         void EndFrame() override;
 
         void DrawSprite(
-            const TransformComponent &transform,
-            const SpriteComponent &sprite) override;
+            const SpriteDrawCommand &command) override;
 
         void *GetNativeRenderer() override;
 
