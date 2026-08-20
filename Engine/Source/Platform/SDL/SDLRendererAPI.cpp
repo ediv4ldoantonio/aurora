@@ -163,6 +163,65 @@ namespace Aurora
         }
     }
 
+    void SDLRendererAPI::DrawSpriteBatch(
+        const SpriteBatch &batch)
+    {
+        const auto &vertices =
+            batch.GetVertices();
+
+        const auto &indices =
+            batch.GetIndices();
+
+        if (vertices.empty())
+            return;
+
+        SDL_Vertex *
+            sdlVertices =
+                new SDL_Vertex[vertices.size()];
+
+        for (size_t i = 0;
+             i < vertices.size();
+             ++i)
+        {
+            sdlVertices[i].position.x =
+                vertices[i].Position.x;
+
+            sdlVertices[i].position.y =
+                vertices[i].Position.y;
+
+            sdlVertices[i].tex_coord.x =
+                vertices[i].TexCoord.x;
+
+            sdlVertices[i].tex_coord.y =
+                vertices[i].TexCoord.y;
+
+            sdlVertices[i].color.r =
+                vertices[i].Color.R;
+
+            sdlVertices[i].color.g =
+                vertices[i].Color.G;
+
+            sdlVertices[i].color.b =
+                vertices[i].Color.B;
+
+            sdlVertices[i].color.a =
+                vertices[i].Color.A;
+        }
+
+        SDL_RenderGeometry(
+            m_Renderer,
+            nullptr,
+            sdlVertices,
+            static_cast<int>(
+                vertices.size()),
+            reinterpret_cast<const int *>(
+                indices.data()),
+            static_cast<int>(
+                indices.size()));
+
+        delete[] sdlVertices;
+    }
+
     void SDLRendererAPI::Clear()
     {
         SDL_RenderClear(m_Renderer);

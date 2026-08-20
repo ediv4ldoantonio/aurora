@@ -1,8 +1,6 @@
 #pragma once
 
 #include "Aurora/Renderer/RendererAPI.h"
-#include "Aurora/Scene/Components/SpriteComponent.h"
-#include "Aurora/Scene/Components/TransformComponent.h"
 
 struct SDL_Renderer;
 
@@ -32,6 +30,9 @@ namespace Aurora
             int y,
             int width,
             int height) override;
+
+        void DrawSpriteBatch(
+            const SpriteBatch &batch) override;
 
         void *GetNativeRenderer() override;
 

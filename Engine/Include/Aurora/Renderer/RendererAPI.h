@@ -2,6 +2,7 @@
 
 #include "Aurora/Math/Vector2.h"
 #include "Aurora/Renderer/SpriteDrawCommand.h"
+#include "Aurora/Renderer/SpriteBatch.h"
 
 namespace Aurora
 {
@@ -28,6 +29,9 @@ namespace Aurora
             int y,
             int width,
             int height) = 0;
+
+        virtual void DrawSpriteBatch(
+            const SpriteBatch &batch) = 0;
 
         virtual void *GetNativeRenderer() = 0;
     };

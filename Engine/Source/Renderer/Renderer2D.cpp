@@ -14,6 +14,9 @@ namespace Aurora
     RenderState
         Renderer2D::s_RenderState;
 
+    SpriteBatch
+        Renderer2D::s_SpriteBatch;
+
     std::vector<SpriteDrawCommand>
         Renderer2D::s_SpriteCommands;
 
@@ -116,13 +119,21 @@ namespace Aurora
         if (!s_Renderer)
             return;
 
+        s_SpriteBatch.Clear();
+
         for (const auto &command :
              s_SpriteCommands)
         {
-            s_Renderer->DrawSprite(
-                command);
+            s_SpriteBatch.AddQuad(
+                command.Position,
+                command.Size,
+                command.Rotation,
+                command.Tint);
         }
 
         s_SpriteCommands.clear();
+
+        s_Renderer->DrawSpriteBatch(
+            s_SpriteBatch);
     }
 }
