@@ -114,7 +114,7 @@ namespace Aurora
         return s_Renderer;
     }
 
-    void Renderer2D::Flush()
+    void Renderer2D::Flushs()
     {
         if (!s_Renderer)
             return;
@@ -128,7 +128,8 @@ namespace Aurora
                 command.Position,
                 command.Size,
                 command.Rotation,
-                command.Tint);
+                command.Tint,
+                command.Texture);
         }
 
         s_SpriteCommands.clear();
