@@ -114,16 +114,20 @@ namespace Aurora
         return s_Renderer;
     }
 
-    void Renderer2D::Flushs()
+    void Renderer2D::Flush()
     {
         if (!s_Renderer)
             return;
 
-        s_SpriteBatch.Clear();
-
         for (const auto &command :
              s_SpriteCommands)
         {
+            if (!s_SpriteBatch.CanAdd(
+                    command.Texture))
+            {
+                FlushBatch();
+            }
+
             s_SpriteBatch.AddQuad(
                 command.Position,
                 command.Size,
@@ -132,9 +136,22 @@ namespace Aurora
                 command.Texture);
         }
 
+        FlushBatch();
+
         s_SpriteCommands.clear();
+    }
+
+    void Renderer2D::FlushBatch()
+    {
+        if (!s_Renderer)
+            return;
+
+        if (s_SpriteBatch.GetVertices().empty())
+            return;
 
         s_Renderer->DrawSpriteBatch(
             s_SpriteBatch);
+
+        s_SpriteBatch.Clear();
     }
 }

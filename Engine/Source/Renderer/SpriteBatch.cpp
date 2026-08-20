@@ -35,13 +35,13 @@ namespace Aurora
              ++i)
         {
             if (m_Textures[i] == texture)
-                return i;
+                return i + 1;
         }
 
         m_Textures.push_back(texture);
 
         return static_cast<uint32_t>(
-            m_Textures.size() - 1);
+            m_Textures.size());
     }
 
     void SpriteBatch::AddQuad(
@@ -157,5 +157,44 @@ namespace Aurora
     SpriteBatch::GetTextures() const
     {
         return m_Textures;
+    }
+
+    bool SpriteBatch::CanAdd(
+        Texture2D *texture) const
+    {
+        if (m_Vertices.size() + 4 >
+            MaxVertices)
+        {
+            return false;
+        }
+
+        if (m_Indices.size() + 6 >
+            MaxIndices)
+        {
+            return false;
+        }
+
+        if (!texture)
+            return true;
+
+        for (const auto &existing :
+             m_Textures)
+        {
+            if (existing == texture)
+                return true;
+        }
+
+        return m_Textures.size() <
+               MaxTextureSlots - 1;
+    }
+
+    bool SpriteBatch::IsFull() const
+    {
+        return m_Vertices.size() + 4 >
+                   MaxVertices ||
+               m_Indices.size() + 6 >
+                   MaxIndices ||
+               m_Textures.size() >=
+                   MaxTextureSlots;
     }
 }

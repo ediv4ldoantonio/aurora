@@ -12,6 +12,16 @@ namespace Aurora
     {
 
     public:
+        static constexpr uint32_t MaxQuads = 1000;
+
+        static constexpr uint32_t MaxVertices =
+            MaxQuads * 4;
+
+        static constexpr uint32_t MaxIndices =
+            MaxQuads * 6;
+
+        static constexpr uint32_t MaxTextureSlots = 16;
+
         void Clear();
 
         void AddQuad(
@@ -20,6 +30,11 @@ namespace Aurora
             float rotation,
             const Color &color,
             Texture2D *texture);
+
+        bool CanAdd(
+            Texture2D *texture) const;
+
+        bool IsFull() const;
 
         const std::vector<SpriteVertex> &
         GetVertices() const;

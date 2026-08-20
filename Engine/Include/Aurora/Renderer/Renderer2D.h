@@ -41,6 +41,8 @@ namespace Aurora
         static void Flush();
 
     private:
+        static void FlushBatch();
+
         static RendererAPI *s_Renderer;
         static Camera2D *s_Camera;
         static RenderState s_RenderState;
