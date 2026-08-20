@@ -128,7 +128,8 @@ namespace Aurora
                 command.Position,
                 command.Size,
                 command.Rotation,
-                command.Tint);
+                command.Tint,
+                command.Texture);
         }
 
         s_SpriteCommands.clear();
