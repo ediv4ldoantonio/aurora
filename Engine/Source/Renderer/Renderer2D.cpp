@@ -114,7 +114,7 @@ namespace Aurora
         return s_Renderer;
     }
 
-    void Renderer2D::Flush()
+    void Renderer2D::Flushs()
     {
         if (!s_Renderer)
             return;
