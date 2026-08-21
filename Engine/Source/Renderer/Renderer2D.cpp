@@ -93,6 +93,9 @@ namespace Aurora
         command.Texture =
             sprite.Texture.get();
 
+        command.SortKey.Pass =
+            sprite.Pass;
+
         command.SortKey.Layer =
             sprite.Layer;
 
@@ -130,9 +133,28 @@ namespace Aurora
         const auto &commands =
             s_RenderQueue.GetCommands();
 
-        for (const auto &command :
-             commands)
+        bool hasPass = false;
+
+        RenderPass currentPass =
+            RenderPass::Background;
+
+        for (const auto &command : commands)
         {
+            if (!hasPass)
+            {
+                currentPass =
+                    command.SortKey.Pass;
+
+                hasPass = true;
+            }
+            else if (command.SortKey.Pass != currentPass)
+            {
+                FlushBatch();
+
+                currentPass =
+                    command.SortKey.Pass;
+            }
+
             if (!s_SpriteBatch.CanAdd(
                     command.Texture))
             {

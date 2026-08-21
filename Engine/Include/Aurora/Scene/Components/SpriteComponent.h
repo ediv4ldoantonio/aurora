@@ -4,6 +4,7 @@
 #include "Aurora/Math/Vector2.h"
 #include "Aurora/Renderer/Color.h"
 #include "Aurora/Renderer/Texture2D.h"
+#include "Aurora/Renderer/RenderPass.h"
 
 namespace Aurora
 {
@@ -17,6 +18,9 @@ namespace Aurora
         int32_t Layer = 0;
 
         SpriteComponent() = default;
+
+        RenderPass Pass =
+            RenderPass::World;
 
         explicit SpriteComponent(const Aurora::Color &tint)
             : Tint(tint)
