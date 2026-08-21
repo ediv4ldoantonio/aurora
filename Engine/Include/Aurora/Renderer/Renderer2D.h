@@ -5,8 +5,8 @@
 #include "Aurora/Renderer/RenderState.h"
 #include "Aurora/Scene/Components/SpriteComponent.h"
 #include "Aurora/Scene/Components/TransformComponent.h"
-#include "Aurora/Renderer/SpriteDrawCommand.h"
 #include "Aurora/Renderer/SpriteBatch.h"
+#include "Aurora/Renderer/RenderQueue.h"
 
 #include <vector>
 #include <memory>
@@ -47,9 +47,7 @@ namespace Aurora
         static Camera2D *s_Camera;
         static RenderState s_RenderState;
         static SpriteBatch s_SpriteBatch;
-
-        static std::vector<SpriteDrawCommand>
-            s_SpriteCommands;
+        static RenderQueue s_RenderQueue;
     };
 
 }

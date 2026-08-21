@@ -2,10 +2,10 @@
 
 #include "Aurora/Math/Vector2.h"
 #include "Aurora/Renderer/Color.h"
+#include "Aurora/Renderer/RenderSortKey.h"
 
 namespace Aurora
 {
-
     class Texture2D;
 
     struct SpriteDrawCommand
@@ -14,12 +14,12 @@ namespace Aurora
 
         Vector2 Size;
 
-        float Rotation;
+        float Rotation = 0.0f;
 
         Color Tint;
 
-        Texture2D *Texture;
+        Texture2D *Texture = nullptr;
 
-        int32_t Layer = 0;
+        RenderSortKey SortKey;
     };
 }

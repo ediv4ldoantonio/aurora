@@ -19,8 +19,7 @@ namespace Aurora
     SpriteBatch
         Renderer2D::s_SpriteBatch;
 
-    std::vector<SpriteDrawCommand>
-        Renderer2D::s_SpriteCommands;
+    RenderQueue Renderer2D::s_RenderQueue;
 
     void Renderer2D::Init(
         RendererAPI *renderer)
@@ -41,11 +40,13 @@ namespace Aurora
         if (!s_Renderer)
             return;
 
+        s_RenderQueue.Clear();
+
+        s_SpriteBatch.Clear();
+
         s_Renderer->BeginFrame();
 
         RenderCommand::Clear();
-
-        s_SpriteCommands.clear();
     }
 
     void Renderer2D::EndFrame()
@@ -92,10 +93,10 @@ namespace Aurora
         command.Texture =
             sprite.Texture.get();
 
-        command.Layer =
+        command.SortKey.Layer =
             sprite.Layer;
 
-        s_SpriteCommands.push_back(
+        s_RenderQueue.Submit(
             command);
     }
 
@@ -124,17 +125,13 @@ namespace Aurora
         if (!s_Renderer)
             return;
 
-        std::stable_sort(
-            s_SpriteCommands.begin(),
-            s_SpriteCommands.end(),
-            [](const SpriteDrawCommand &a,
-               const SpriteDrawCommand &b)
-            {
-                return a.Layer < b.Layer;
-            });
+        s_RenderQueue.Sort();
+
+        const auto &commands =
+            s_RenderQueue.GetCommands();
 
         for (const auto &command :
-             s_SpriteCommands)
+             commands)
         {
             if (!s_SpriteBatch.CanAdd(
                     command.Texture))
@@ -152,7 +149,7 @@ namespace Aurora
 
         FlushBatch();
 
-        s_SpriteCommands.clear();
+        s_RenderQueue.Clear();
     }
 
     void Renderer2D::FlushBatch()
