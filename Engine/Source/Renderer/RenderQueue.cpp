@@ -53,4 +53,17 @@ namespace Aurora
                        b.SortKey;
             });
     }
+
+    bool RenderQueue::IsSorted() const
+    {
+        return std::is_sorted(
+            m_Commands.begin(),
+            m_Commands.end(),
+            [](const SpriteDrawCommand &a,
+               const SpriteDrawCommand &b)
+            {
+                return a.SortKey <
+                       b.SortKey;
+            });
+    }
 }

@@ -1,6 +1,7 @@
 #include "Aurora/Renderer/Renderer2D.h"
 #include "Aurora/Renderer/RendererAPI.h"
 #include "Aurora/Renderer/RenderCommand.h"
+#include "Aurora/Core/Assert.h"
 
 #include <algorithm>
 
@@ -129,6 +130,8 @@ namespace Aurora
             return;
 
         s_RenderQueue.Sort();
+
+        AURORA_ASSERT(s_RenderQueue.IsSorted());
 
         const auto &commands =
             s_RenderQueue.GetCommands();

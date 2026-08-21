@@ -24,6 +24,8 @@ namespace Aurora
 
         size_t Size() const;
 
+        bool IsSorted() const;
+
     private:
         std::vector<SpriteDrawCommand>
             m_Commands;

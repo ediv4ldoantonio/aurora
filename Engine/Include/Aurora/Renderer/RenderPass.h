@@ -12,4 +12,10 @@ namespace Aurora
         UI = 3,
         Debug = 4
     };
+
+    inline bool IsTransparentPass(
+        RenderPass pass)
+    {
+        return pass == RenderPass::Transparent;
+    }
 }
