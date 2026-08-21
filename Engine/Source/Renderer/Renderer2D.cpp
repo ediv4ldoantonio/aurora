@@ -2,6 +2,8 @@
 #include "Aurora/Renderer/RendererAPI.h"
 #include "Aurora/Renderer/RenderCommand.h"
 
+#include <algorithm>
+
 namespace Aurora
 {
 
@@ -90,6 +92,9 @@ namespace Aurora
         command.Texture =
             sprite.Texture.get();
 
+        command.Layer =
+            sprite.Layer;
+
         s_SpriteCommands.push_back(
             command);
     }
@@ -118,6 +123,15 @@ namespace Aurora
     {
         if (!s_Renderer)
             return;
+
+        std::stable_sort(
+            s_SpriteCommands.begin(),
+            s_SpriteCommands.end(),
+            [](const SpriteDrawCommand &a,
+               const SpriteDrawCommand &b)
+            {
+                return a.Layer < b.Layer;
+            });
 
         for (const auto &command :
              s_SpriteCommands)

@@ -2,6 +2,7 @@
 #include <Aurora/Core/Logger.h>
 #include <Aurora/Input/Input.h>
 #include <Aurora/Renderer/Renderer2D.h>
+#include <Aurora/Renderer/Texture2D.h>
 #include <Aurora/Scene/Entity.h>
 #include <Aurora/Scene/Components/IDComponent.h>
 #include "Aurora/Events/Event.h"
@@ -22,6 +23,13 @@ SandboxLayer::SandboxLayer()
         player.GetComponent<
             Aurora::TransformComponent>();
 
+    auto &p_Sprite =
+        player.AddComponent<
+            Aurora::SpriteComponent>();
+
+    p_Sprite.Texture =
+        Aurora::Texture2D::Create("Assets/player.png");
+
     p_Transform.LocalTransform.Position =
         {100, 0};
 
@@ -30,9 +38,6 @@ SandboxLayer::SandboxLayer()
 
     // player.AddComponent<Aurora::ScriptComponent>()
     //     .Bind<PlayerMovement>();
-
-    player.AddComponent<
-        Aurora::SpriteComponent>(Aurora::Color::White);
 }
 
 void SandboxLayer::OnUpdate(float dt)

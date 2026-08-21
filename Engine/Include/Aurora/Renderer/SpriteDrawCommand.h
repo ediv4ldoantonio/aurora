@@ -14,11 +14,12 @@ namespace Aurora
 
         Vector2 Size;
 
-        float Rotation = 0.0f;
+        float Rotation;
 
         Color Tint;
 
-        Texture2D *Texture = nullptr;
-    };
+        Texture2D *Texture;
 
+        int32_t Layer = 0;
+    };
 }

@@ -14,6 +14,8 @@ namespace Aurora
 
         std::shared_ptr<Texture2D> Texture;
 
+        int32_t Layer = 0;
+
         SpriteComponent() = default;
 
         explicit SpriteComponent(const Aurora::Color &tint)
