@@ -3,6 +3,7 @@
 #include "Aurora/Renderer/RendererAPI.h"
 
 struct SDL_Renderer;
+struct SDL_Vertex;
 
 namespace Aurora
 {
@@ -36,8 +37,10 @@ namespace Aurora
 
         void *GetNativeRenderer() override;
 
+        static SDL_Vertex ToSDLVertex(
+            const SpriteVertex &vertex);
+
     private:
         SDL_Renderer *m_Renderer;
     };
-
 }

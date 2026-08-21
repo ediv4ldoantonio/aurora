@@ -3,6 +3,7 @@
 #include "Aurora/Core/Logger.h"
 
 #include <SDL3/SDL.h>
+
 #include <cmath>
 
 namespace Aurora
@@ -172,54 +173,86 @@ namespace Aurora
         const auto &indices =
             batch.GetIndices();
 
+        const auto &textures =
+            batch.GetTextures();
+
         if (vertices.empty())
             return;
 
-        SDL_Vertex *
-            sdlVertices =
-                new SDL_Vertex[vertices.size()];
+        const size_t quadCount =
+            vertices.size() / 4;
 
-        for (size_t i = 0;
-             i < vertices.size();
-             ++i)
+        for (size_t quad = 0;
+             quad < quadCount;
+             ++quad)
         {
-            sdlVertices[i].position.x =
-                vertices[i].Position.x;
+            const size_t vertexStart =
+                quad * 4;
 
-            sdlVertices[i].position.y =
-                vertices[i].Position.y;
+            const size_t indexStart =
+                quad * 6;
 
-            sdlVertices[i].tex_coord.x =
-                vertices[i].TexCoord.x;
+            const float textureIndex =
+                vertices[vertexStart]
+                    .TextureIndex;
 
-            sdlVertices[i].tex_coord.y =
-                vertices[i].TexCoord.y;
+            SDL_Texture *texture =
+                nullptr;
 
-            sdlVertices[i].color.r =
-                vertices[i].Color.R;
+            if (textureIndex > 0.0f)
+            {
+                const size_t textureSlot =
+                    static_cast<size_t>(
+                        textureIndex) -
+                    1;
 
-            sdlVertices[i].color.g =
-                vertices[i].Color.G;
+                if (textureSlot <
+                    textures.size())
+                {
+                    auto *texture2D =
+                        textures[textureSlot];
 
-            sdlVertices[i].color.b =
-                vertices[i].Color.B;
+                    if (texture2D)
+                    {
+                        auto *sdlTexture =
+                            static_cast<
+                                SDLTexture2D *>(
+                                texture2D);
 
-            sdlVertices[i].color.a =
-                vertices[i].Color.A;
+                        texture =
+                            sdlTexture->GetNativeTexture();
+                    }
+                }
+            }
+
+            SDL_Vertex quadVertices[4];
+
+            for (int i = 0; i < 4; ++i)
+            {
+                quadVertices[i] =
+                    ToSDLVertex(
+                        vertices[vertexStart + i]);
+            }
+
+            int quadIndices[6];
+
+            for (int i = 0; i < 6; ++i)
+            {
+                quadIndices[i] =
+                    static_cast<int>(
+                        indices[indexStart + i] -
+                        static_cast<uint32_t>(
+                            vertexStart));
+            }
+
+            SDL_RenderGeometry(
+                m_Renderer,
+                texture,
+                quadVertices,
+                4,
+                quadIndices,
+                6);
         }
-
-        SDL_RenderGeometry(
-            m_Renderer,
-            nullptr,
-            sdlVertices,
-            static_cast<int>(
-                vertices.size()),
-            reinterpret_cast<const int *>(
-                indices.data()),
-            static_cast<int>(
-                indices.size()));
-
-        delete[] sdlVertices;
     }
 
     void SDLRendererAPI::Clear()
@@ -248,5 +281,37 @@ namespace Aurora
         SDL_SetRenderViewport(
             m_Renderer,
             &viewport);
+    }
+
+    SDL_Vertex SDLRendererAPI::ToSDLVertex(
+        const SpriteVertex &vertex)
+    {
+        SDL_Vertex result;
+
+        result.position.x =
+            vertex.Position.x;
+
+        result.position.y =
+            vertex.Position.y;
+
+        result.tex_coord.x =
+            vertex.TexCoord.x;
+
+        result.tex_coord.y =
+            vertex.TexCoord.y;
+
+        result.color.r =
+            vertex.Color.R;
+
+        result.color.g =
+            vertex.Color.G;
+
+        result.color.b =
+            vertex.Color.B;
+
+        result.color.a =
+            vertex.Color.A;
+
+        return result;
     }
 }
