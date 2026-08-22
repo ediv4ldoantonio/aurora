@@ -1,5 +1,4 @@
 #include "Aurora/Renderer/SpriteBatch.h"
-#include "Aurora/Renderer/Material.h"
 
 #include <cmath>
 
@@ -10,7 +9,7 @@ namespace Aurora
     {
         m_Vertices.clear();
         m_Indices.clear();
-        m_Textures.clear();
+        m_Materials.clear();
     }
 
     const std::vector<SpriteVertex> &
@@ -25,24 +24,24 @@ namespace Aurora
         return m_Indices;
     }
 
-    uint32_t SpriteBatch::GetTextureSlot(
-        Texture2D *texture)
+    uint32_t SpriteBatch::GetMaterialSlot(
+        Material *material)
     {
-        if (!texture)
+        if (!material)
             return 0;
 
         for (uint32_t i = 0;
-             i < m_Textures.size();
+             i < m_Materials.size();
              ++i)
         {
-            if (m_Textures[i] == texture)
+            if (m_Materials[i] == material)
                 return i + 1;
         }
 
-        m_Textures.push_back(texture);
+        m_Materials.push_back(material);
 
         return static_cast<uint32_t>(
-            m_Textures.size());
+            m_Materials.size());
     }
 
     void SpriteBatch::AddQuad(
@@ -51,28 +50,22 @@ namespace Aurora
         float rotation,
         Material *material)
     {
-        Texture2D *texture = nullptr;
-
-        Color color = Color::White;
-
-        if (material)
-        {
-            texture =
-                material->GetTexture();
-
-            color =
-                material->GetTint();
-        }
-
-        uint32_t textureSlot =
-            GetTextureSlot(texture);
-
-        float textureIndex =
-            static_cast<float>(textureSlot);
-
         const uint32_t baseIndex =
             static_cast<uint32_t>(
                 m_Vertices.size());
+
+        const uint32_t materialSlot =
+            GetMaterialSlot(material);
+
+        const float materialIndex =
+            static_cast<float>(
+                materialSlot);
+
+        Color color =
+            Color::White;
+
+        if (material)
+            color = material->GetTint();
 
         const float halfWidth =
             size.x * 0.5f;
@@ -135,27 +128,14 @@ namespace Aurora
         vertices[2].TexCoord = {1.0f, 1.0f};
         vertices[3].TexCoord = {0.0f, 1.0f};
 
-        vertices[0].Color = color;
-        vertices[1].Color = color;
-        vertices[2].Color = color;
-        vertices[3].Color = color;
-
-        vertices[0].TextureIndex =
-            textureIndex;
-
-        vertices[1].TextureIndex =
-            textureIndex;
-
-        vertices[2].TextureIndex =
-            textureIndex;
-
-        vertices[3].TextureIndex =
-            textureIndex;
+        for (auto &vertex : vertices)
+        {
+            vertex.Color = color;
+            vertex.MaterialIndex = materialIndex;
+        }
 
         for (const auto &vertex : vertices)
-        {
             m_Vertices.push_back(vertex);
-        }
 
         m_Indices.push_back(baseIndex + 0);
         m_Indices.push_back(baseIndex + 1);
@@ -166,14 +146,8 @@ namespace Aurora
         m_Indices.push_back(baseIndex + 0);
     }
 
-    const std::vector<Texture2D *> &
-    SpriteBatch::GetTextures() const
-    {
-        return m_Textures;
-    }
-
     bool SpriteBatch::CanAdd(
-        Texture2D *texture) const
+        Material *material) const
     {
         if (m_Vertices.size() + 4 >
             MaxVertices)
@@ -187,18 +161,18 @@ namespace Aurora
             return false;
         }
 
-        if (!texture)
+        if (!material)
             return true;
 
         for (const auto &existing :
-             m_Textures)
+             m_Materials)
         {
-            if (existing == texture)
+            if (existing == material)
                 return true;
         }
 
-        return m_Textures.size() <
-               MaxTextureSlots - 1;
+        return m_Materials.size() <
+               MaxMaterialSlots - 1;
     }
 
     bool SpriteBatch::IsFull() const
@@ -207,7 +181,13 @@ namespace Aurora
                    MaxVertices ||
                m_Indices.size() + 6 >
                    MaxIndices ||
-               m_Textures.size() >=
-                   MaxTextureSlots;
+               m_Materials.size() >=
+                   MaxMaterialSlots;
+    }
+
+    const std::vector<Material *> &
+    SpriteBatch::GetMaterials() const
+    {
+        return m_Materials;
     }
 }

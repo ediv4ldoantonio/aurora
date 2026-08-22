@@ -41,6 +41,9 @@ namespace Aurora
     void SDLRendererAPI::DrawSprite(
         const SpriteDrawCommand &command)
     {
+        if (!command.MaterialInstance)
+            return;
+
         SDL_FRect rect;
 
         rect.x = command.Position.x;
@@ -82,10 +85,10 @@ namespace Aurora
         verts[0].tex_coord.x = 0.0f;
         verts[0].tex_coord.y = 0.0f;
 
-        verts[0].color.r = command.MaterialInstance->GetTint().R;
-        verts[0].color.g = command.MaterialInstance->GetTint().G;
-        verts[0].color.b = command.MaterialInstance->GetTint().B;
-        verts[0].color.a = command.MaterialInstance->GetTint().A;
+        verts[0].color.r = command.MaterialInstance->GetTint().R / 255.0f;
+        verts[0].color.g = command.MaterialInstance->GetTint().G / 255.0f;
+        verts[0].color.b = command.MaterialInstance->GetTint().B / 255.0f;
+        verts[0].color.a = command.MaterialInstance->GetTint().A / 255.0f;
 
         // Top-right
         verts[1].position.x =
@@ -127,22 +130,15 @@ namespace Aurora
 
         if (command.MaterialInstance && command.MaterialInstance->GetTexture())
         {
-            auto *texture =
+            const auto &texture =
+                command.MaterialInstance->GetTexture();
+
+            auto *sdlTexture =
                 static_cast<SDLTexture2D *>(
-                    command.MaterialInstance->GetTexture());
+                    texture.get());
 
             SDL_Texture *native =
-                texture->GetNativeTexture();
-
-            SDL_SetTextureColorMod(
-                native,
-                command.MaterialInstance->GetTint().R,
-                command.MaterialInstance->GetTint().G,
-                command.MaterialInstance->GetTint().B);
-
-            SDL_SetTextureAlphaMod(
-                native,
-                command.MaterialInstance->GetTint().A);
+                sdlTexture->GetNativeTexture();
 
             SDL_RenderGeometry(
                 m_Renderer,
@@ -173,8 +169,8 @@ namespace Aurora
         const auto &indices =
             batch.GetIndices();
 
-        const auto &textures =
-            batch.GetTextures();
+        const auto &materials =
+            batch.GetMaterials();
 
         if (vertices.empty())
             return;
@@ -192,35 +188,42 @@ namespace Aurora
             const size_t indexStart =
                 quad * 6;
 
-            const float textureIndex =
+            const float materialIndex =
                 vertices[vertexStart]
-                    .TextureIndex;
+                    .MaterialIndex;
+
+            Material *material =
+                nullptr;
 
             SDL_Texture *texture =
                 nullptr;
 
-            if (textureIndex > 0.0f)
+            if (materialIndex > 0.0f)
             {
-                const size_t textureSlot =
+                const size_t materialSlot =
                     static_cast<size_t>(
-                        textureIndex) -
+                        materialIndex) -
                     1;
 
-                if (textureSlot <
-                    textures.size())
+                if (materialSlot <
+                    materials.size())
                 {
-                    auto *texture2D =
-                        textures[textureSlot];
+                    material =
+                        materials[materialSlot];
 
-                    if (texture2D)
+                    if (material &&
+                        material->GetTexture())
                     {
-                        auto *sdlTexture =
+                        const auto &sharedTexture =
+                            material->GetTexture();
+
+                        auto *texture2D =
                             static_cast<
                                 SDLTexture2D *>(
-                                texture2D);
+                                sharedTexture.get());
 
                         texture =
-                            sdlTexture->GetNativeTexture();
+                            texture2D->GetNativeTexture();
                     }
                 }
             }
@@ -245,13 +248,18 @@ namespace Aurora
                             vertexStart));
             }
 
-            SDL_RenderGeometry(
-                m_Renderer,
-                texture,
-                quadVertices,
-                4,
-                quadIndices,
-                6);
+            if (!SDL_RenderGeometry(
+                    m_Renderer,
+                    texture,
+                    quadVertices,
+                    4,
+                    quadIndices,
+                    6))
+            {
+                AURORA_LOG_ERROR(
+                    "SDL_RenderGeometry failed: ",
+                    SDL_GetError());
+            }
         }
     }
 
@@ -301,16 +309,16 @@ namespace Aurora
             vertex.TexCoord.y;
 
         result.color.r =
-            vertex.Color.R;
+            vertex.Color.R / 255.0f;
 
         result.color.g =
-            vertex.Color.G;
+            vertex.Color.G / 255.0f;
 
         result.color.b =
-            vertex.Color.B;
+            vertex.Color.B / 255.0f;
 
         result.color.a =
-            vertex.Color.A;
+            vertex.Color.A / 255.0f;
 
         return result;
     }

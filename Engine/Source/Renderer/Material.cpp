@@ -1,20 +1,30 @@
 #include "Aurora/Renderer/Material.h"
 
+#include <utility>
+
 namespace Aurora
 {
+    UUID Material::GetID() const
+    {
+        return m_ID;
+    }
+
     Material::Material(
-        Texture2D *texture)
-        : m_Texture(texture)
+        std::shared_ptr<Texture2D> texture)
+        : m_Texture(
+              std::move(texture))
     {
     }
 
     void Material::SetTexture(
-        Texture2D *texture)
+        std::shared_ptr<Texture2D> texture)
     {
-        m_Texture = texture;
+        m_Texture =
+            std::move(texture);
     }
 
-    Texture2D *Material::GetTexture() const
+    const std::shared_ptr<Texture2D> &
+    Material::GetTexture() const
     {
         return m_Texture;
     }
@@ -40,10 +50,5 @@ namespace Aurora
     BlendMode Material::GetBlendMode() const
     {
         return m_BlendMode;
-    }
-
-    UUID Material::GetID() const
-    {
-        return m_ID;
     }
 }

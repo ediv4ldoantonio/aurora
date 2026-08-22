@@ -169,15 +169,8 @@ namespace Aurora
                     command.SortKey.Pass;
             }
 
-            Texture2D *texture = nullptr;
-
-            if (command.MaterialInstance)
-            {
-                texture =
-                    command.MaterialInstance->GetTexture();
-            }
-
-            if (!s_SpriteBatch.CanAdd(texture))
+            if (!s_SpriteBatch.CanAdd(
+                    command.MaterialInstance))
             {
                 FlushBatch();
             }

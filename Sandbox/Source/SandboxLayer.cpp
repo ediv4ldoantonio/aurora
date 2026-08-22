@@ -28,7 +28,7 @@ SandboxLayer::SandboxLayer()
             "Assets/player.png");
 
     auto material =
-        std::make_shared<Aurora::Material>(texture.get());
+        std::make_shared<Aurora::Material>(texture);
 
     material->SetTint(
         Aurora::Color::Red);

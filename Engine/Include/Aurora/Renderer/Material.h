@@ -4,6 +4,8 @@
 #include "Aurora/Renderer/BlendMode.h"
 #include "Aurora/Renderer/Color.h"
 
+#include <memory>
+
 namespace Aurora
 {
     class Texture2D;
@@ -11,22 +13,24 @@ namespace Aurora
     class Material
     {
     public:
-        Material();
+        Material() = default;
 
         explicit Material(
-            Texture2D *texture);
+            std::shared_ptr<Texture2D> texture);
 
         UUID GetID() const;
 
         void SetTexture(
-            Texture2D *texture);
+            std::shared_ptr<Texture2D> texture);
 
-        Texture2D *GetTexture() const;
+        const std::shared_ptr<Texture2D> &
+        GetTexture() const;
 
         void SetTint(
             const Color &tint);
 
-        const Color &GetTint() const;
+        const Color &
+        GetTint() const;
 
         void SetBlendMode(
             BlendMode mode);
@@ -36,7 +40,7 @@ namespace Aurora
     private:
         UUID m_ID;
 
-        Texture2D *m_Texture = nullptr;
+        std::shared_ptr<Texture2D> m_Texture;
 
         Color m_Tint;
 

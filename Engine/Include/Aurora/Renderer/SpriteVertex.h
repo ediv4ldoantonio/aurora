@@ -11,7 +11,7 @@ namespace Aurora
         Vector2 Position;
         Vector2 TexCoord;
         Aurora::Color Color;
-        float TextureIndex = 0.0f;
+        float MaterialIndex = 0.0f;
     };
 
 }
