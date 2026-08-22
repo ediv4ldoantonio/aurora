@@ -2,6 +2,7 @@
 
 #include "Aurora/Renderer/SpriteVertex.h"
 #include "Aurora/Renderer/Material.h"
+#include "Aurora/Renderer/BatchKey.h"
 
 #include <vector>
 
@@ -26,13 +27,17 @@ namespace Aurora
         bool CanAdd(
             Material *material) const;
 
+        bool CanBatchWith(
+            const BatchKey &key) const;
+
         bool IsFull() const;
 
         void AddQuad(
             const Vector2 &position,
             const Vector2 &size,
             float rotation,
-            Material *material);
+            Material *material,
+            const BatchKey &batchKey);
 
         const std::vector<SpriteVertex> &
         GetVertices() const;
@@ -56,5 +61,8 @@ namespace Aurora
 
         std::vector<Material *>
             m_Materials;
+
+        bool m_HasBatchKey = false;
+        BatchKey m_BatchKey;
     };
 }

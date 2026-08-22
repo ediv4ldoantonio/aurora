@@ -142,31 +142,15 @@ namespace Aurora
 
         s_RenderQueue.Sort();
 
-        AURORA_ASSERT(s_RenderQueue.IsSorted());
-
         const auto &commands =
             s_RenderQueue.GetCommands();
 
-        bool hasPass = false;
-
-        RenderPass currentPass =
-            RenderPass::Background;
-
         for (const auto &command : commands)
         {
-            if (!hasPass)
-            {
-                currentPass =
-                    command.SortKey.Pass;
-
-                hasPass = true;
-            }
-            else if (command.SortKey.Pass != currentPass)
+            if (!s_SpriteBatch.CanBatchWith(
+                    command.Batch))
             {
                 FlushBatch();
-
-                currentPass =
-                    command.SortKey.Pass;
             }
 
             if (!s_SpriteBatch.CanAdd(
@@ -179,7 +163,8 @@ namespace Aurora
                 command.Position,
                 command.Size,
                 command.Rotation,
-                command.MaterialInstance);
+                command.MaterialInstance,
+                command.Batch);
         }
 
         FlushBatch();

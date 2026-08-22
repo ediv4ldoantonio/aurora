@@ -10,6 +10,18 @@ namespace Aurora
         m_Vertices.clear();
         m_Indices.clear();
         m_Materials.clear();
+
+        m_HasBatchKey = false;
+        m_BatchKey = {};
+    }
+
+    bool SpriteBatch::CanBatchWith(
+        const BatchKey &key) const
+    {
+        if (!m_HasBatchKey)
+            return true;
+
+        return m_BatchKey == key;
     }
 
     const std::vector<SpriteVertex> &
@@ -48,8 +60,15 @@ namespace Aurora
         const Vector2 &position,
         const Vector2 &size,
         float rotation,
-        Material *material)
+        Material *material,
+        const BatchKey &batchKey)
     {
+        if (!m_HasBatchKey)
+        {
+            m_BatchKey = batchKey;
+            m_HasBatchKey = true;
+        }
+
         const uint32_t baseIndex =
             static_cast<uint32_t>(
                 m_Vertices.size());
