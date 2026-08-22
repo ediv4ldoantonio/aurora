@@ -1,6 +1,7 @@
 #include "Aurora/Renderer/Renderer2D.h"
 #include "Aurora/Renderer/RendererAPI.h"
 #include "Aurora/Renderer/RenderCommand.h"
+#include "Aurora/Core/Logger.h"
 #include "Aurora/Core/Assert.h"
 
 #include <algorithm>
@@ -88,11 +89,15 @@ namespace Aurora
         command.Rotation =
             transform.WorldTransform.Rotation - s_Camera->GetRotation();
 
-        command.Tint =
-            sprite.Tint;
+        if (!sprite.MaterialInstance)
+        {
+            AURORA_LOG_WARN(
+                "SpriteComponent has no MaterialInstance. Skipping draw call.");
+            return;
+        }
 
-        command.Texture =
-            sprite.Texture.get();
+        command.MaterialInstance =
+            sprite.MaterialInstance.get();
 
         command.SortKey.Pass =
             sprite.Pass;
@@ -158,8 +163,15 @@ namespace Aurora
                     command.SortKey.Pass;
             }
 
-            if (!s_SpriteBatch.CanAdd(
-                    command.Texture))
+            Texture2D *texture = nullptr;
+
+            if (command.MaterialInstance)
+            {
+                texture =
+                    command.MaterialInstance->GetTexture();
+            }
+
+            if (!s_SpriteBatch.CanAdd(texture))
             {
                 FlushBatch();
             }
@@ -168,8 +180,10 @@ namespace Aurora
                 command.Position,
                 command.Size,
                 command.Rotation,
-                command.Tint,
-                command.Texture);
+                command.MaterialInstance
+                    ? command.MaterialInstance->GetTint()
+                    : Color::White,
+                texture);
         }
 
         FlushBatch();

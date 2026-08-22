@@ -42,6 +42,10 @@ namespace Aurora
             return;
         }
 
+        SDL_SetTextureBlendMode(
+            m_Texture,
+            SDL_BLENDMODE_BLEND);
+
         SDL_DestroySurface(surface);
     }
 

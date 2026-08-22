@@ -82,10 +82,10 @@ namespace Aurora
         verts[0].tex_coord.x = 0.0f;
         verts[0].tex_coord.y = 0.0f;
 
-        verts[0].color.r = command.Tint.R;
-        verts[0].color.g = command.Tint.G;
-        verts[0].color.b = command.Tint.B;
-        verts[0].color.a = command.Tint.A;
+        verts[0].color.r = command.MaterialInstance->GetTint().R;
+        verts[0].color.g = command.MaterialInstance->GetTint().G;
+        verts[0].color.b = command.MaterialInstance->GetTint().B;
+        verts[0].color.a = command.MaterialInstance->GetTint().A;
 
         // Top-right
         verts[1].position.x =
@@ -125,24 +125,24 @@ namespace Aurora
                 0, 1, 2,
                 2, 3, 0};
 
-        if (command.Texture)
+        if (command.MaterialInstance && command.MaterialInstance->GetTexture())
         {
             auto *texture =
                 static_cast<SDLTexture2D *>(
-                    command.Texture);
+                    command.MaterialInstance->GetTexture());
 
             SDL_Texture *native =
                 texture->GetNativeTexture();
 
             SDL_SetTextureColorMod(
                 native,
-                command.Tint.R,
-                command.Tint.G,
-                command.Tint.B);
+                command.MaterialInstance->GetTint().R,
+                command.MaterialInstance->GetTint().G,
+                command.MaterialInstance->GetTint().B);
 
             SDL_SetTextureAlphaMod(
                 native,
-                command.Tint.A);
+                command.MaterialInstance->GetTint().A);
 
             SDL_RenderGeometry(
                 m_Renderer,

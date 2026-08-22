@@ -1,31 +1,31 @@
 #pragma once
 
 #include "Aurora/Scene/Components/Component.h"
-#include "Aurora/Math/Vector2.h"
-#include "Aurora/Renderer/Color.h"
-#include "Aurora/Renderer/Texture2D.h"
+#include "Aurora/Renderer/Material.h"
 #include "Aurora/Renderer/RenderPass.h"
 
+#include <memory>
+#include <utility>
 namespace Aurora
 {
 
     struct SpriteComponent : public Component
     {
-        Aurora::Color Tint;
+        SpriteComponent() = default;
 
-        std::shared_ptr<Texture2D> Texture;
+        explicit SpriteComponent(
+            std::shared_ptr<Material> material)
+            : MaterialInstance(
+                  std::move(material))
+        {
+        }
+
+        std::shared_ptr<Material> MaterialInstance;
 
         int32_t Layer = 0;
 
-        SpriteComponent() = default;
-
         RenderPass Pass =
             RenderPass::World;
-
-        explicit SpriteComponent(const Aurora::Color &tint)
-            : Tint(tint)
-        {
-        }
     };
 
 }

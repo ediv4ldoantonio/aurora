@@ -1,13 +1,11 @@
 #pragma once
 
 #include "Aurora/Math/Vector2.h"
-#include "Aurora/Renderer/Color.h"
+#include "Aurora/Renderer/Material.h"
 #include "Aurora/Renderer/RenderSortKey.h"
 
 namespace Aurora
 {
-    class Texture2D;
-
     struct SpriteDrawCommand
     {
         Vector2 Position;
@@ -16,9 +14,7 @@ namespace Aurora
 
         float Rotation = 0.0f;
 
-        Color Tint;
-
-        Texture2D *Texture = nullptr;
+        Material *MaterialInstance = nullptr;
 
         RenderSortKey SortKey;
     };

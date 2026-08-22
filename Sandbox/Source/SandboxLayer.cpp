@@ -23,12 +23,19 @@ SandboxLayer::SandboxLayer()
         player.GetComponent<
             Aurora::TransformComponent>();
 
+    auto texture =
+        Aurora::Texture2D::Create(
+            "Assets/player.png");
+
+    auto material =
+        std::make_shared<Aurora::Material>(texture.get());
+
+    material->SetTint(
+        Aurora::Color::Red);
+
     auto &p_Sprite =
         player.AddComponent<
-            Aurora::SpriteComponent>();
-
-    p_Sprite.Texture =
-        Aurora::Texture2D::Create("Assets/player.png");
+            Aurora::SpriteComponent>(material);
 
     p_Transform.LocalTransform.Position =
         {100, 0};
@@ -36,8 +43,8 @@ SandboxLayer::SandboxLayer()
     p_Transform.LocalTransform.Scale =
         {200, 200};
 
-    // player.AddComponent<Aurora::ScriptComponent>()
-    //     .Bind<PlayerMovement>();
+    player.AddComponent<Aurora::ScriptComponent>()
+        .Bind<PlayerMovement>();
 }
 
 void SandboxLayer::OnUpdate(float dt)
