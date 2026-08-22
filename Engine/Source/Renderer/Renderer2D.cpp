@@ -105,6 +105,9 @@ namespace Aurora
         command.SortKey.Layer =
             sprite.Layer;
 
+        command.SortKey.MaterialID =
+            sprite.MaterialInstance->GetID();
+
         s_RenderQueue.Submit(
             command);
     }
@@ -180,10 +183,7 @@ namespace Aurora
                 command.Position,
                 command.Size,
                 command.Rotation,
-                command.MaterialInstance
-                    ? command.MaterialInstance->GetTint()
-                    : Color::White,
-                texture);
+                command.MaterialInstance);
         }
 
         FlushBatch();

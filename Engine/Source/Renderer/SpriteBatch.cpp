@@ -1,4 +1,5 @@
 #include "Aurora/Renderer/SpriteBatch.h"
+#include "Aurora/Renderer/Material.h"
 
 #include <cmath>
 
@@ -48,9 +49,21 @@ namespace Aurora
         const Vector2 &position,
         const Vector2 &size,
         float rotation,
-        const Color &color,
-        Texture2D *texture)
+        Material *material)
     {
+        Texture2D *texture = nullptr;
+
+        Color color = Color::White;
+
+        if (material)
+        {
+            texture =
+                material->GetTexture();
+
+            color =
+                material->GetTint();
+        }
+
         uint32_t textureSlot =
             GetTextureSlot(texture);
 

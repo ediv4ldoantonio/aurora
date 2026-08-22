@@ -41,4 +41,9 @@ namespace Aurora
     {
         return m_BlendMode;
     }
+
+    UUID Material::GetID() const
+    {
+        return m_ID;
+    }
 }

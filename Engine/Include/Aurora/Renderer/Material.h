@@ -1,5 +1,6 @@
 #pragma once
 
+#include "Aurora/Core/UUID.h"
 #include "Aurora/Renderer/BlendMode.h"
 #include "Aurora/Renderer/Color.h"
 
@@ -10,10 +11,12 @@ namespace Aurora
     class Material
     {
     public:
-        Material() = default;
+        Material();
 
         explicit Material(
             Texture2D *texture);
+
+        UUID GetID() const;
 
         void SetTexture(
             Texture2D *texture);
@@ -31,6 +34,8 @@ namespace Aurora
         BlendMode GetBlendMode() const;
 
     private:
+        UUID m_ID;
+
         Texture2D *m_Texture = nullptr;
 
         Color m_Tint;

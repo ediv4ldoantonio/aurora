@@ -246,32 +246,32 @@ namespace Aurora
 
         Vector2 movement(0.0f, 0.0f);
 
-        if (Input::IsKeyPressed(Aurora::Key::A))
+        if (Input::IsKeyPressed(Aurora::Key::J))
         {
             movement.x -= cameraSpeed;
         }
 
-        if (Input::IsKeyPressed(Aurora::Key::D))
+        if (Input::IsKeyPressed(Aurora::Key::L))
         {
             movement.x += cameraSpeed;
         }
 
-        if (Input::IsKeyPressed(Aurora::Key::W))
+        if (Input::IsKeyPressed(Aurora::Key::I))
         {
             movement.y -= cameraSpeed;
         }
 
-        if (Input::IsKeyPressed(Aurora::Key::S))
+        if (Input::IsKeyPressed(Aurora::Key::K))
         {
             movement.y += cameraSpeed;
         }
 
-        if (Input::IsKeyPressed(Aurora::Key::Q))
+        if (Input::IsKeyPressed(Aurora::Key::U))
         {
             zoom -= 1.0f * dt;
         }
 
-        if (Input::IsKeyPressed(Aurora::Key::E))
+        if (Input::IsKeyPressed(Aurora::Key::O))
         {
             zoom += 1.0f * dt;
         }

@@ -7,6 +7,7 @@
 
 namespace Aurora
 {
+    class Material;
 
     class SpriteBatch
     {
@@ -28,8 +29,7 @@ namespace Aurora
             const Vector2 &position,
             const Vector2 &size,
             float rotation,
-            const Color &color,
-            Texture2D *texture);
+            Material *material);
 
         bool CanAdd(
             Texture2D *texture) const;
@@ -45,6 +45,9 @@ namespace Aurora
         const std::vector<Texture2D *> &
         GetTextures() const;
 
+        const std::vector<Material *> &
+        GetMaterials() const;
+
     private:
         uint32_t GetTextureSlot(
             Texture2D *texture);
@@ -57,6 +60,8 @@ namespace Aurora
 
         std::vector<Texture2D *>
             m_Textures;
+
+        std::vector<Material *> m_Materials;
     };
 
 }
