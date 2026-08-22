@@ -3,6 +3,7 @@
 #include "Aurora/Math/Vector2.h"
 #include "Aurora/Renderer/Material.h"
 #include "Aurora/Renderer/RenderSortKey.h"
+#include "Aurora/Renderer/BatchKey.h"
 
 namespace Aurora
 {
@@ -17,5 +18,7 @@ namespace Aurora
         Material *MaterialInstance = nullptr;
 
         RenderSortKey SortKey;
+
+        BatchKey Batch;
     };
 }

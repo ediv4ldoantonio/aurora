@@ -105,7 +105,10 @@ namespace Aurora
         command.SortKey.Layer =
             sprite.Layer;
 
-        command.SortKey.MaterialID =
+        command.Batch.Pass =
+            sprite.Pass;
+
+        command.Batch.MaterialID =
             sprite.MaterialInstance->GetID();
 
         s_RenderQueue.Submit(

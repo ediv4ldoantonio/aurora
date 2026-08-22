@@ -1,7 +1,6 @@
 #pragma once
 
 #include "Aurora/Renderer/RenderPass.h"
-#include "Aurora/Core/UUID.h"
 
 #include <cstdint>
 
@@ -16,8 +15,6 @@ namespace Aurora
 
         uint64_t SubmissionOrder = 0;
 
-        UUID MaterialID;
-
         bool operator<(
             const RenderSortKey &other) const
         {
@@ -30,17 +27,6 @@ namespace Aurora
             if (Layer != other.Layer)
             {
                 return Layer < other.Layer;
-            }
-
-            if (Pass != RenderPass::Transparent)
-            {
-                if (MaterialID != other.MaterialID)
-                {
-                    return static_cast<uint64_t>(
-                               MaterialID) <
-                           static_cast<uint64_t>(
-                               other.MaterialID);
-                }
             }
 
             return SubmissionOrder <
