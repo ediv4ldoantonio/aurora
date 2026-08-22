@@ -20,5 +20,11 @@ namespace Aurora
         RenderSortKey SortKey;
 
         BatchKey Batch;
+
+        bool CanReorderForBatching() const
+        {
+            return MaterialInstance != nullptr &&
+                   MaterialInstance->IsOpaque();
+        }
     };
 }

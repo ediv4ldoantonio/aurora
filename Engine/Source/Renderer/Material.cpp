@@ -51,4 +51,10 @@ namespace Aurora
     {
         return m_BlendMode;
     }
+
+    bool Material::IsOpaque() const
+    {
+        return m_BlendMode ==
+               BlendMode::Opaque;
+    }
 }

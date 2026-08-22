@@ -26,6 +26,8 @@ namespace Aurora
 
         bool IsSorted() const;
 
+        void OptimizeForBatching();
+
     private:
         std::vector<SpriteDrawCommand>
             m_Commands;

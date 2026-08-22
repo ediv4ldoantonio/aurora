@@ -142,6 +142,8 @@ namespace Aurora
 
         s_RenderQueue.Sort();
 
+        s_RenderQueue.OptimizeForBatching();
+
         const auto &commands =
             s_RenderQueue.GetCommands();
 

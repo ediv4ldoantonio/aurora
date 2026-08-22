@@ -37,6 +37,8 @@ namespace Aurora
 
         BlendMode GetBlendMode() const;
 
+        bool IsOpaque() const;
+
     private:
         UUID m_ID;
 

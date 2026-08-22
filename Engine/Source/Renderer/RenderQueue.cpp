@@ -66,4 +66,75 @@ namespace Aurora
                        b.SortKey;
             });
     }
+
+    void RenderQueue::OptimizeForBatching()
+    {
+        if (m_Commands.size() < 2)
+            return;
+
+        size_t start = 0;
+
+        while (start < m_Commands.size())
+        {
+            const RenderPass pass =
+                m_Commands[start]
+                    .SortKey.Pass;
+
+            const int32_t layer =
+                m_Commands[start]
+                    .SortKey.Layer;
+
+            size_t end = start + 1;
+
+            while (end < m_Commands.size())
+            {
+                const auto &command =
+                    m_Commands[end];
+
+                if (command.SortKey.Pass != pass)
+                    break;
+
+                if (command.SortKey.Layer != layer)
+                    break;
+
+                ++end;
+            }
+
+            size_t runStart = start;
+
+            while (runStart < end)
+            {
+                if (!m_Commands[runStart]
+                         .CanReorderForBatching())
+                {
+                    ++runStart;
+                    continue;
+                }
+
+                size_t runEnd =
+                    runStart + 1;
+
+                while (runEnd < end &&
+                       m_Commands[runEnd]
+                           .CanReorderForBatching())
+                {
+                    ++runEnd;
+                }
+
+                std::stable_sort(
+                    m_Commands.begin() + runStart,
+                    m_Commands.begin() + runEnd,
+                    [](const SpriteDrawCommand &a,
+                       const SpriteDrawCommand &b)
+                    {
+                        return a.Batch <
+                               b.Batch;
+                    });
+
+                runStart = runEnd;
+            }
+
+            start = end;
+        }
+    }
 }

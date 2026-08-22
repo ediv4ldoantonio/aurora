@@ -20,5 +20,18 @@ namespace Aurora
             return Pass == other.Pass &&
                    MaterialID == other.MaterialID;
         }
+
+        bool operator<(
+            const BatchKey &other) const
+        {
+            if (Pass != other.Pass)
+            {
+                return static_cast<uint8_t>(Pass) <
+                       static_cast<uint8_t>(other.Pass);
+            }
+
+            return MaterialID <
+                   other.MaterialID;
+        }
     };
 }
