@@ -3,6 +3,7 @@
 #include <SDL3/SDL_blendmode.h>
 
 #include "Aurora/Renderer/RendererAPI.h"
+#include "Aurora/Renderer/RendererState.h"
 
 struct SDL_Renderer;
 struct SDL_Vertex;
@@ -43,8 +44,12 @@ namespace Aurora
         static SDL_Vertex ToSDLVertex(
             const SpriteVertex &vertex);
 
+        void ApplyMaterialState(
+            Material *material);
+
     private:
         SDL_Renderer *m_Renderer;
+        RendererState m_State;
 
         static SDL_BlendMode ToSDLBlendMode(
             Aurora::BlendMode mode);

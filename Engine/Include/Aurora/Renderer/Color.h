@@ -26,6 +26,21 @@ namespace Aurora
         {
         }
 
+        constexpr bool operator==(
+            const Color &other) const
+        {
+            return R == other.R &&
+                   G == other.G &&
+                   B == other.B &&
+                   A == other.A;
+        }
+
+        constexpr bool operator!=(
+            const Color &other) const
+        {
+            return !(*this == other);
+        }
+
         static const Color White;
         static const Color Black;
         static const Color Red;

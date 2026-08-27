@@ -21,6 +21,8 @@ namespace Aurora
 
     void SDLRendererAPI::BeginFrame()
     {
+        m_State = {};
+
         SDL_SetRenderDrawColor(
             m_Renderer,
             20,
@@ -225,9 +227,8 @@ namespace Aurora
                         texture =
                             texture2D->GetNativeTexture();
 
-                        ApplyTextureMaterial(
-                            texture,
-                            *material);
+                        ApplyMaterialState(
+                            material);
                     }
                 }
             }
@@ -372,5 +373,43 @@ namespace Aurora
         SDL_SetTextureAlphaMod(
             texture,
             tint.A);
+    }
+
+    void SDLRendererAPI::ApplyMaterialState(
+        Material *material)
+    {
+        RendererState desired;
+
+        if (material)
+        {
+            desired.Texture =
+                material->GetTexture().get();
+
+            desired.Tint =
+                material->GetTint();
+
+            desired.Blend =
+                material->GetBlendMode();
+        }
+
+        if (desired == m_State)
+            return;
+
+        if (desired.Texture)
+        {
+            auto *texture =
+                static_cast<SDLTexture2D *>(
+                    desired.Texture);
+
+            SDL_Texture *native =
+                texture->GetNativeTexture();
+
+            ApplyTextureMaterial(
+                native,
+                *material);
+        }
+
+        m_State =
+            desired;
     }
 }
