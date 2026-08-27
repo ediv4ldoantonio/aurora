@@ -41,21 +41,30 @@ namespace Aurora
 
         void *GetNativeRenderer() override;
 
-        static SDL_Vertex ToSDLVertex(
-            const SpriteVertex &vertex);
-
-        void ApplyMaterialState(
-            Material *material);
-
     private:
         SDL_Renderer *m_Renderer;
         RendererState m_State;
+        uint32_t m_DrawCallCount = 0;
 
         static SDL_BlendMode ToSDLBlendMode(
             Aurora::BlendMode mode);
 
+        static SDL_Vertex ToSDLVertex(
+            const SpriteVertex &vertex);
+
         static void ApplyTextureMaterial(
             SDL_Texture *texture,
             const Material &material);
+
+        void ApplyMaterialState(
+            Material *material);
+
+        void DrawMaterialRange(
+            const SpriteBatch &batch,
+            size_t firstQuad,
+            size_t quadCount,
+            Material *material);
+
+        uint32_t GetDrawCallCount() const;
     };
 }

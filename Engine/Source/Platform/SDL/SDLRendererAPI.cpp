@@ -22,6 +22,7 @@ namespace Aurora
     void SDLRendererAPI::BeginFrame()
     {
         m_State = {};
+        m_DrawCallCount = 0;
 
         SDL_SetRenderDrawColor(
             m_Renderer,
@@ -168,103 +169,64 @@ namespace Aurora
         const auto &vertices =
             batch.GetVertices();
 
-        const auto &indices =
-            batch.GetIndices();
+        if (vertices.empty())
+            return;
 
         const auto &materials =
             batch.GetMaterials();
 
-        if (vertices.empty())
-            return;
-
         const size_t quadCount =
             vertices.size() / 4;
 
-        for (size_t quad = 0;
-             quad < quadCount;
-             ++quad)
+        size_t groupStart = 0;
+
+        while (groupStart < quadCount)
         {
-            const size_t vertexStart =
-                quad * 4;
-
-            const size_t indexStart =
-                quad * 6;
-
             const float materialIndex =
-                vertices[vertexStart]
+                vertices[groupStart * 4]
                     .MaterialIndex;
 
-            Material *material =
-                nullptr;
-
-            SDL_Texture *texture =
-                nullptr;
+            Material *material = nullptr;
 
             if (materialIndex > 0.0f)
             {
-                const size_t materialSlot =
+                const size_t slot =
                     static_cast<size_t>(
                         materialIndex) -
                     1;
 
-                if (materialSlot <
-                    materials.size())
+                if (slot < materials.size())
                 {
                     material =
-                        materials[materialSlot];
-
-                    if (material &&
-                        material->GetTexture())
-                    {
-                        const auto &sharedTexture =
-                            material->GetTexture();
-
-                        auto *texture2D =
-                            static_cast<
-                                SDLTexture2D *>(
-                                sharedTexture.get());
-
-                        texture =
-                            texture2D->GetNativeTexture();
-
-                        ApplyMaterialState(
-                            material);
-                    }
+                        materials[slot];
                 }
             }
 
-            SDL_Vertex quadVertices[4];
+            size_t groupEnd =
+                groupStart + 1;
 
-            for (int i = 0; i < 4; ++i)
+            while (groupEnd < quadCount)
             {
-                quadVertices[i] =
-                    ToSDLVertex(
-                        vertices[vertexStart + i]);
+                const float nextMaterialIndex =
+                    vertices[groupEnd * 4]
+                        .MaterialIndex;
+
+                if (nextMaterialIndex !=
+                    materialIndex)
+                {
+                    break;
+                }
+
+                ++groupEnd;
             }
 
-            int quadIndices[6];
+            DrawMaterialRange(
+                batch,
+                groupStart,
+                groupEnd - groupStart,
+                material);
 
-            for (int i = 0; i < 6; ++i)
-            {
-                quadIndices[i] =
-                    static_cast<int>(
-                        indices[indexStart + i] -
-                        static_cast<uint32_t>(
-                            vertexStart));
-            }
-
-            if (!SDL_RenderGeometry(
-                    m_Renderer,
-                    texture,
-                    quadVertices,
-                    4,
-                    quadIndices,
-                    6))
-            {
-                AURORA_LOG_ERROR(
-                    "SDL_RenderGeometry failed: ",
-                    SDL_GetError());
-            }
+            groupStart = groupEnd;
         }
     }
 
@@ -411,5 +373,115 @@ namespace Aurora
 
         m_State =
             desired;
+    }
+
+    void SDLRendererAPI::DrawMaterialRange(
+        const SpriteBatch &batch,
+        size_t firstQuad,
+        size_t quadCount,
+        Material *material)
+    {
+        const auto &vertices =
+            batch.GetVertices();
+
+        const auto &indices =
+            batch.GetIndices();
+
+        if (quadCount == 0)
+            return;
+
+        std::vector<SDL_Vertex> sdlVertices(
+            quadCount * 4);
+
+        std::vector<int> sdlIndices(
+            quadCount * 6);
+
+        const size_t vertexStart =
+            firstQuad * 4;
+
+        const size_t indexStart =
+            firstQuad * 6;
+
+        for (size_t i = 0;
+             i < quadCount * 4;
+             ++i)
+        {
+            const SpriteVertex &vertex =
+                vertices[vertexStart + i];
+
+            SDL_Vertex &output =
+                sdlVertices[i];
+
+            output.position.x =
+                vertex.Position.x;
+
+            output.position.y =
+                vertex.Position.y;
+
+            output.tex_coord.x =
+                vertex.TexCoord.x;
+
+            output.tex_coord.y =
+                vertex.TexCoord.y;
+
+            output.color.r =
+                vertex.Color.R;
+
+            output.color.g =
+                vertex.Color.G;
+
+            output.color.b =
+                vertex.Color.B;
+
+            output.color.a =
+                vertex.Color.A;
+        }
+
+        for (size_t i = 0;
+             i < quadCount * 6;
+             ++i)
+        {
+            sdlIndices[i] =
+                static_cast<int>(
+                    indices[indexStart + i] -
+                    static_cast<uint32_t>(
+                        vertexStart));
+        }
+
+        SDL_Texture *nativeTexture =
+            nullptr;
+
+        if (material &&
+            material->GetTexture())
+        {
+            auto *texture =
+                static_cast<SDLTexture2D *>(
+                    material->GetTexture().get());
+
+            nativeTexture =
+                texture->GetNativeTexture();
+        }
+
+        if (material)
+        {
+            ApplyMaterialState(material);
+        }
+
+        SDL_RenderGeometry(
+            m_Renderer,
+            nativeTexture,
+            sdlVertices.data(),
+            static_cast<int>(
+                sdlVertices.size()),
+            sdlIndices.data(),
+            static_cast<int>(
+                sdlIndices.size()));
+
+        ++m_DrawCallCount;
+    }
+
+    uint32_t SDLRendererAPI::GetDrawCallCount() const
+    {
+        return m_DrawCallCount;
     }
 }
