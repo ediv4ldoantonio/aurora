@@ -33,6 +33,9 @@ SandboxLayer::SandboxLayer()
     material->SetTint(
         Aurora::Color::Red);
 
+    material->SetBlendMode(
+        Aurora::BlendMode::Alpha);
+
     auto &p_Sprite =
         player.AddComponent<
             Aurora::SpriteComponent>(material);

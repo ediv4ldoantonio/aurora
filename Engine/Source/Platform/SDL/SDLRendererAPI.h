@@ -1,9 +1,12 @@
 #pragma once
 
+#include <SDL3/SDL_blendmode.h>
+
 #include "Aurora/Renderer/RendererAPI.h"
 
 struct SDL_Renderer;
 struct SDL_Vertex;
+struct SDL_Texture;
 
 namespace Aurora
 {
@@ -42,5 +45,12 @@ namespace Aurora
 
     private:
         SDL_Renderer *m_Renderer;
+
+        static SDL_BlendMode ToSDLBlendMode(
+            Aurora::BlendMode mode);
+
+        static void ApplyTextureMaterial(
+            SDL_Texture *texture,
+            const Material &material);
     };
 }

@@ -224,6 +224,10 @@ namespace Aurora
 
                         texture =
                             texture2D->GetNativeTexture();
+
+                        ApplyTextureMaterial(
+                            texture,
+                            *material);
                     }
                 }
             }
@@ -321,5 +325,52 @@ namespace Aurora
             vertex.Color.A / 255.0f;
 
         return result;
+    }
+
+    SDL_BlendMode SDLRendererAPI::ToSDLBlendMode(
+        Aurora::BlendMode mode)
+    {
+        switch (mode)
+        {
+        case Aurora::BlendMode::Opaque:
+            return SDL_BLENDMODE_NONE;
+
+        case Aurora::BlendMode::Alpha:
+            return SDL_BLENDMODE_BLEND;
+
+        case Aurora::BlendMode::Additive:
+            return SDL_BLENDMODE_ADD;
+
+        case Aurora::BlendMode::Multiply:
+            return SDL_BLENDMODE_MOD;
+        }
+
+        return SDL_BLENDMODE_NONE;
+    }
+
+    void SDLRendererAPI::ApplyTextureMaterial(
+        SDL_Texture *texture,
+        const Material &material)
+    {
+        if (!texture)
+            return;
+
+        SDL_SetTextureBlendMode(
+            texture,
+            ToSDLBlendMode(
+                material.GetBlendMode()));
+
+        const Color &tint =
+            material.GetTint();
+
+        SDL_SetTextureColorMod(
+            texture,
+            tint.R,
+            tint.G,
+            tint.B);
+
+        SDL_SetTextureAlphaMod(
+            texture,
+            tint.A);
     }
 }
