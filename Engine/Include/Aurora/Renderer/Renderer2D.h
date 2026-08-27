@@ -48,6 +48,9 @@ namespace Aurora
         static RenderState s_RenderState;
         static SpriteBatch s_SpriteBatch;
         static RenderQueue s_RenderQueue;
+
+        static uint32_t s_BatchCount;
+        static uint32_t s_BatchBreakCount;
     };
 
 }

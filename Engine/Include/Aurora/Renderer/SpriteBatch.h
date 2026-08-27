@@ -48,6 +48,9 @@ namespace Aurora
         const std::vector<Material *> &
         GetMaterials() const;
 
+        const BatchKey &
+        GetBatchKey() const;
+
     private:
         uint32_t GetMaterialSlot(
             Material *material);

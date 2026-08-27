@@ -23,6 +23,9 @@ namespace Aurora
 
     RenderQueue Renderer2D::s_RenderQueue;
 
+    uint32_t Renderer2D::s_BatchCount = 0;
+    uint32_t Renderer2D::s_BatchBreakCount = 0;
+
     void Renderer2D::Init(
         RendererAPI *renderer)
     {
@@ -41,6 +44,9 @@ namespace Aurora
     {
         if (!s_Renderer)
             return;
+
+        s_BatchCount = 0;
+        s_BatchBreakCount = 0;
 
         s_RenderQueue.Clear();
 
@@ -147,17 +153,23 @@ namespace Aurora
         const auto &commands =
             s_RenderQueue.GetCommands();
 
-        for (const auto &command : commands)
+        for (const auto &command :
+             commands)
         {
             if (!s_SpriteBatch.CanBatchWith(
                     command.Batch))
             {
+                ++s_BatchBreakCount;
+
                 FlushBatch();
             }
 
             if (!s_SpriteBatch.CanAdd(
                     command.MaterialInstance))
             {
+
+                ++s_BatchBreakCount;
+
                 FlushBatch();
             }
 
@@ -181,6 +193,8 @@ namespace Aurora
 
         if (s_SpriteBatch.GetVertices().empty())
             return;
+
+        ++s_BatchCount;
 
         s_Renderer->DrawSpriteBatch(
             s_SpriteBatch);

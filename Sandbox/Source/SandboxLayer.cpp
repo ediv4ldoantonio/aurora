@@ -31,7 +31,7 @@ SandboxLayer::SandboxLayer()
         std::make_shared<Aurora::Material>(texture);
 
     material->SetTint(
-        Aurora::Color::Red);
+        Aurora::Color::Green);
 
     material->SetBlendMode(
         Aurora::BlendMode::Alpha);

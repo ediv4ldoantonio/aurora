@@ -209,4 +209,10 @@ namespace Aurora
     {
         return m_Materials;
     }
+
+    const BatchKey &
+    SpriteBatch::GetBatchKey() const
+    {
+        return m_BatchKey;
+    }
 }

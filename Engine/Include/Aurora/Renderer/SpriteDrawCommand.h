@@ -26,5 +26,10 @@ namespace Aurora
             return MaterialInstance != nullptr &&
                    MaterialInstance->IsOpaque();
         }
+
+        BatchKey GetBatchKey() const
+        {
+            return Batch;
+        }
     };
 }
