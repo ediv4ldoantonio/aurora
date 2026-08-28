@@ -25,6 +25,18 @@ namespace Aurora
             size);
     }
 
+    void CPUVertexBuffer::SetLayout(
+        const BufferLayout &layout)
+    {
+        m_Layout = layout;
+    }
+
+    const BufferLayout &
+    CPUVertexBuffer::GetLayout() const
+    {
+        return m_Layout;
+    }
+
     size_t CPUVertexBuffer::GetCapacity() const
     {
         return m_Data.size();
