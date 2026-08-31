@@ -17,7 +17,7 @@ namespace Aurora
 
         virtual size_t GetCount() const = 0;
 
-        static std::unique_ptr<IndexBuffer>
-        Create(size_t count);
+        static std::shared_ptr<IndexBuffer> Create(
+            size_t count);
     };
 }

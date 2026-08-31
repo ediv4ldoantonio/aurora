@@ -24,7 +24,7 @@ namespace Aurora
         virtual const BufferLayout &
         GetLayout() const = 0;
 
-        static std::unique_ptr<VertexBuffer>
-        Create(size_t size);
+        static std::shared_ptr<VertexBuffer> Create(
+            size_t size);
     };
 }
