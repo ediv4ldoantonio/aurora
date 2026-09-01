@@ -3,6 +3,7 @@
 #include "Aurora/Math/Vector2.h"
 #include "Aurora/Renderer/SpriteDrawCommand.h"
 #include "Aurora/Renderer/SpriteBatch.h"
+#include "Aurora/Renderer/RendererBackend.h"
 
 namespace Aurora
 {
@@ -34,6 +35,14 @@ namespace Aurora
             const SpriteBatch &batch) = 0;
 
         virtual void *GetNativeRenderer() = 0;
+
+        static RendererBackend GetBackend();
+
+        static void SetBackend(
+            RendererBackend backend);
+
+    private:
+        static RendererBackend s_Backend;
     };
 
 }

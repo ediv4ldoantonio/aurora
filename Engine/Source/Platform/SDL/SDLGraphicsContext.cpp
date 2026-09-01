@@ -26,6 +26,8 @@ namespace Aurora
 
     void SDLGraphicsContext::Init()
     {
+        RendererAPI::SetBackend(
+            RendererBackend::SDL);
 
         m_Renderer =
             SDL_CreateRenderer(
