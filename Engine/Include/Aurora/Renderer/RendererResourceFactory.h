@@ -1,0 +1,26 @@
+#pragma once
+
+#include <cstddef>
+#include <memory>
+
+namespace Aurora
+{
+    class VertexBuffer;
+    class IndexBuffer;
+    class VertexArray;
+
+    class RendererResourceFactory
+    {
+    public:
+        static std::shared_ptr<VertexBuffer>
+        CreateVertexBuffer(
+            size_t size);
+
+        static std::shared_ptr<IndexBuffer>
+        CreateIndexBuffer(
+            size_t count);
+
+        static std::shared_ptr<VertexArray>
+        CreateVertexArray();
+    };
+}

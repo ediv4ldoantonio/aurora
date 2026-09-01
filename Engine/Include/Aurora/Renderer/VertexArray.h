@@ -30,8 +30,6 @@ namespace Aurora
         virtual const std::shared_ptr<IndexBuffer> &
         GetIndexBuffer() const = 0;
 
-        static std::shared_ptr<VertexArray> Create();
-
         virtual bool HasIndexBuffer() const = 0;
     };
 }

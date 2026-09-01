@@ -2,7 +2,6 @@
 
 #include <cstddef>
 #include <cstdint>
-#include <memory>
 
 namespace Aurora
 {
@@ -16,8 +15,5 @@ namespace Aurora
             size_t count) = 0;
 
         virtual size_t GetCount() const = 0;
-
-        static std::shared_ptr<IndexBuffer> Create(
-            size_t count);
     };
 }

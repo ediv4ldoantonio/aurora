@@ -3,7 +3,6 @@
 #include "Aurora/Renderer/BufferLayout.h"
 
 #include <cstddef>
-#include <memory>
 
 namespace Aurora
 {
@@ -23,8 +22,5 @@ namespace Aurora
 
         virtual const BufferLayout &
         GetLayout() const = 0;
-
-        static std::shared_ptr<VertexBuffer> Create(
-            size_t size);
     };
 }
