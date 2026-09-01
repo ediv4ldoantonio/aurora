@@ -1,0 +1,8 @@
+[submodule "ThirdParty/glad"]
+	path = ThirdParty/glad
+	url = https://github.com/Dav1dde/glad.git
+	branch = glad2
+[submodule "ThirdParty/SDL"]
+	path = ThirdParty/SDL
+	url = https://github.com/libsdl-org/SDL.git
+	branch = main

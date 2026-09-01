@@ -18,12 +18,21 @@ target_include_directories(
 
 find_package(SDL3 REQUIRED)
 find_package(SDL3_image REQUIRED)
+find_package(OpenGL REQUIRED)
+
 
 target_link_libraries(
     Aurora
     PRIVATE
         SDL3::SDL3
         SDL3_image::SDL3_image
+)
+
+target_link_libraries(
+    Aurora
+    PRIVATE
+        OpenGL::GL
+        glad_gl_core_33
 )
 
 
