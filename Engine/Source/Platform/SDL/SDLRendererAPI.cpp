@@ -484,4 +484,13 @@ namespace Aurora
     {
         return m_DrawCallCount;
     }
+
+    void SDLRendererAPI::Shutdown()
+    {
+    }
+
+    RendererBackend SDLRendererAPI::GetBackend() const
+    {
+        return RendererBackend::SDL;
+    }
 }

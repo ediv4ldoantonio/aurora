@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Aurora/Renderer/RendererBackend.h"
+
 #include <cstddef>
 #include <memory>
 
@@ -12,6 +14,9 @@ namespace Aurora
     class RendererResourceFactory
     {
     public:
+        static void Init(
+            RendererBackend backend);
+
         static std::shared_ptr<VertexBuffer>
         CreateVertexBuffer(
             size_t size);
@@ -22,5 +27,8 @@ namespace Aurora
 
         static std::shared_ptr<VertexArray>
         CreateVertexArray();
+
+    private:
+        static RendererBackend s_Backend;
     };
 }

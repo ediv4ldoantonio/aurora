@@ -6,11 +6,21 @@
 
 namespace Aurora
 {
+    RendererBackend
+        RendererResourceFactory::s_Backend =
+            RendererBackend::SDL;
+
+    void RendererResourceFactory::Init(
+        RendererBackend backend)
+    {
+        s_Backend = backend;
+    }
+
     std::shared_ptr<VertexBuffer>
     RendererResourceFactory::CreateVertexBuffer(
         size_t size)
     {
-        switch (RendererAPI::GetBackend())
+        switch (s_Backend)
         {
         case RendererBackend::SDL:
             throw std::runtime_error(
@@ -35,7 +45,7 @@ namespace Aurora
     RendererResourceFactory::CreateIndexBuffer(
         size_t count)
     {
-        switch (RendererAPI::GetBackend())
+        switch (s_Backend)
         {
         case RendererBackend::SDL:
             throw std::runtime_error(
@@ -59,7 +69,7 @@ namespace Aurora
     std::shared_ptr<VertexArray>
     RendererResourceFactory::CreateVertexArray()
     {
-        switch (RendererAPI::GetBackend())
+        switch (s_Backend)
         {
         case RendererBackend::SDL:
             throw std::runtime_error(

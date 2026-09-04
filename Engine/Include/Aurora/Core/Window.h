@@ -6,6 +6,7 @@
 
 #include "Aurora/Renderer/GraphicsContext.h"
 #include "Aurora/Events/Event.h"
+#include "Aurora/Renderer/RendererBackend.h"
 
 namespace Aurora
 {
@@ -20,6 +21,9 @@ namespace Aurora
         unsigned int Height;
 
         EventCallbackFn EventCallback;
+
+        RendererBackend Backend =
+            RendererBackend::SDL;
     };
 
     class GraphicsContext;

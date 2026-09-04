@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Aurora/Renderer/RendererBackend.h"
+
 #include <memory>
 
 namespace Aurora
@@ -18,7 +20,10 @@ namespace Aurora
         virtual RendererAPI *
         GetRendererAPI() = 0;
 
-        static std::unique_ptr<GraphicsContext> Create(void *nativeWindow);
+        virtual void SwapBuffers() = 0;
+
+        static std::unique_ptr<GraphicsContext> Create(void *nativeWindow,
+                                                       RendererBackend backend);
     };
 
 }

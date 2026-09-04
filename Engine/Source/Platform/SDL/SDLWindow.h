@@ -25,9 +25,11 @@ namespace Aurora
         GraphicsContext &GetGraphicsContext() override;
 
     private:
+        static void ConfigureOpenGLAttributes();
+
         WindowSpecification m_Specification;
         SDL_Window *m_Window = nullptr;
         bool m_ShouldClose = false;
-        std::unique_ptr<SDLGraphicsContext> m_Context;
+        std::unique_ptr<GraphicsContext> m_Context;
     };
 }

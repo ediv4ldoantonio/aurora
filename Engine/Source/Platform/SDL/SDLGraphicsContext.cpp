@@ -26,9 +26,6 @@ namespace Aurora
 
     void SDLGraphicsContext::Init()
     {
-        RendererAPI::SetBackend(
-            RendererBackend::SDL);
-
         m_Renderer =
             SDL_CreateRenderer(
                 m_Window,
@@ -50,5 +47,9 @@ namespace Aurora
     SDLGraphicsContext::GetRendererAPI()
     {
         return m_RendererAPI.get();
+    }
+
+    void SDLGraphicsContext::SwapBuffers()
+    {
     }
 }

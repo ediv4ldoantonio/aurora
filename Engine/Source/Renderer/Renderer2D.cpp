@@ -1,6 +1,7 @@
 #include "Aurora/Renderer/Renderer2D.h"
 #include "Aurora/Renderer/RendererAPI.h"
 #include "Aurora/Renderer/RenderCommand.h"
+#include "Aurora/Renderer/RendererResourceFactory.h"
 #include "Aurora/Core/Logger.h"
 #include "Aurora/Core/Assert.h"
 
@@ -29,10 +30,17 @@ namespace Aurora
     void Renderer2D::Init(
         RendererAPI *renderer)
     {
+        if (!renderer)
+            throw std::invalid_argument(
+                "Renderer2D received null RendererAPI");
+
         s_Renderer = renderer;
 
         RenderCommand::Init(
             renderer);
+
+        RendererResourceFactory::Init(
+            renderer->GetBackend());
     }
 
     void Renderer2D::Shutdown()

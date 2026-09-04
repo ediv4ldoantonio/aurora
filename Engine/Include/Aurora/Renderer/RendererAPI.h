@@ -20,6 +20,8 @@ namespace Aurora
 
         virtual void EndFrame() = 0;
 
+        virtual void Shutdown() = 0;
+
         virtual void DrawSprite(
             const SpriteDrawCommand &command) = 0;
 
@@ -36,10 +38,8 @@ namespace Aurora
 
         virtual void *GetNativeRenderer() = 0;
 
-        static RendererBackend GetBackend();
-
-        static void SetBackend(
-            RendererBackend backend);
+        virtual RendererBackend
+        GetBackend() const = 0;
 
     private:
         static RendererBackend s_Backend;

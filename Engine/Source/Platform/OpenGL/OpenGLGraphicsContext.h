@@ -1,26 +1,24 @@
 #pragma once
 
 #include "Aurora/Renderer/GraphicsContext.h"
+#include "OpenGLRendererAPI.h"
 
-#include <memory>
-
+struct SDL_GLContextState;
 struct SDL_Window;
-struct SDL_Renderer;
+using SDL_GLContext = SDL_GLContextState *;
 
 namespace Aurora
 {
+    class RendererAPI;
 
-    class SDLRendererAPI;
-
-    class SDLGraphicsContext
+    class OpenGLGraphicsContext
         : public GraphicsContext
     {
-
     public:
-        SDLGraphicsContext(
+        explicit OpenGLGraphicsContext(
             SDL_Window *window);
 
-        ~SDLGraphicsContext() override;
+        ~OpenGLGraphicsContext() override;
 
         void Init() override;
 
@@ -32,10 +30,9 @@ namespace Aurora
     private:
         SDL_Window *m_Window = nullptr;
 
-        SDL_Renderer *m_Renderer = nullptr;
+        SDL_GLContext m_Context = nullptr;
 
-        std::unique_ptr<SDLRendererAPI>
+        std::unique_ptr<OpenGLRendererAPI>
             m_RendererAPI;
     };
-
 }

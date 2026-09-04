@@ -60,6 +60,9 @@ namespace Aurora
 
         spec.Height = 720;
 
+        spec.Backend =
+            RendererBackend::OpenGL;
+
         m_Window =
             Window::Create(spec);
 

@@ -4,6 +4,7 @@
 
 #include "Aurora/Renderer/RendererAPI.h"
 #include "Aurora/Renderer/RendererState.h"
+#include "Aurora/Renderer/RendererBackend.h"
 
 struct SDL_Renderer;
 struct SDL_Vertex;
@@ -25,6 +26,8 @@ namespace Aurora
 
         void EndFrame() override;
 
+        void Shutdown() override;
+
         void DrawSprite(
             const SpriteDrawCommand &command) override;
 
@@ -40,6 +43,8 @@ namespace Aurora
             const SpriteBatch &batch) override;
 
         void *GetNativeRenderer() override;
+
+        RendererBackend GetBackend() const override;
 
     private:
         SDL_Renderer *m_Renderer;
