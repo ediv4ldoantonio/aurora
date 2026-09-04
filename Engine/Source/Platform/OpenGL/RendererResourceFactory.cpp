@@ -4,6 +4,7 @@
 #include "OpenGLVertexBuffer.h"
 #include "OpenGLIndexBuffer.h"
 #include "OpenGLVertexArray.h"
+#include "OpenGLShader.h"
 
 #include <stdexcept>
 #include <memory>
@@ -86,5 +87,26 @@ namespace Aurora
 
         throw std::runtime_error(
             "Unknown renderer backend");
+    }
+
+    std::shared_ptr<Shader>
+    RendererResourceFactory::CreateShader(
+        const std::string &vertexSource,
+        const std::string &fragmentSource)
+    {
+        switch (s_Backend)
+        {
+        case RendererBackend::SDL:
+            throw std::runtime_error(
+                "SDL Shader is not implemented");
+
+        case RendererBackend::OpenGL:
+            return std::make_shared<OpenGLShader>(
+                vertexSource,
+                fragmentSource);
+        }
+
+        throw std::runtime_error(
+            "Unsupported renderer backend");
     }
 }

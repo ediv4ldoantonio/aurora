@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Aurora/Renderer/RendererBackend.h"
+#include "Aurora/Renderer/Shader.h"
 
 #include <cstddef>
 #include <memory>
@@ -27,6 +28,11 @@ namespace Aurora
 
         static std::shared_ptr<VertexArray>
         CreateVertexArray();
+
+        static std::shared_ptr<Shader>
+        CreateShader(
+            const std::string &vertexSource,
+            const std::string &fragmentSource);
 
     private:
         static RendererBackend s_Backend;
