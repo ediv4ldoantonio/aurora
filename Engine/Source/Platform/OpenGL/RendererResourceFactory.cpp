@@ -2,6 +2,8 @@
 #include "Aurora/Renderer/RendererAPI.h"
 
 #include "OpenGLVertexBuffer.h"
+#include "OpenGLIndexBuffer.h"
+#include "OpenGLVertexArray.h"
 
 #include <stdexcept>
 #include <memory>
@@ -53,9 +55,7 @@ namespace Aurora
                 "by the SDL renderer");
 
         case RendererBackend::OpenGL:
-            throw std::runtime_error(
-                "OpenGLIndexBuffer is not "
-                "implemented yet");
+            return std::make_shared<OpenGLIndexBuffer>(count);
 
         case RendererBackend::None:
             throw std::runtime_error(
@@ -77,9 +77,7 @@ namespace Aurora
                 "by the SDL renderer");
 
         case RendererBackend::OpenGL:
-            throw std::runtime_error(
-                "OpenGLVertexArray is not "
-                "implemented yet");
+            return std::make_shared<OpenGLVertexArray>();
 
         case RendererBackend::None:
             throw std::runtime_error(

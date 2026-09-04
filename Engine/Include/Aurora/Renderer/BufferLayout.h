@@ -66,6 +66,26 @@ namespace Aurora
 
         size_t GetStride() const;
 
+        auto begin()
+        {
+            return m_Elements.begin();
+        }
+
+        auto end()
+        {
+            return m_Elements.end();
+        }
+
+        auto begin() const
+        {
+            return m_Elements.begin();
+        }
+
+        auto end() const
+        {
+            return m_Elements.end();
+        }
+
     private:
         void CalculateOffsetsAndStride();
 
