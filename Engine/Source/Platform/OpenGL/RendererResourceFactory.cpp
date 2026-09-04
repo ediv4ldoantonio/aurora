@@ -1,8 +1,10 @@
 #include "Aurora/Renderer/RendererResourceFactory.h"
-
 #include "Aurora/Renderer/RendererAPI.h"
 
+#include "OpenGLVertexBuffer.h"
+
 #include <stdexcept>
+#include <memory>
 
 namespace Aurora
 {
@@ -28,9 +30,7 @@ namespace Aurora
                 "by the SDL renderer");
 
         case RendererBackend::OpenGL:
-            throw std::runtime_error(
-                "OpenGLVertexBuffer is not "
-                "implemented yet");
+            return std::make_shared<OpenGLVertexBuffer>(size);
 
         case RendererBackend::None:
             throw std::runtime_error(

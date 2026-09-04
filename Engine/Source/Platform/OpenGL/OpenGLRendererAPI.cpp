@@ -52,13 +52,15 @@ namespace Aurora
     }
 
     void OpenGLRendererAPI::DrawSprite(
-        const SpriteDrawCommand &)
+        const SpriteDrawCommand &command)
     {
+        (void)command;
     }
 
     void OpenGLRendererAPI::DrawSpriteBatch(
-        const SpriteBatch &)
+        const SpriteBatch &batch)
     {
+        (void)batch;
     }
 
     RendererBackend OpenGLRendererAPI::GetBackend() const

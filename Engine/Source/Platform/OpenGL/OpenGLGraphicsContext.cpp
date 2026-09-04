@@ -49,6 +49,9 @@ namespace Aurora
                 reinterpret_cast<GLADloadfunc>(
                     SDL_GL_GetProcAddress)))
         {
+            SDL_GL_DestroyContext(m_Context);
+            m_Context = nullptr;
+
             throw std::runtime_error(
                 "Failed to initialize GLAD");
         }

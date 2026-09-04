@@ -36,6 +36,8 @@ namespace Aurora
 
         s_Renderer = renderer;
 
+        renderer->Init();
+
         RenderCommand::Init(
             renderer);
 
