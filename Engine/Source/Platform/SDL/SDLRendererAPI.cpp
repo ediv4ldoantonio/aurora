@@ -230,9 +230,15 @@ namespace Aurora
         }
     }
 
-    void SDLRendererAPI::Clear()
+    void SDLRendererAPI::Clear(const Color &color)
     {
         SDL_RenderClear(m_Renderer);
+    }
+
+    void SDLRendererAPI::DrawIndexed(
+        const std::shared_ptr<VertexArray> &vertexArray,
+        uint32_t indexCount)
+    {
     }
 
     void *SDLRendererAPI::GetNativeRenderer()

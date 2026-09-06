@@ -18,7 +18,7 @@ namespace Aurora
         if (!s_Renderer)
             return;
 
-        s_Renderer->Clear();
+        s_Renderer->Clear(Color(20, 20, 20, 255));
     }
 
     void RenderCommand::SetViewport(

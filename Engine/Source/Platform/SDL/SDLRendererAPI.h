@@ -1,10 +1,11 @@
 #pragma once
 
-#include <SDL3/SDL_blendmode.h>
-
 #include "Aurora/Renderer/RendererAPI.h"
 #include "Aurora/Renderer/RendererState.h"
 #include "Aurora/Renderer/RendererBackend.h"
+
+#include <SDL3/SDL_blendmode.h>
+#include <memory>
 
 struct SDL_Renderer;
 struct SDL_Vertex;
@@ -31,7 +32,11 @@ namespace Aurora
         void DrawSprite(
             const SpriteDrawCommand &command) override;
 
-        void Clear() override;
+        void DrawIndexed(
+            const std::shared_ptr<VertexArray> &vertexArray,
+            uint32_t indexCount) override;
+
+        void Clear(const Color &color) override;
 
         void SetViewport(
             int x,

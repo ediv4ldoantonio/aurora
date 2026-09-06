@@ -4,6 +4,9 @@
 #include "Aurora/Renderer/SpriteDrawCommand.h"
 #include "Aurora/Renderer/SpriteBatch.h"
 #include "Aurora/Renderer/RendererBackend.h"
+#include "Aurora/Renderer/VertexArray.h"
+
+#include <memory>
 
 namespace Aurora
 {
@@ -25,7 +28,7 @@ namespace Aurora
         virtual void DrawSprite(
             const SpriteDrawCommand &command) = 0;
 
-        virtual void Clear() = 0;
+        virtual void Clear(const Color &color) = 0;
 
         virtual void SetViewport(
             int x,
@@ -35,6 +38,10 @@ namespace Aurora
 
         virtual void DrawSpriteBatch(
             const SpriteBatch &batch) = 0;
+
+        virtual void DrawIndexed(
+            const std::shared_ptr<VertexArray> &vertexArray,
+            uint32_t indexCount) = 0;
 
         virtual void *GetNativeRenderer() = 0;
 

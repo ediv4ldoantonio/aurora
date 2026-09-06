@@ -13,7 +13,7 @@ namespace Aurora
 {
     RendererBackend
         RendererResourceFactory::s_Backend =
-            RendererBackend::SDL;
+            RendererBackend::OpenGL;
 
     void RendererResourceFactory::Init(
         RendererBackend backend)
