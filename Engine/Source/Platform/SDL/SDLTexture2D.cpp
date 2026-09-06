@@ -80,4 +80,13 @@ namespace Aurora
     {
         return m_Texture;
     }
+
+    void SDLTexture2D::Bind(
+        uint32_t slot) const
+    {
+    }
+
+    void SDLTexture2D::Unbind() const
+    {
+    }
 }

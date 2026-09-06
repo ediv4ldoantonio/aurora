@@ -14,6 +14,10 @@ target_include_directories(
     PUBLIC
 
     ${CMAKE_CURRENT_SOURCE_DIR}/Include
+
+    PRIVATE
+
+    ${CMAKE_CURRENT_SOURCE_DIR}/../ThirdParty/stb
 )
 
 find_package(SDL3 REQUIRED)

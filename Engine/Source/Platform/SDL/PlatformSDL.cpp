@@ -1,6 +1,7 @@
 #include "Aurora/Core/Window.h"
 #include "Aurora/Renderer/GraphicsContext.h"
 #include "Aurora/Renderer/Texture2D.h"
+#include "Aurora/Renderer/RendererResourceFactory.h"
 #include "SDLGraphicsContext.h"
 #include "SDLWindow.h"
 #include "SDLTexture2D.h"
@@ -46,6 +47,6 @@ namespace Aurora
     Texture2D::Create(
         const std::string &path)
     {
-        return std::make_shared<SDLTexture2D>(path);
+        return RendererResourceFactory::CreateTexture2D(path);
     }
 }

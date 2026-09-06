@@ -2,6 +2,7 @@
 
 #include "Aurora/Renderer/RendererBackend.h"
 #include "Aurora/Renderer/Shader.h"
+#include "Aurora/Renderer/Texture2D.h"
 
 #include <cstddef>
 #include <memory>
@@ -33,6 +34,9 @@ namespace Aurora
         CreateShader(
             const std::string &vertexSource,
             const std::string &fragmentSource);
+
+        static std::shared_ptr<Texture2D>
+        CreateTexture2D(const std::string &path);
 
     private:
         static RendererBackend s_Backend;

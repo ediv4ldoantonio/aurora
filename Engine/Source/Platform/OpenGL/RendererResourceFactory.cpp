@@ -5,6 +5,9 @@
 #include "OpenGLIndexBuffer.h"
 #include "OpenGLVertexArray.h"
 #include "OpenGLShader.h"
+#include "OpenGLTexture2D.h"
+
+#include "../SDL/SDLTexture2D.h"
 
 #include <stdexcept>
 #include <memory>
@@ -104,6 +107,25 @@ namespace Aurora
             return std::make_shared<OpenGLShader>(
                 vertexSource,
                 fragmentSource);
+        }
+
+        throw std::runtime_error(
+            "Unsupported renderer backend");
+    }
+
+    std::shared_ptr<Texture2D>
+    RendererResourceFactory::CreateTexture2D(
+        const std::string &path)
+    {
+        switch (s_Backend)
+        {
+        case RendererBackend::SDL:
+            return std::make_shared<SDLTexture2D>(
+                path);
+
+        case RendererBackend::OpenGL:
+            return std::make_shared<OpenGLTexture2D>(
+                path);
         }
 
         throw std::runtime_error(
