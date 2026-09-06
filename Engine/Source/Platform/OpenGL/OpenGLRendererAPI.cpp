@@ -127,6 +127,15 @@ namespace Aurora
                     std::to_string(i) +
                     "]",
                 i);
+
+            m_SpriteShader->SetVector4(
+                "u_MaterialTints[" +
+                    std::to_string(i) +
+                    "]",
+                1.0f,
+                1.0f,
+                1.0f,
+                1.0f);
         }
 
         m_SpriteShader->Unbind();
@@ -203,7 +212,11 @@ namespace Aurora
 
         m_SpriteShader->Bind();
 
+        UploadMaterialState(batch);
+
         BindBatchMaterials(batch);
+
+        ApplyBlendMode(BlendMode::Alpha);
 
         m_SpriteVertexArray->Bind();
 
@@ -223,12 +236,6 @@ namespace Aurora
     void *OpenGLRendererAPI::GetNativeRenderer()
     {
         return nullptr;
-    }
-
-    void OpenGLRendererAPI::ApplyMaterial(
-        const Material &material,
-        const std::shared_ptr<Shader> &shader)
-    {
     }
 
     void OpenGLRendererAPI::SetViewProjection(
@@ -287,5 +294,57 @@ namespace Aurora
         m_SpriteVertexBuffer->SetData(
             vertices.data(),
             vertices.size() * sizeof(SpriteVertex));
+    }
+
+    void OpenGLRendererAPI::UploadMaterialState(
+        const SpriteBatch &batch)
+    {
+        const auto &materials =
+            batch.GetMaterials();
+
+        for (size_t i = 0;
+             i < materials.size();
+             ++i)
+        {
+            Material *material = materials[i];
+
+            if (!material)
+                continue;
+
+            const Color &tint =
+                material->GetTint();
+
+            m_SpriteShader->SetVector4(
+                "u_MaterialTints[" + std::to_string(i) + "]",
+                tint.R / 255.0f,
+                tint.G / 255.0f,
+                tint.B / 255.0f,
+                tint.A / 255.0f);
+        }
+    }
+
+    void OpenGLRendererAPI::ApplyBlendMode(
+        BlendMode mode)
+    {
+        switch (mode)
+        {
+        case BlendMode::Opaque:
+            glDisable(GL_BLEND);
+            break;
+
+        case BlendMode::Alpha:
+            glEnable(GL_BLEND);
+            glBlendFunc(
+                GL_SRC_ALPHA,
+                GL_ONE_MINUS_SRC_ALPHA);
+            break;
+
+        case BlendMode::Additive:
+            glEnable(GL_BLEND);
+            glBlendFunc(
+                GL_SRC_ALPHA,
+                GL_ONE);
+            break;
+        }
     }
 }

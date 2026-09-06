@@ -25,9 +25,11 @@ namespace Aurora
             const std::string &name,
             const float *value) = 0;
 
-        static std::shared_ptr<Shader>
-        Create(
-            const std::string &vertexSource,
-            const std::string &fragmentSource);
+        virtual void SetVector4(
+            const std::string &name,
+            float x,
+            float y,
+            float z,
+            float w) = 0;
     };
 }

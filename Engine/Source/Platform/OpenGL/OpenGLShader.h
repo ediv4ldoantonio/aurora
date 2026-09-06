@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Aurora/Renderer/Shader.h"
+#include "Aurora/Renderer/SpriteBatch.h"
 
 namespace Aurora
 {
@@ -28,6 +29,13 @@ namespace Aurora
             const std::string &name,
             const float *value) override;
 
+        void SetVector4(
+            const std::string &name,
+            float x,
+            float y,
+            float z,
+            float w) override;
+
     private:
         int GetUniformLocation(
             const std::string &name) const;
@@ -36,7 +44,6 @@ namespace Aurora
             uint32_t type,
             const std::string &source);
 
-    private:
         uint32_t m_RendererID = 0;
     };
 }

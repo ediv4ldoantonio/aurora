@@ -197,4 +197,19 @@ namespace Aurora
             GL_TRUE,
             value);
     }
+
+    void OpenGLShader::SetVector4(
+        const std::string &name,
+        float x,
+        float y,
+        float z,
+        float w)
+    {
+        glUniform4f(
+            GetUniformLocation(name),
+            x,
+            y,
+            z,
+            w);
+    }
 }

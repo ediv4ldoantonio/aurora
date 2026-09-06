@@ -7,6 +7,7 @@
 #include "Aurora/Renderer/VertexArray.h"
 #include "Aurora/Renderer/VertexBuffer.h"
 #include "Aurora/Renderer/IndexBuffer.h"
+#include "Aurora/Renderer/BlendMode.h"
 
 #include <memory>
 #include <stdexcept>
@@ -49,9 +50,9 @@ namespace Aurora
         void SetViewProjection(
             const Matrix4 &viewProjection) override;
 
-        void ApplyMaterial(
-            const Material &material,
-            const std::shared_ptr<Shader> &shader);
+    private:
+        void UploadMaterialState(
+            const SpriteBatch &batch);
 
         void BindBatchMaterials(
             const SpriteBatch &batch);
@@ -59,7 +60,9 @@ namespace Aurora
         void UploadBatchVertices(
             const SpriteBatch &batch);
 
-    private:
+        void ApplyBlendMode(
+            BlendMode mode);
+
         std::shared_ptr<VertexArray> m_SpriteVertexArray;
         std::shared_ptr<VertexBuffer> m_SpriteVertexBuffer;
         std::shared_ptr<IndexBuffer> m_SpriteIndexBuffer;
