@@ -2,6 +2,8 @@
 
 #include "Aurora/Renderer/RendererAPI.h"
 #include "Aurora/Renderer/RendererBackend.h"
+#include "Aurora/Renderer/Shader.h"
+#include "Aurora/Renderer/Material.h"
 
 #include <memory>
 #include <stdexcept>
@@ -40,5 +42,9 @@ namespace Aurora
         void *GetNativeRenderer() override;
 
         RendererBackend GetBackend() const override;
+
+        void ApplyMaterial(
+            const Material &material,
+            const std::shared_ptr<Shader> &shader);
     };
 }

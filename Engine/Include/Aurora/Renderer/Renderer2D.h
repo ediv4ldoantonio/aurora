@@ -3,11 +3,12 @@
 #include "Aurora/Math/Vector2.h"
 #include "Aurora/Renderer/Camera2D.h"
 #include "Aurora/Renderer/RenderState.h"
+#include "Aurora/Renderer/RenderQueue.h"
+#include "Aurora/Renderer/SpriteBatch.h"
+#include "Aurora/Renderer/Shader.h"
 #include "Aurora/Renderer/GraphicsContext.h"
 #include "Aurora/Scene/Components/SpriteComponent.h"
 #include "Aurora/Scene/Components/TransformComponent.h"
-#include "Aurora/Renderer/SpriteBatch.h"
-#include "Aurora/Renderer/RenderQueue.h"
 
 #include <vector>
 #include <memory>
@@ -52,6 +53,8 @@ namespace Aurora
 
         static uint32_t s_BatchCount;
         static uint32_t s_BatchBreakCount;
+
+        static std::shared_ptr<Shader> s_SpriteShader;
     };
 
 }

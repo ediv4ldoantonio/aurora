@@ -105,4 +105,10 @@ namespace Aurora
     {
         return nullptr;
     }
+
+    void OpenGLRendererAPI::ApplyMaterial(
+        const Material &material,
+        const std::shared_ptr<Shader> &shader)
+    {
+        }
 }
