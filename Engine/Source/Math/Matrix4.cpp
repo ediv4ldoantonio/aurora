@@ -154,4 +154,9 @@ namespace Aurora
 
         return Vector2(x, y);
     }
+
+    const float *Matrix4::GetData() const
+    {
+        return &m_Data[0][0];
+    }
 }

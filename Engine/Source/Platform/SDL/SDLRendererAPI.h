@@ -49,6 +49,9 @@ namespace Aurora
 
         void *GetNativeRenderer() override;
 
+        void SetViewProjection(
+            const Matrix4 &viewProjection) override;
+
         RendererBackend GetBackend() const override;
 
     private:

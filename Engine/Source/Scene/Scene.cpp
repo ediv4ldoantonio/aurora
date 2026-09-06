@@ -77,6 +77,7 @@ namespace Aurora
     {
         Renderer2D::SetCamera(
             &m_Camera);
+
         m_SystemManager.Render(
             m_Registry);
     }

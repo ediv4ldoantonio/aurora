@@ -6,32 +6,11 @@
 #include "Aurora/Core/Assert.h"
 
 #include <algorithm>
-#include <fstream>
 #include <stdexcept>
 #include <string>
 
 namespace Aurora
 {
-    namespace
-    {
-        std::string LoadShaderSource(
-            const std::string &path)
-        {
-            std::ifstream file(path);
-
-            if (!file)
-                throw std::runtime_error(
-                    "Failed to open shader source: " + path);
-
-            return std::string(
-                std::istreambuf_iterator<char>(file),
-                std::istreambuf_iterator<char>());
-        }
-    }
-
-    std::shared_ptr<Shader>
-        Renderer2D::s_SpriteShader = nullptr;
-
     RendererAPI *
         Renderer2D::s_Renderer = nullptr;
 
@@ -68,30 +47,6 @@ namespace Aurora
 
         RendererResourceFactory::Init(
             s_Renderer->GetBackend());
-
-        const std::string vertexSource =
-            LoadShaderSource("Engine/Assets/Shaders/Sprite.vert");
-
-        const std::string fragmentSource =
-            LoadShaderSource("Engine/Assets/Shaders/Sprite.frag");
-
-        s_SpriteShader =
-            RendererResourceFactory::CreateShader(
-                vertexSource,
-                fragmentSource);
-
-        s_SpriteShader->Bind();
-
-        for (int i = 0; i < 16; ++i)
-        {
-            s_SpriteShader->SetInt(
-                "u_Textures[" +
-                    std::to_string(i) +
-                    "]",
-                i);
-        }
-
-        s_SpriteShader->Unbind();
     }
 
     void Renderer2D::Shutdown()
@@ -114,6 +69,12 @@ namespace Aurora
         s_Renderer->BeginFrame();
 
         RenderCommand::Clear();
+
+        if (s_Camera && s_Renderer)
+        {
+            s_Renderer->SetViewProjection(
+                s_Camera->GetViewProjectionMatrix());
+        }
     }
 
     void Renderer2D::EndFrame()

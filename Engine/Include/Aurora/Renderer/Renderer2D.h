@@ -53,8 +53,6 @@ namespace Aurora
 
         static uint32_t s_BatchCount;
         static uint32_t s_BatchBreakCount;
-
-        static std::shared_ptr<Shader> s_SpriteShader;
     };
 
 }

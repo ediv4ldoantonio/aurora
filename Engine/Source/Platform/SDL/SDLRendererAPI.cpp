@@ -499,4 +499,10 @@ namespace Aurora
     {
         return RendererBackend::SDL;
     }
+
+    void SDLRendererAPI::SetViewProjection(
+        const Matrix4 &viewProjection)
+    {
+        (void)viewProjection;
+    }
 }

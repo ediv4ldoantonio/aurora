@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Aurora/Math/Vector2.h"
+#include "Aurora/Math/Matrix4.h"
 #include "Aurora/Renderer/SpriteDrawCommand.h"
 #include "Aurora/Renderer/SpriteBatch.h"
 #include "Aurora/Renderer/RendererBackend.h"
@@ -47,6 +48,9 @@ namespace Aurora
 
         virtual RendererBackend
         GetBackend() const = 0;
+
+        virtual void SetViewProjection(
+            const Matrix4 &viewProjection) = 0;
 
     private:
         static RendererBackend s_Backend;

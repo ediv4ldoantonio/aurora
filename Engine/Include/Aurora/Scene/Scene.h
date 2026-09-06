@@ -52,6 +52,7 @@ namespace Aurora
         Camera2D m_Camera;
         Registry m_Registry;
         SystemManager m_SystemManager;
+
         std::unordered_map<Aurora::UUID, EntityID> m_EntityMap;
         std::vector<EntityID> m_DestroyQueue;
     };

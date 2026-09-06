@@ -38,6 +38,8 @@ namespace Aurora
         Vector2 TransformPoint(
             const Vector2 &point) const;
 
+        const float *GetData() const;
+
     private:
         float m_Data[4][4];
     };

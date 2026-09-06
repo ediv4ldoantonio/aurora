@@ -194,7 +194,7 @@ namespace Aurora
         glUniformMatrix4fv(
             GetUniformLocation(name),
             1,
-            GL_FALSE,
+            GL_TRUE,
             value);
     }
 }

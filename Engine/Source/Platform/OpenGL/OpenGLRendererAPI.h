@@ -4,6 +4,9 @@
 #include "Aurora/Renderer/RendererBackend.h"
 #include "Aurora/Renderer/Shader.h"
 #include "Aurora/Renderer/Material.h"
+#include "Aurora/Renderer/VertexArray.h"
+#include "Aurora/Renderer/VertexBuffer.h"
+#include "Aurora/Renderer/IndexBuffer.h"
 
 #include <memory>
 #include <stdexcept>
@@ -43,8 +46,17 @@ namespace Aurora
 
         RendererBackend GetBackend() const override;
 
+        void SetViewProjection(
+            const Matrix4 &viewProjection) override;
+
         void ApplyMaterial(
             const Material &material,
             const std::shared_ptr<Shader> &shader);
+
+    private:
+        std::shared_ptr<VertexArray> m_SpriteVertexArray;
+        std::shared_ptr<VertexBuffer> m_SpriteVertexBuffer;
+        std::shared_ptr<IndexBuffer> m_SpriteIndexBuffer;
+        std::shared_ptr<Shader> m_SpriteShader;
     };
 }
