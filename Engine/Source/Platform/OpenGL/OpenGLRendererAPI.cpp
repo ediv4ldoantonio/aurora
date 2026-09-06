@@ -196,44 +196,23 @@ namespace Aurora
     void OpenGLRendererAPI::DrawSpriteBatch(
         const SpriteBatch &batch)
     {
-        if (batch.GetVertices().empty())
+        if (batch.GetVertexCount() == 0)
             return;
+
+        UploadBatchVertices(batch);
 
         m_SpriteShader->Bind();
 
+        BindBatchMaterials(batch);
+
         m_SpriteVertexArray->Bind();
 
-        m_SpriteVertexBuffer->SetData(
-            batch.GetVertices().data(),
-            batch.GetVertices().size() *
-                sizeof(SpriteVertex));
-
-        const auto &materials =
-            batch.GetMaterials();
-
-        for (size_t i = 0;
-             i < materials.size();
-             ++i)
-        {
-            Material *material = materials[i];
-
-            if (!material)
-                continue;
-
-            const auto &texture =
-                material->GetTexture();
-
-            if (texture)
-            {
-                texture->Bind(
-                    static_cast<uint32_t>(i));
-            }
-        }
-
-        DrawIndexed(
-            m_SpriteVertexArray,
-            static_cast<uint32_t>(
-                batch.GetIndices().size()));
+        glDrawElements(
+            GL_TRIANGLES,
+            static_cast<GLsizei>(
+                batch.GetIndexCount()),
+            GL_UNSIGNED_INT,
+            nullptr);
     }
 
     RendererBackend OpenGLRendererAPI::GetBackend() const
@@ -268,5 +247,45 @@ namespace Aurora
             viewProjection.GetData());
 
         m_SpriteShader->Unbind();
+    }
+
+    void OpenGLRendererAPI::BindBatchMaterials(
+        const SpriteBatch &batch)
+    {
+        const auto &materials =
+            batch.GetMaterials();
+
+        for (size_t i = 0;
+             i < materials.size();
+             ++i)
+        {
+            Material *material = materials[i];
+
+            if (!material)
+                continue;
+
+            const auto &texture =
+                material->GetTexture();
+
+            if (texture)
+            {
+                texture->Bind(
+                    static_cast<uint32_t>(i));
+            }
+        }
+    }
+
+    void OpenGLRendererAPI::UploadBatchVertices(
+        const SpriteBatch &batch)
+    {
+        const auto &vertices =
+            batch.GetVertices();
+
+        if (vertices.empty())
+            return;
+
+        m_SpriteVertexBuffer->SetData(
+            vertices.data(),
+            vertices.size() * sizeof(SpriteVertex));
     }
 }

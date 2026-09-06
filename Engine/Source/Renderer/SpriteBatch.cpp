@@ -215,4 +215,14 @@ namespace Aurora
     {
         return m_BatchKey;
     }
+
+    size_t SpriteBatch::GetVertexCount() const
+    {
+        return m_Vertices.size();
+    }
+
+    size_t SpriteBatch::GetIndexCount() const
+    {
+        return m_Indices.size();
+    }
 }

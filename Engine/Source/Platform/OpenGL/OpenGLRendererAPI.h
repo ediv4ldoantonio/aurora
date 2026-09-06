@@ -53,6 +53,12 @@ namespace Aurora
             const Material &material,
             const std::shared_ptr<Shader> &shader);
 
+        void BindBatchMaterials(
+            const SpriteBatch &batch);
+
+        void UploadBatchVertices(
+            const SpriteBatch &batch);
+
     private:
         std::shared_ptr<VertexArray> m_SpriteVertexArray;
         std::shared_ptr<VertexBuffer> m_SpriteVertexBuffer;

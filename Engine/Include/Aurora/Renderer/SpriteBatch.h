@@ -51,6 +51,9 @@ namespace Aurora
         const BatchKey &
         GetBatchKey() const;
 
+        size_t GetVertexCount() const;
+        size_t GetIndexCount() const;
+
     private:
         uint32_t GetMaterialSlot(
             Material *material);
