@@ -76,8 +76,7 @@ namespace Aurora
 
         Renderer2D::Init(
             m_Window
-                ->GetGraphicsContext()
-                .GetRendererAPI());
+                ->GetGraphicsContext());
     }
 
     void Application::Shutdown()

@@ -13,6 +13,9 @@ namespace Aurora
     RendererAPI *
         Renderer2D::s_Renderer = nullptr;
 
+    GraphicsContext *
+        Renderer2D::s_GraphicsContext = nullptr;
+
     Camera2D *
         Renderer2D::s_Camera = nullptr;
 
@@ -27,22 +30,22 @@ namespace Aurora
     uint32_t Renderer2D::s_BatchCount = 0;
     uint32_t Renderer2D::s_BatchBreakCount = 0;
 
-    void Renderer2D::Init(
-        RendererAPI *renderer)
+    void Renderer2D::Init(GraphicsContext &context)
     {
-        if (!renderer)
+        s_GraphicsContext = &context;
+        s_Renderer = context.GetRendererAPI();
+
+        if (!s_Renderer)
             throw std::invalid_argument(
                 "Renderer2D received null RendererAPI");
 
-        s_Renderer = renderer;
-
-        renderer->Init();
+        s_Renderer->Init();
 
         RenderCommand::Init(
-            renderer);
+            s_Renderer);
 
         RendererResourceFactory::Init(
-            renderer->GetBackend());
+            s_Renderer->GetBackend());
     }
 
     void Renderer2D::Shutdown()
@@ -75,6 +78,8 @@ namespace Aurora
             return;
 
         s_Renderer->EndFrame();
+
+        s_GraphicsContext->SwapBuffers();
     }
 
     void Renderer2D::DrawSprite(

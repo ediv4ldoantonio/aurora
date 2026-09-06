@@ -19,22 +19,22 @@ namespace Aurora
 
         virtual void Init() = 0;
 
+        virtual void Shutdown() = 0;
+
         virtual void BeginFrame() = 0;
 
         virtual void EndFrame() = 0;
-
-        virtual void Shutdown() = 0;
-
-        virtual void DrawSprite(
-            const SpriteDrawCommand &command) = 0;
-
-        virtual void Clear(const Color &color) = 0;
 
         virtual void SetViewport(
             int x,
             int y,
             int width,
             int height) = 0;
+
+        virtual void DrawSprite(
+            const SpriteDrawCommand &command) = 0;
+
+        virtual void Clear(const Color &color) = 0;
 
         virtual void DrawSpriteBatch(
             const SpriteBatch &batch) = 0;

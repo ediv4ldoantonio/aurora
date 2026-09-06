@@ -3,6 +3,7 @@
 #include "Aurora/Math/Vector2.h"
 #include "Aurora/Renderer/Camera2D.h"
 #include "Aurora/Renderer/RenderState.h"
+#include "Aurora/Renderer/GraphicsContext.h"
 #include "Aurora/Scene/Components/SpriteComponent.h"
 #include "Aurora/Scene/Components/TransformComponent.h"
 #include "Aurora/Renderer/SpriteBatch.h"
@@ -20,8 +21,7 @@ namespace Aurora
     {
 
     public:
-        static void Init(
-            RendererAPI *renderer);
+        static void Init(GraphicsContext &context);
 
         static void Shutdown();
 
@@ -44,6 +44,7 @@ namespace Aurora
         static void FlushBatch();
 
         static RendererAPI *s_Renderer;
+        static GraphicsContext *s_GraphicsContext;
         static Camera2D *s_Camera;
         static RenderState s_RenderState;
         static SpriteBatch s_SpriteBatch;
