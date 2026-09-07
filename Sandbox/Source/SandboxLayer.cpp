@@ -41,7 +41,7 @@ SandboxLayer::SandboxLayer()
             Aurora::SpriteComponent>(material);
 
     p_Transform.LocalTransform.Position =
-        {100, 0};
+        {0, 0};
 
     p_Transform.LocalTransform.Scale =
         {200, 200};

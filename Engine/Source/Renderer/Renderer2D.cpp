@@ -102,20 +102,13 @@ namespace Aurora
         SpriteDrawCommand command;
 
         command.Position =
-            s_Camera->WorldToScreen(
-                transform.WorldTransform.Position);
+            transform.WorldTransform.Position;
 
         command.Size =
             transform.WorldTransform.Scale;
 
-        command.Size.x *=
-            s_Camera->GetZoom();
-
-        command.Size.y *=
-            s_Camera->GetZoom();
-
         command.Rotation =
-            transform.WorldTransform.Rotation - s_Camera->GetRotation();
+            transform.WorldTransform.Rotation;
 
         if (!sprite.MaterialInstance)
         {

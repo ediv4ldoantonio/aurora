@@ -14,6 +14,8 @@ namespace Aurora
 {
     namespace
     {
+        constexpr uint32_t FirstMaterialTextureSlot = 1;
+
         std::string LoadShaderSource(
             const std::string &path)
         {
@@ -277,7 +279,8 @@ namespace Aurora
             if (texture)
             {
                 texture->Bind(
-                    static_cast<uint32_t>(i));
+                    static_cast<uint32_t>(i) +
+                    FirstMaterialTextureSlot);
             }
         }
     }
@@ -315,7 +318,7 @@ namespace Aurora
                 material->GetTint();
 
             m_SpriteShader->SetVector4(
-                "u_MaterialTints[" + std::to_string(i) + "]",
+                "u_MaterialTints[" + std::to_string(i + 1) + "]",
                 tint.R / 255.0f,
                 tint.G / 255.0f,
                 tint.B / 255.0f,
