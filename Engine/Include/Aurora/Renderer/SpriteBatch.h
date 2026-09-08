@@ -51,6 +51,8 @@ namespace Aurora
         const BatchKey &
         GetBatchKey() const;
 
+        BlendMode GetBlendMode() const;
+
         size_t GetVertexCount() const;
         size_t GetIndexCount() const;
 

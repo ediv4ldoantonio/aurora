@@ -33,11 +33,9 @@ namespace Aurora
 
     void OpenGLRendererAPI::Init()
     {
-        glEnable(GL_BLEND);
+        glDisable(GL_BLEND);
 
-        glBlendFunc(
-            GL_SRC_ALPHA,
-            GL_ONE_MINUS_SRC_ALPHA);
+        m_State = {};
 
         glClearColor(
             0.1f,
@@ -141,6 +139,7 @@ namespace Aurora
         }
 
         m_SpriteShader->Unbind();
+        InvalidateShaderState();
     }
 
     void OpenGLRendererAPI::DrawIndexed(
@@ -164,6 +163,12 @@ namespace Aurora
 
     void OpenGLRendererAPI::Shutdown()
     {
+        m_State = {};
+
+        m_SpriteShader.reset();
+        m_SpriteVertexArray.reset();
+        m_SpriteVertexBuffer.reset();
+        m_SpriteIndexBuffer.reset();
     }
 
     void OpenGLRendererAPI::BeginFrame()
@@ -212,13 +217,14 @@ namespace Aurora
 
         UploadBatchVertices(batch);
 
-        m_SpriteShader->Bind();
+        BindShader(m_SpriteShader);
 
         UploadMaterialState(batch);
 
         BindBatchMaterials(batch);
 
-        ApplyBlendMode(BlendMode::Alpha);
+        ApplyBlendMode(
+            batch.GetBlendMode());
 
         m_SpriteVertexArray->Bind();
 
@@ -249,13 +255,11 @@ namespace Aurora
                 "Sprite shader is not initialized");
         }
 
-        m_SpriteShader->Bind();
+        BindShader(m_SpriteShader);
 
         m_SpriteShader->SetMatrix4(
             "u_ViewProjection",
             viewProjection.GetData());
-
-        m_SpriteShader->Unbind();
     }
 
     void OpenGLRendererAPI::BindBatchMaterials(
@@ -278,9 +282,10 @@ namespace Aurora
 
             if (texture)
             {
-                texture->Bind(
+                BindTexture(
                     static_cast<uint32_t>(i) +
-                    FirstMaterialTextureSlot);
+                        FirstMaterialTextureSlot,
+                    texture);
             }
         }
     }
@@ -329,6 +334,12 @@ namespace Aurora
     void OpenGLRendererAPI::ApplyBlendMode(
         BlendMode mode)
     {
+        if (m_State.HasBlendMode &&
+            m_State.CurrentBlendMode == mode)
+        {
+            return;
+        }
+
         switch (mode)
         {
         case BlendMode::Opaque:
@@ -348,6 +359,55 @@ namespace Aurora
                 GL_SRC_ALPHA,
                 GL_ONE);
             break;
+
+        case BlendMode::Multiply:
+            glEnable(GL_BLEND);
+            glBlendFunc(
+                GL_DST_COLOR,
+                GL_ZERO);
+            break;
         }
+
+        m_State.CurrentBlendMode = mode;
+        m_State.HasBlendMode = true;
+    }
+
+    void OpenGLRendererAPI::BindShader(
+        const std::shared_ptr<Shader> &shader)
+    {
+        if (!shader)
+            return;
+
+        if (m_State.CurrentShader == shader.get())
+            return;
+
+        shader->Bind();
+
+        m_State.CurrentShader = shader.get();
+    }
+
+    void OpenGLRendererAPI::InvalidateShaderState()
+    {
+        m_State.CurrentShader = nullptr;
+    }
+
+    void OpenGLRendererAPI::BindTexture(
+        uint32_t slot,
+        const std::shared_ptr<Texture2D> &texture)
+    {
+        if (!texture)
+            return;
+
+        if (slot >= m_State.TextureBindings.size())
+            throw std::out_of_range(
+                "OpenGL texture slot out of range");
+
+        if (m_State.TextureBindings[slot] == texture.get())
+            return;
+
+        texture->Bind(slot);
+
+        m_State.TextureBindings[slot] =
+            texture.get();
     }
 }

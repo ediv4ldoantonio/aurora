@@ -216,6 +216,17 @@ namespace Aurora
         return m_BatchKey;
     }
 
+    BlendMode SpriteBatch::GetBlendMode() const
+    {
+        for (Material *material : m_Materials)
+        {
+            if (material)
+                return material->GetBlendMode();
+        }
+
+        return BlendMode::Opaque;
+    }
+
     size_t SpriteBatch::GetVertexCount() const
     {
         return m_Vertices.size();

@@ -9,6 +9,8 @@
 #include "Aurora/Renderer/IndexBuffer.h"
 #include "Aurora/Renderer/BlendMode.h"
 
+#include "OpenGLRendererState.h"
+
 #include <memory>
 #include <stdexcept>
 
@@ -63,9 +65,19 @@ namespace Aurora
         void ApplyBlendMode(
             BlendMode mode);
 
+        void BindShader(
+            const std::shared_ptr<Shader> &shader);
+
+        void InvalidateShaderState();
+
+        void BindTexture(
+            uint32_t slot,
+            const std::shared_ptr<Texture2D> &texture);
+
         std::shared_ptr<VertexArray> m_SpriteVertexArray;
         std::shared_ptr<VertexBuffer> m_SpriteVertexBuffer;
         std::shared_ptr<IndexBuffer> m_SpriteIndexBuffer;
         std::shared_ptr<Shader> m_SpriteShader;
+        OpenGLRendererState m_State;
     };
 }
