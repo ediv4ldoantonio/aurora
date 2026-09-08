@@ -53,9 +53,6 @@ namespace Aurora
             const Matrix4 &viewProjection) override;
 
     private:
-        void UploadMaterialState(
-            const SpriteBatch &batch);
-
         void BindBatchMaterials(
             const SpriteBatch &batch);
 

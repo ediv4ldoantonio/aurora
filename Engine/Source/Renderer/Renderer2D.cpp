@@ -51,7 +51,12 @@ namespace Aurora
 
     void Renderer2D::Shutdown()
     {
+        s_SpriteBatch.Clear();
+        s_RenderQueue.Clear();
+
+        s_Camera = nullptr;
         s_Renderer = nullptr;
+        s_GraphicsContext = nullptr;
     }
 
     void Renderer2D::BeginFrame()

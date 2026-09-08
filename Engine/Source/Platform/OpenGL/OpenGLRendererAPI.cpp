@@ -219,8 +219,6 @@ namespace Aurora
 
         BindShader(m_SpriteShader);
 
-        UploadMaterialState(batch);
-
         BindBatchMaterials(batch);
 
         ApplyBlendMode(
@@ -302,33 +300,6 @@ namespace Aurora
         m_SpriteVertexBuffer->SetData(
             vertices.data(),
             vertices.size() * sizeof(SpriteVertex));
-    }
-
-    void OpenGLRendererAPI::UploadMaterialState(
-        const SpriteBatch &batch)
-    {
-        const auto &materials =
-            batch.GetMaterials();
-
-        for (size_t i = 0;
-             i < materials.size();
-             ++i)
-        {
-            Material *material = materials[i];
-
-            if (!material)
-                continue;
-
-            const Color &tint =
-                material->GetTint();
-
-            m_SpriteShader->SetVector4(
-                "u_MaterialTints[" + std::to_string(i + 1) + "]",
-                tint.R / 255.0f,
-                tint.G / 255.0f,
-                tint.B / 255.0f,
-                tint.A / 255.0f);
-        }
     }
 
     void OpenGLRendererAPI::ApplyBlendMode(
