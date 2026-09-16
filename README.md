@@ -832,18 +832,18 @@ is preferable to combining unrelated engine changes into a single commit.
 
 ## Rendering
 
-- [ ] Material abstraction
-- [ ] More advanced texture batching
-- [ ] OpenGL renderer backend
-- [ ] GPU vertex buffers
-- [ ] Vertex arrays
-- [ ] Index buffers
-- [ ] Shaders
-- [ ] Texture arrays / texture units
-- [ ] Orthographic projection
-- [ ] Proper camera matrices
-- [ ] Render targets
-- [ ] Framebuffers
+- [x] Material abstraction
+- [x] More advanced texture batching
+- [x] OpenGL renderer backend
+- [x] GPU vertex buffers
+- [x] Vertex arrays
+- [x] Index buffers
+- [x] Shaders
+- [x] Texture arrays / texture units
+- [x] Orthographic projection
+- [x] Proper camera matrices
+- [x] Render targets
+- [x] Framebuffers
 
 ## ECS
 
