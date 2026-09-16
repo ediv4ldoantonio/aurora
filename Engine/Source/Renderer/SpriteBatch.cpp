@@ -218,13 +218,7 @@ namespace Aurora
 
     BlendMode SpriteBatch::GetBlendMode() const
     {
-        for (Material *material : m_Materials)
-        {
-            if (material)
-                return material->GetBlendMode();
-        }
-
-        return BlendMode::Opaque;
+        return m_BatchKey.BlendMode;
     }
 
     size_t SpriteBatch::GetVertexCount() const

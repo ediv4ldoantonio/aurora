@@ -1,7 +1,7 @@
 #pragma once
 
-#include "Aurora/Core/UUID.h"
 #include "Aurora/Renderer/RenderPass.h"
+#include "Aurora/Renderer/BlendMode.h"
 
 #include <cstdint>
 
@@ -12,13 +12,14 @@ namespace Aurora
         RenderPass Pass =
             RenderPass::World;
 
-        UUID MaterialID;
+        Aurora::BlendMode BlendMode =
+            Aurora::BlendMode::Opaque;
 
         bool operator==(
             const BatchKey &other) const
         {
             return Pass == other.Pass &&
-                   MaterialID == other.MaterialID;
+                   BlendMode == other.BlendMode;
         }
 
         bool operator<(
@@ -30,8 +31,8 @@ namespace Aurora
                        static_cast<uint8_t>(other.Pass);
             }
 
-            return MaterialID <
-                   other.MaterialID;
+            return BlendMode <
+                   other.BlendMode;
         }
     };
 }

@@ -134,8 +134,8 @@ namespace Aurora
         command.Batch.Pass =
             sprite.Pass;
 
-        command.Batch.MaterialID =
-            sprite.MaterialInstance->GetID();
+        command.Batch.BlendMode =
+            sprite.MaterialInstance->GetBlendMode();
 
         s_RenderQueue.Submit(
             command);
