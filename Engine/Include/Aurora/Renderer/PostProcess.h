@@ -4,6 +4,7 @@
 #include "Aurora/Renderer/Texture2D.h"
 #include "Aurora/Renderer/PostProcessSettings.h"
 #include "Aurora/Renderer/Framebuffer.h"
+#include "Aurora/Renderer/PostProcessPass.h"
 
 #include <memory>
 
@@ -43,6 +44,8 @@ namespace Aurora
 
         static PostProcessEffect s_Effect;
         static PostProcessSettings s_Settings;
+
+        static PostProcessPass s_Pass;
 
         static std::shared_ptr<Framebuffer>
             s_IntermediateFramebuffer;

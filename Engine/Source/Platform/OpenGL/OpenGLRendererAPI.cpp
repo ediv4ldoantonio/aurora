@@ -531,6 +531,7 @@ namespace Aurora
         m_ScreenVertexArray->Unbind();
 
         m_ScreenShader->Unbind();
+        InvalidateShaderState();
 
         target->Unbind();
     }

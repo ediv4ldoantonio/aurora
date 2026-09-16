@@ -13,6 +13,8 @@ namespace Aurora
 
     PostProcessSettings PostProcess::s_Settings;
 
+    PostProcessPass PostProcess::s_Pass;
+
     std::shared_ptr<Framebuffer>
         PostProcess::s_IntermediateFramebuffer = nullptr;
 
@@ -28,6 +30,10 @@ namespace Aurora
         }
 
         s_Renderer = renderer;
+
+        s_Pass.SetRenderer(
+            s_Renderer);
+
         s_Effect = PostProcessEffect::None;
         s_Settings = PostProcessSettings{};
 
@@ -45,11 +51,15 @@ namespace Aurora
     {
         s_IntermediateFramebuffer.reset();
 
+        s_Pass.SetRenderer(nullptr);
+
         s_Renderer = nullptr;
 
-        s_Effect = PostProcessEffect::None;
+        s_Effect =
+            PostProcessEffect::None;
 
-        s_Settings = PostProcessSettings{};
+        s_Settings =
+            PostProcessSettings{};
     }
 
     void PostProcess::SetEffect(
@@ -72,12 +82,18 @@ namespace Aurora
         if (!source)
             return;
 
-        s_Renderer->SetPostProcessEffect(
-            s_Effect);
+        if (!s_IntermediateFramebuffer)
+            return;
 
-        s_Renderer->SetPostProcessSettings(s_Settings);
+        s_Pass.Apply(
+            source,
+            s_IntermediateFramebuffer,
+            s_Effect,
+            s_Settings);
 
-        s_Renderer->DrawFramebuffer(source);
+        s_Renderer->DrawFramebuffer(
+            s_IntermediateFramebuffer
+                ->GetColorAttachment());
     }
 
     void PostProcess::SetSettings(
