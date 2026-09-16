@@ -107,6 +107,66 @@ namespace Aurora
         stbi_image_free(data);
     }
 
+    OpenGLTexture2D::OpenGLTexture2D(
+        const TextureSpecification &specification)
+    {
+        if (specification.Width == 0 ||
+            specification.Height == 0)
+        {
+            throw std::invalid_argument(
+                "Texture dimensions must be greater than zero");
+        }
+
+        m_Width = specification.Width;
+        m_Height = specification.Height;
+        m_Channels = 4;
+
+        glGenTextures(
+            1,
+            &m_RendererID);
+
+        glBindTexture(
+            GL_TEXTURE_2D,
+            m_RendererID);
+
+        glTexParameteri(
+            GL_TEXTURE_2D,
+            GL_TEXTURE_MIN_FILTER,
+            GL_LINEAR);
+
+        glTexParameteri(
+            GL_TEXTURE_2D,
+            GL_TEXTURE_MAG_FILTER,
+            GL_LINEAR);
+
+        glTexParameteri(
+            GL_TEXTURE_2D,
+            GL_TEXTURE_WRAP_S,
+            GL_CLAMP_TO_EDGE);
+
+        glTexParameteri(
+            GL_TEXTURE_2D,
+            GL_TEXTURE_WRAP_T,
+            GL_CLAMP_TO_EDGE);
+
+        glTexImage2D(
+            GL_TEXTURE_2D,
+            0,
+            GL_RGBA8,
+            static_cast<GLsizei>(
+                specification.Width),
+            static_cast<GLsizei>(
+                specification.Height),
+            0,
+            GL_RGBA,
+            GL_UNSIGNED_BYTE,
+            nullptr);
+
+        glBindTexture(
+            GL_TEXTURE_2D,
+            0);
+    }
+
     OpenGLTexture2D::~OpenGLTexture2D()
     {
         if (m_RendererID != 0)
@@ -156,5 +216,10 @@ namespace Aurora
     OpenGLTexture2D::GetPath() const
     {
         return m_Path;
+    }
+
+    uint32_t OpenGLTexture2D::GetRendererID() const
+    {
+        return m_RendererID;
     }
 }

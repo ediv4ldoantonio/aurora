@@ -3,6 +3,7 @@
 #include "Aurora/Renderer/RendererBackend.h"
 #include "Aurora/Renderer/Shader.h"
 #include "Aurora/Renderer/Texture2D.h"
+#include "Aurora/Renderer/Framebuffer.h"
 
 #include <cstddef>
 #include <memory>
@@ -37,6 +38,14 @@ namespace Aurora
 
         static std::shared_ptr<Texture2D>
         CreateTexture2D(const std::string &path);
+
+        static std::shared_ptr<Texture2D>
+        CreateTexture2D(
+            const TextureSpecification &specification);
+
+        static std::shared_ptr<Framebuffer>
+        CreateFramebuffer(
+            const FramebufferSpecification &specification);
 
     private:
         static RendererBackend s_Backend;

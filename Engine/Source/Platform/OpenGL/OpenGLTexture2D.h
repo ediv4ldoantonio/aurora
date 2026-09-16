@@ -10,6 +10,9 @@ namespace Aurora
         explicit OpenGLTexture2D(
             const std::string &path);
 
+        explicit OpenGLTexture2D(
+            const TextureSpecification &specification);
+
         ~OpenGLTexture2D() override;
 
         void Bind(uint32_t slot = 0) const override;
@@ -23,6 +26,8 @@ namespace Aurora
 
         const std::string &
         GetPath() const override;
+
+        uint32_t GetRendererID() const;
 
     private:
         uint32_t m_RendererID = 0;

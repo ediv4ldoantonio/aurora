@@ -5,6 +5,11 @@
 
 namespace Aurora
 {
+    struct TextureSpecification
+    {
+        uint32_t Width = 0;
+        uint32_t Height = 0;
+    };
 
     class Texture2D
     {
@@ -25,6 +30,10 @@ namespace Aurora
 
         static std::shared_ptr<Texture2D>
         Create(const std::string &path);
+
+        static std::shared_ptr<Texture2D>
+        Create(
+            const TextureSpecification &specification);
     };
 
 }

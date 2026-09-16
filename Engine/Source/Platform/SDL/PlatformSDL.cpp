@@ -1,11 +1,14 @@
 #include "Aurora/Core/Window.h"
 #include "Aurora/Renderer/GraphicsContext.h"
 #include "Aurora/Renderer/Texture2D.h"
+#include "Aurora/Renderer/Framebuffer.h"
 #include "Aurora/Renderer/RendererResourceFactory.h"
+#include "Aurora/Renderer/RendererAPI.h"
+
 #include "SDLGraphicsContext.h"
 #include "SDLWindow.h"
 #include "SDLTexture2D.h"
-#include "Aurora/Renderer/RendererAPI.h"
+
 #include "../OpenGL/OpenGLGraphicsContext.h"
 
 namespace Aurora
@@ -49,4 +52,20 @@ namespace Aurora
     {
         return RendererResourceFactory::CreateTexture2D(path);
     }
+
+    std::shared_ptr<Texture2D>
+    Texture2D::Create(
+        const TextureSpecification &specification)
+    {
+        return RendererResourceFactory::CreateTexture2D(
+            specification);
+    }
+
+    std::shared_ptr<Framebuffer>
+    Framebuffer::Create(
+        const FramebufferSpecification &specification)
+    {
+        return RendererResourceFactory::CreateFramebuffer(
+            specification);
+    };
 }

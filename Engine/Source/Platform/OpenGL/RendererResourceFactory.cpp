@@ -6,6 +6,7 @@
 #include "OpenGLVertexArray.h"
 #include "OpenGLShader.h"
 #include "OpenGLTexture2D.h"
+#include "OpenGLFramebuffer.h"
 
 #include "../SDL/SDLTexture2D.h"
 
@@ -126,6 +127,45 @@ namespace Aurora
         case RendererBackend::OpenGL:
             return std::make_shared<OpenGLTexture2D>(
                 path);
+        }
+
+        throw std::runtime_error(
+            "Unsupported renderer backend");
+    }
+
+    std::shared_ptr<Texture2D>
+    RendererResourceFactory::CreateTexture2D(
+        const TextureSpecification &specification)
+    {
+        switch (s_Backend)
+        {
+        case RendererBackend::SDL:
+            throw std::runtime_error(
+                "Render-target textures are not supported "
+                "by the SDL renderer");
+
+        case RendererBackend::OpenGL:
+            return std::make_shared<OpenGLTexture2D>(
+                specification);
+        }
+
+        throw std::runtime_error(
+            "Unsupported renderer backend");
+    }
+
+    std::shared_ptr<Framebuffer>
+    RendererResourceFactory::CreateFramebuffer(
+        const FramebufferSpecification &specification)
+    {
+        switch (s_Backend)
+        {
+        case RendererBackend::SDL:
+            throw std::runtime_error(
+                "SDL Framebuffer is not implemented");
+
+        case RendererBackend::OpenGL:
+            return std::make_shared<OpenGLFramebuffer>(
+                specification);
         }
 
         throw std::runtime_error(
