@@ -57,6 +57,9 @@ namespace Aurora
 
         RendererBackend GetBackend() const override;
 
+        void SetPostProcessEffect(
+            PostProcessEffect effect) override;
+
     private:
         SDL_Renderer *m_Renderer;
         RendererState m_State;

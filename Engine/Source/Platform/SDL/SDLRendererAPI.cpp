@@ -511,4 +511,10 @@ namespace Aurora
     {
         (void)texture;
     }
+
+    void SDLRendererAPI::SetPostProcessEffect(
+        PostProcessEffect effect)
+    {
+        (void)effect;
+    }
 }

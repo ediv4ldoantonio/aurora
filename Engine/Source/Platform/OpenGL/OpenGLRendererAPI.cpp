@@ -227,6 +227,11 @@ namespace Aurora
             "u_ScreenTexture",
             0);
 
+        m_ScreenShader->SetInt(
+            "u_PostProcessEffect",
+            static_cast<int>(
+                m_PostProcessEffect));
+
         m_ScreenShader->Unbind();
     }
 
@@ -491,5 +496,20 @@ namespace Aurora
             6,
             GL_UNSIGNED_INT,
             nullptr);
+    }
+
+    void OpenGLRendererAPI::SetPostProcessEffect(
+        PostProcessEffect effect)
+    {
+        m_PostProcessEffect = effect;
+
+        BindShader(m_ScreenShader);
+
+        if (m_ScreenShader)
+        {
+            m_ScreenShader->SetInt(
+                "u_PostProcessEffect",
+                static_cast<int>(m_PostProcessEffect));
+        }
     }
 }

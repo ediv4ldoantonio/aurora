@@ -6,6 +6,7 @@
 #include "Aurora/Renderer/SpriteBatch.h"
 #include "Aurora/Renderer/RendererBackend.h"
 #include "Aurora/Renderer/VertexArray.h"
+#include "Aurora/Renderer/PostProcessEffect.h"
 
 #include <memory>
 
@@ -54,6 +55,9 @@ namespace Aurora
 
         virtual void DrawFramebuffer(
             const std::shared_ptr<Texture2D> &texture) = 0;
+
+        virtual void SetPostProcessEffect(
+            PostProcessEffect effect) = 0;
 
     private:
         static RendererBackend s_Backend;

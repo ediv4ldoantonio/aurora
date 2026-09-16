@@ -1,0 +1,10 @@
+#pragma once
+
+namespace Aurora
+{
+    enum class PostProcessEffect
+    {
+        None = 0,
+        Grayscale = 1,
+    };
+}

@@ -3,13 +3,30 @@
 in vec2 v_TexCoord;
 
 uniform sampler2D u_ScreenTexture;
+uniform int u_PostProcessEffect;
 
 out vec4 o_Color;
 
 void main()
 {
-    o_Color =
+    vec4 color =
         texture(
             u_ScreenTexture,
             v_TexCoord);
+
+    if (u_PostProcessEffect == 1)
+    {
+        float grayscale =
+            dot(
+                color.rgb,
+                vec3(
+                    0.299,
+                    0.587,
+                    0.114));
+
+        color.rgb =
+            vec3(grayscale);
+    }
+
+    o_Color = color;
 }

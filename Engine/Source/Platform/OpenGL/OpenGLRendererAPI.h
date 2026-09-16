@@ -55,6 +55,9 @@ namespace Aurora
         void DrawFramebuffer(
             const std::shared_ptr<Texture2D> &texture) override;
 
+        void SetPostProcessEffect(
+            PostProcessEffect effect) override;
+
     private:
         void CreateSpriteResources();
 
@@ -100,5 +103,8 @@ namespace Aurora
             m_ScreenShader;
 
         OpenGLRendererState m_State;
+
+        PostProcessEffect m_PostProcessEffect =
+            PostProcessEffect::None;
     };
 }
