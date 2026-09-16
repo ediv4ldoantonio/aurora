@@ -7,6 +7,7 @@
 #include "Aurora/Renderer/RendererBackend.h"
 #include "Aurora/Renderer/VertexArray.h"
 #include "Aurora/Renderer/PostProcessEffect.h"
+#include "Aurora/Renderer/PostProcessSettings.h"
 
 #include <memory>
 
@@ -58,6 +59,9 @@ namespace Aurora
 
         virtual void SetPostProcessEffect(
             PostProcessEffect effect) = 0;
+
+        virtual void SetPostProcessSettings(
+            const PostProcessSettings &settings) = 0;
 
     private:
         static RendererBackend s_Backend;

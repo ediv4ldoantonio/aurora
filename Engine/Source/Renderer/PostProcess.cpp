@@ -10,6 +10,8 @@ namespace Aurora
     PostProcessEffect PostProcess::s_Effect =
         PostProcessEffect::None;
 
+    PostProcessSettings PostProcess::s_Settings;
+
     void PostProcess::Init(RendererAPI *renderer)
     {
         if (!renderer)
@@ -20,12 +22,14 @@ namespace Aurora
 
         s_Renderer = renderer;
         s_Effect = PostProcessEffect::None;
+        s_Settings = PostProcessSettings{};
     }
 
     void PostProcess::Shutdown()
     {
         s_Renderer = nullptr;
         s_Effect = PostProcessEffect::None;
+        s_Settings = PostProcessSettings{};
     }
 
     void PostProcess::SetEffect(
@@ -51,6 +55,20 @@ namespace Aurora
         s_Renderer->SetPostProcessEffect(
             s_Effect);
 
+        s_Renderer->SetPostProcessSettings(s_Settings);
+
         s_Renderer->DrawFramebuffer(source);
+    }
+
+    void PostProcess::SetSettings(
+        const PostProcessSettings &settings)
+    {
+        s_Settings = settings;
+    }
+
+    const PostProcessSettings &
+    PostProcess::GetSettings()
+    {
+        return s_Settings;
     }
 }

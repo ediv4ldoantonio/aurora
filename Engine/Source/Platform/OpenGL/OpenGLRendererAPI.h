@@ -58,6 +58,9 @@ namespace Aurora
         void SetPostProcessEffect(
             PostProcessEffect effect) override;
 
+        void SetPostProcessSettings(
+            const PostProcessSettings &settings) override;
+
     private:
         void CreateSpriteResources();
 
@@ -103,6 +106,8 @@ namespace Aurora
             m_ScreenShader;
 
         OpenGLRendererState m_State;
+
+        PostProcessSettings m_PostProcessSettings;
 
         PostProcessEffect m_PostProcessEffect =
             PostProcessEffect::None;

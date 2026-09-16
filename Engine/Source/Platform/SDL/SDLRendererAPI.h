@@ -60,6 +60,9 @@ namespace Aurora
         void SetPostProcessEffect(
             PostProcessEffect effect) override;
 
+        void SetPostProcessSettings(
+            const PostProcessSettings &settings) override;
+
     private:
         SDL_Renderer *m_Renderer;
         RendererState m_State;

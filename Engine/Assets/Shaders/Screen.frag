@@ -4,6 +4,7 @@ in vec2 v_TexCoord;
 
 uniform sampler2D u_ScreenTexture;
 uniform int u_PostProcessEffect;
+uniform float u_Brightness;
 
 out vec4 o_Color;
 
@@ -27,6 +28,8 @@ void main()
         color.rgb =
             vec3(grayscale);
     }
+    
+    color.rgb += vec3(u_Brightness);
 
     o_Color = color;
 }

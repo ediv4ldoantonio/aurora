@@ -206,6 +206,7 @@ namespace Aurora
         }
 
         m_SpriteShader->Unbind();
+        InvalidateShaderState();
     }
 
     void OpenGLRendererAPI::CreateScreenShader()
@@ -232,7 +233,12 @@ namespace Aurora
             static_cast<int>(
                 m_PostProcessEffect));
 
+        m_ScreenShader->SetFloat(
+            "u_Brightness",
+            m_PostProcessSettings.Brightness);
+
         m_ScreenShader->Unbind();
+        InvalidateShaderState();
     }
 
     void OpenGLRendererAPI::DrawIndexed(
@@ -510,6 +516,21 @@ namespace Aurora
             m_ScreenShader->SetInt(
                 "u_PostProcessEffect",
                 static_cast<int>(m_PostProcessEffect));
+        }
+    }
+
+    void OpenGLRendererAPI::SetPostProcessSettings(
+        const PostProcessSettings &settings)
+    {
+        m_PostProcessSettings = settings;
+
+        BindShader(m_ScreenShader);
+
+        if (m_ScreenShader)
+        {
+            m_ScreenShader->SetFloat(
+                "u_Brightness",
+                m_PostProcessSettings.Brightness);
         }
     }
 }

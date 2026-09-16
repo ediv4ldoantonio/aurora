@@ -517,4 +517,10 @@ namespace Aurora
     {
         (void)effect;
     }
+
+    void SDLRendererAPI::SetPostProcessSettings(
+        const PostProcessSettings &settings)
+    {
+        (void)settings;
+    }
 }
