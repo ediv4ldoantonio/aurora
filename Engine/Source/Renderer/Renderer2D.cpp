@@ -2,6 +2,7 @@
 #include "Aurora/Renderer/RendererAPI.h"
 #include "Aurora/Renderer/RenderCommand.h"
 #include "Aurora/Renderer/RendererResourceFactory.h"
+#include "Aurora/Renderer/PostProcess.h"
 #include "Aurora/Core/Logger.h"
 #include "Aurora/Core/Assert.h"
 #include "Aurora/Core/Window.h"
@@ -57,6 +58,8 @@ namespace Aurora
         RendererResourceFactory::Init(
             s_Renderer->GetBackend());
 
+        PostProcess::Init(s_Renderer);
+
         FramebufferSpecification specification;
 
         specification.Width = window.GetWidth();
@@ -70,6 +73,8 @@ namespace Aurora
 
     void Renderer2D::Shutdown()
     {
+        PostProcess::Shutdown();
+
         s_SpriteBatch.Clear();
         s_RenderQueue.Clear();
 
@@ -125,9 +130,8 @@ namespace Aurora
                 s_Window->GetWidth(),
                 s_Window->GetHeight());
 
-            s_Renderer->DrawFramebuffer(
-                s_SceneFramebuffer
-                    ->GetColorAttachment());
+            PostProcess::Apply(
+                s_SceneFramebuffer->GetColorAttachment());
         }
 
         s_Renderer->EndFrame();
