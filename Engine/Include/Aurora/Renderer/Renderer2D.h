@@ -7,6 +7,7 @@
 #include "Aurora/Renderer/SpriteBatch.h"
 #include "Aurora/Renderer/Shader.h"
 #include "Aurora/Renderer/GraphicsContext.h"
+#include "Aurora/Renderer/Framebuffer.h"
 #include "Aurora/Scene/Components/SpriteComponent.h"
 #include "Aurora/Scene/Components/TransformComponent.h"
 
@@ -16,13 +17,14 @@
 namespace Aurora
 {
 
+    class Window;
     class RendererAPI;
 
     class Renderer2D
     {
 
     public:
-        static void Init(GraphicsContext &context);
+        static void Init(Window &window);
 
         static void Shutdown();
 
@@ -41,18 +43,26 @@ namespace Aurora
 
         static void Flush();
 
+        static void OnResize(
+            uint32_t width,
+            uint32_t height);
+
     private:
         static void FlushBatch();
 
         static RendererAPI *s_Renderer;
         static GraphicsContext *s_GraphicsContext;
+        static Window *s_Window;
         static Camera2D *s_Camera;
+
         static RenderState s_RenderState;
         static SpriteBatch s_SpriteBatch;
         static RenderQueue s_RenderQueue;
 
         static uint32_t s_BatchCount;
         static uint32_t s_BatchBreakCount;
+
+        static std::shared_ptr<Framebuffer> s_SceneFramebuffer;
     };
 
 }

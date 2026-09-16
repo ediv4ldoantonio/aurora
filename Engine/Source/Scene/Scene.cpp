@@ -1,7 +1,6 @@
 #include "Aurora/Scene/Scene.h"
 #include "Aurora/Scene/Entity.h"
 #include "Aurora/Renderer/Renderer2D.h"
-#include "Aurora/Renderer/RenderCommand.h"
 #include "Aurora/Scene/Components/SpriteComponent.h"
 #include "Aurora/Scene/Components/TransformComponent.h"
 #include "Aurora/Scene/Components/ScriptComponent.h"
@@ -24,9 +23,6 @@ namespace Aurora
 
     Scene::Scene()
     {
-        m_Camera.SetViewportSize(
-            {1280.0f, 720.0f});
-
         m_Camera.SetPosition(
             {0.0f, 0.0f});
 
@@ -84,20 +80,6 @@ namespace Aurora
 
     void Scene::OnEvent(Event &event)
     {
-        EventDispatcher dispatcher(event);
-
-        dispatcher.Dispatch<WindowResizeEvent>(
-            [this](WindowResizeEvent &e)
-            {
-                m_Camera.SetViewportSize(
-                    Vector2(
-                        static_cast<float>(e.GetWidth()),
-                        static_cast<float>(e.GetHeight())));
-
-                RenderCommand::SetViewport(0, 0, e.GetWidth(), e.GetHeight());
-
-                return false;
-            });
     }
 
     void Scene::SetParent(

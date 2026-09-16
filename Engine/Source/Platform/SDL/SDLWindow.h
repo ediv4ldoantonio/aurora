@@ -24,6 +24,10 @@ namespace Aurora
 
         GraphicsContext &GetGraphicsContext() override;
 
+        unsigned int GetWidth() const override;
+
+        unsigned int GetHeight() const override;
+
     private:
         static void ConfigureOpenGLAttributes();
 

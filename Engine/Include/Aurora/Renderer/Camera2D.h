@@ -50,10 +50,11 @@ namespace Aurora
     private:
         float m_Rotation = 0.0f;
         float m_Zoom = 1.0f;
+        float m_OrthographicSize = 10.0f;
 
         Vector2 m_Position;
         Vector2 m_ViewportSize =
-            {1280.0f, 720.0f};
+            {1.0f, 1.0f};
 
         Matrix4 m_ViewMatrix =
             Matrix4::Identity();

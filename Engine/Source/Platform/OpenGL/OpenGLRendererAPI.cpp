@@ -221,7 +221,7 @@ namespace Aurora
                 vertexSource,
                 fragmentSource);
 
-        m_ScreenShader->Bind();
+        BindShader(m_ScreenShader);
 
         m_ScreenShader->SetInt(
             "u_ScreenTexture",
@@ -480,7 +480,7 @@ namespace Aurora
         if (!texture)
             return;
 
-        m_ScreenShader->Bind();
+        BindShader(m_ScreenShader);
 
         texture->Bind(0);
 

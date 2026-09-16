@@ -15,7 +15,7 @@ public:
             GetEntity()
                 .GetComponent<Aurora::TransformComponent>();
 
-        auto speed = 10000.0f;
+        auto speed = 10.0f;
 
         if (
             Aurora::Input::IsKeyPressed(

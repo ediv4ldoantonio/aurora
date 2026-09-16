@@ -64,6 +64,16 @@ namespace Aurora
         return *m_Context;
     }
 
+    unsigned int SDLWindow::GetWidth() const
+    {
+        return m_Specification.Width;
+    }
+
+    unsigned int SDLWindow::GetHeight() const
+    {
+        return m_Specification.Height;
+    }
+
     void SDLWindow::OnUpdate()
     {
 
@@ -106,9 +116,17 @@ namespace Aurora
             }
             case SDL_EVENT_WINDOW_RESIZED:
             {
+                m_Specification.Width =
+                    static_cast<unsigned int>(
+                        sdlEvent.window.data1);
+
+                m_Specification.Height =
+                    static_cast<unsigned int>(
+                        sdlEvent.window.data2);
+
                 WindowResizeEvent event(
-                    static_cast<uint32_t>(sdlEvent.window.data1),
-                    static_cast<uint32_t>(sdlEvent.window.data2));
+                    m_Specification.Width,
+                    m_Specification.Height);
 
                 m_Specification.EventCallback(event);
 

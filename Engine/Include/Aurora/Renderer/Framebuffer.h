@@ -9,8 +9,8 @@ namespace Aurora
 {
     struct FramebufferSpecification
     {
-        uint32_t Width = 1280;
-        uint32_t Height = 720;
+        uint32_t Width = 0;
+        uint32_t Height = 0;
 
         bool HasDepthStencil = true;
     };

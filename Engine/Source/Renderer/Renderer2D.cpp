@@ -4,6 +4,7 @@
 #include "Aurora/Renderer/RendererResourceFactory.h"
 #include "Aurora/Core/Logger.h"
 #include "Aurora/Core/Assert.h"
+#include "Aurora/Core/Window.h"
 
 #include <algorithm>
 #include <stdexcept>
@@ -16,6 +17,9 @@ namespace Aurora
 
     GraphicsContext *
         Renderer2D::s_GraphicsContext = nullptr;
+
+    Window *
+        Renderer2D::s_Window = nullptr;
 
     Camera2D *
         Renderer2D::s_Camera = nullptr;
@@ -31,8 +35,13 @@ namespace Aurora
     uint32_t Renderer2D::s_BatchCount = 0;
     uint32_t Renderer2D::s_BatchBreakCount = 0;
 
-    void Renderer2D::Init(GraphicsContext &context)
+    std::shared_ptr<Framebuffer>
+        Renderer2D::s_SceneFramebuffer = nullptr;
+
+    void Renderer2D::Init(Window &window)
     {
+        s_Window = &window;
+        auto &context = window.GetGraphicsContext();
         s_GraphicsContext = &context;
         s_Renderer = context.GetRendererAPI();
 
@@ -47,6 +56,16 @@ namespace Aurora
 
         RendererResourceFactory::Init(
             s_Renderer->GetBackend());
+
+        FramebufferSpecification specification;
+
+        specification.Width = window.GetWidth();
+        specification.Height = window.GetHeight();
+        specification.HasDepthStencil = true;
+
+        s_SceneFramebuffer =
+            RendererResourceFactory::CreateFramebuffer(
+                specification);
     }
 
     void Renderer2D::Shutdown()
@@ -54,9 +73,12 @@ namespace Aurora
         s_SpriteBatch.Clear();
         s_RenderQueue.Clear();
 
+        s_SceneFramebuffer.reset();
+
         s_Camera = nullptr;
         s_Renderer = nullptr;
         s_GraphicsContext = nullptr;
+        s_Window = nullptr;
     }
 
     void Renderer2D::BeginFrame()
@@ -68,14 +90,18 @@ namespace Aurora
         s_BatchBreakCount = 0;
 
         s_RenderQueue.Clear();
-
         s_SpriteBatch.Clear();
 
         s_Renderer->BeginFrame();
 
+        if (s_SceneFramebuffer)
+        {
+            s_SceneFramebuffer->Bind();
+        }
+
         RenderCommand::Clear();
 
-        if (s_Camera && s_Renderer)
+        if (s_Camera)
         {
             s_Renderer->SetViewProjection(
                 s_Camera->GetViewProjectionMatrix());
@@ -88,6 +114,21 @@ namespace Aurora
 
         if (!s_Renderer)
             return;
+
+        if (s_SceneFramebuffer)
+        {
+            s_SceneFramebuffer->Unbind();
+
+            s_Renderer->SetViewport(
+                0,
+                0,
+                s_Window->GetWidth(),
+                s_Window->GetHeight());
+
+            s_Renderer->DrawFramebuffer(
+                s_SceneFramebuffer
+                    ->GetColorAttachment());
+        }
 
         s_Renderer->EndFrame();
 
@@ -148,6 +189,13 @@ namespace Aurora
 
         if (!s_Camera)
             return;
+
+        if (s_Window)
+        {
+            s_Camera->SetViewportSize(
+                {static_cast<float>(s_Window->GetWidth()),
+                 static_cast<float>(s_Window->GetHeight())});
+        }
 
         s_RenderState.ViewMatrix =
             s_Camera->GetViewMatrix();
@@ -220,5 +268,36 @@ namespace Aurora
             s_SpriteBatch);
 
         s_SpriteBatch.Clear();
+    }
+
+    void Renderer2D::OnResize(
+        uint32_t width,
+        uint32_t height)
+    {
+        if (!s_Renderer)
+            return;
+
+        if (width == 0 || height == 0)
+            return;
+
+        if (s_SceneFramebuffer)
+        {
+            s_SceneFramebuffer->Resize(
+                width,
+                height);
+        }
+
+        RenderCommand::SetViewport(
+            0,
+            0,
+            width,
+            height);
+
+        if (s_Camera)
+        {
+            s_Camera->SetViewportSize(
+                {static_cast<float>(width),
+                 static_cast<float>(height)});
+        }
     }
 }

@@ -44,7 +44,7 @@ SandboxLayer::SandboxLayer()
         {0, 0};
 
     p_Transform.LocalTransform.Scale =
-        {200.0f, 200.0f};
+        {5.0f, 5.0f};
 
     p_Transform.LocalTransform.Rotation = 0.0f;
 

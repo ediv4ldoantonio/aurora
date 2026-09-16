@@ -75,8 +75,7 @@ namespace Aurora
         AURORA_LOG_INFO("Created window: ", spec.Title, " (", spec.Width, "x", spec.Height, ")");
 
         Renderer2D::Init(
-            m_Window
-                ->GetGraphicsContext());
+            *m_Window);
     }
 
     void Application::Shutdown()
@@ -100,6 +99,16 @@ namespace Aurora
                 m_Running = false;
 
                 AURORA_LOG_INFO("Closing application because the window requested shutdown");
+
+                return true;
+            });
+
+        dispatcher.Dispatch<WindowResizeEvent>(
+            [this](WindowResizeEvent &event)
+            {
+                Renderer2D::OnResize(
+                    event.GetWidth(),
+                    event.GetHeight());
 
                 return true;
             });

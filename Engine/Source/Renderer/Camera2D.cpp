@@ -92,13 +92,22 @@ namespace Aurora
 
     void Camera2D::RecalculateProjectionMatrix()
     {
-        float halfWidth =
-            (m_ViewportSize.x * 0.5f) /
+        if (m_ViewportSize.x <= 0.0f ||
+            m_ViewportSize.y <= 0.0f)
+        {
+            return;
+        }
+
+        const float aspect =
+            m_ViewportSize.x /
+            m_ViewportSize.y;
+
+        const float halfHeight =
+            m_OrthographicSize /
             m_Zoom;
 
-        float halfHeight =
-            (m_ViewportSize.y * 0.5f) /
-            m_Zoom;
+        const float halfWidth =
+            halfHeight * aspect;
 
         m_ProjectionMatrix =
             Matrix4::Orthographic(
@@ -113,42 +122,25 @@ namespace Aurora
     Vector2 Camera2D::WorldToScreen(
         const Vector2 &worldPosition) const
     {
-        Vector2 relative =
-            worldPosition - m_Position;
+        if (m_ViewportSize.x <= 0.0f ||
+            m_ViewportSize.y <= 0.0f)
+        {
+            return {};
+        }
 
-        float radians =
-            -m_Rotation;
+        const Vector2 viewSpacePosition =
+            m_ViewMatrix.TransformPoint(
+                worldPosition);
 
-        float cosRotation =
-            std::cos(radians);
+        const Vector2 normalizedPosition =
+            m_ProjectionMatrix.TransformPoint(
+                viewSpacePosition);
 
-        float sinRotation =
-            std::sin(radians);
-
-        Vector2 rotated;
-
-        rotated.x =
-            relative.x * cosRotation -
-            relative.y * sinRotation;
-
-        rotated.y =
-            relative.x * sinRotation +
-            relative.y * cosRotation;
-
-        rotated.x *= m_Zoom;
-        rotated.y *= m_Zoom;
-
-        Vector2 screen;
-
-        screen.x =
-            m_ViewportSize.x * 0.5f +
-            rotated.x;
-
-        screen.y =
-            m_ViewportSize.y * 0.5f -
-            rotated.y;
-
-        return screen;
+        return Vector2(
+            (normalizedPosition.x + 1.0f) *
+                0.5f * m_ViewportSize.x,
+            (1.0f - normalizedPosition.y) *
+                0.5f * m_ViewportSize.y);
     }
 
     void Camera2D::SetRotation(

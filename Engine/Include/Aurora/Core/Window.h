@@ -38,6 +38,10 @@ namespace Aurora
 
         virtual GraphicsContext &GetGraphicsContext() = 0;
 
+        virtual unsigned int GetWidth() const = 0;
+
+        virtual unsigned int GetHeight() const = 0;
+
         static std::unique_ptr<Window> Create(const WindowSpecification &specification = WindowSpecification{});
 
         virtual void SetEventCallback(
