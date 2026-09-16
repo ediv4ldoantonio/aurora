@@ -52,6 +52,9 @@ namespace Aurora
         void SetViewProjection(
             const Matrix4 &viewProjection) override;
 
+        void DrawFramebuffer(
+            const std::shared_ptr<Texture2D> &texture) override;
+
         RendererBackend GetBackend() const override;
 
     private:

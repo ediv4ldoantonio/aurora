@@ -52,7 +52,18 @@ namespace Aurora
         void SetViewProjection(
             const Matrix4 &viewProjection) override;
 
+        void DrawFramebuffer(
+            const std::shared_ptr<Texture2D> &texture) override;
+
     private:
+        void CreateSpriteResources();
+
+        void CreateScreenResources();
+
+        void CreateSpriteShader();
+
+        void CreateScreenShader();
+
         void BindBatchMaterials(
             const SpriteBatch &batch);
 
@@ -75,6 +86,19 @@ namespace Aurora
         std::shared_ptr<VertexBuffer> m_SpriteVertexBuffer;
         std::shared_ptr<IndexBuffer> m_SpriteIndexBuffer;
         std::shared_ptr<Shader> m_SpriteShader;
+
+        std::shared_ptr<VertexArray>
+            m_ScreenVertexArray;
+
+        std::shared_ptr<VertexBuffer>
+            m_ScreenVertexBuffer;
+
+        std::shared_ptr<IndexBuffer>
+            m_ScreenIndexBuffer;
+
+        std::shared_ptr<Shader>
+            m_ScreenShader;
+
         OpenGLRendererState m_State;
     };
 }

@@ -52,6 +52,9 @@ namespace Aurora
         virtual void SetViewProjection(
             const Matrix4 &viewProjection) = 0;
 
+        virtual void DrawFramebuffer(
+            const std::shared_ptr<Texture2D> &texture) = 0;
+
     private:
         static RendererBackend s_Backend;
     };

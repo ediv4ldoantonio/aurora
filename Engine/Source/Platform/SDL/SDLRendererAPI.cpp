@@ -505,4 +505,10 @@ namespace Aurora
     {
         (void)viewProjection;
     }
+
+    void SDLRendererAPI::DrawFramebuffer(
+        const std::shared_ptr<Texture2D> &texture)
+    {
+        (void)texture;
+    }
 }

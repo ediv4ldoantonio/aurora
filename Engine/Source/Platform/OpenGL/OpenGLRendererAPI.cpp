@@ -43,6 +43,15 @@ namespace Aurora
             0.1f,
             1.0f);
 
+        CreateSpriteResources();
+        CreateScreenResources();
+        CreateSpriteShader();
+        CreateScreenShader();
+        InvalidateShaderState();
+    }
+
+    void OpenGLRendererAPI::CreateSpriteResources()
+    {
         m_SpriteVertexArray =
             RendererResourceFactory::CreateVertexArray();
 
@@ -74,7 +83,7 @@ namespace Aurora
         m_SpriteVertexArray->SetIndexBuffer(
             m_SpriteIndexBuffer);
 
-        std::vector<uint32_t> indices(
+        std::vector<uint32_t> spriteIndices(
             SpriteBatch::MaxQuads * 6);
 
         for (size_t i = 0; i < SpriteBatch::MaxQuads; ++i)
@@ -84,29 +93,87 @@ namespace Aurora
 
             const size_t indexOffset = i * 6;
 
-            indices[indexOffset + 0] =
+            spriteIndices[indexOffset + 0] =
                 vertexOffset + 0;
 
-            indices[indexOffset + 1] =
+            spriteIndices[indexOffset + 1] =
                 vertexOffset + 1;
 
-            indices[indexOffset + 2] =
+            spriteIndices[indexOffset + 2] =
                 vertexOffset + 2;
 
-            indices[indexOffset + 3] =
+            spriteIndices[indexOffset + 3] =
                 vertexOffset + 2;
 
-            indices[indexOffset + 4] =
+            spriteIndices[indexOffset + 4] =
                 vertexOffset + 3;
 
-            indices[indexOffset + 5] =
+            spriteIndices[indexOffset + 5] =
                 vertexOffset + 0;
         }
 
         m_SpriteIndexBuffer->SetData(
-            indices.data(),
-            indices.size());
+            spriteIndices.data(),
+            spriteIndices.size());
+    }
 
+    void OpenGLRendererAPI::CreateScreenResources()
+    {
+        m_ScreenVertexArray =
+            RendererResourceFactory::CreateVertexArray();
+
+        m_ScreenVertexBuffer =
+            RendererResourceFactory::CreateVertexBuffer(
+                4 * sizeof(float) * 4);
+
+        m_ScreenIndexBuffer =
+            RendererResourceFactory::CreateIndexBuffer(6);
+
+        BufferLayout screenLayout =
+            {
+                {ShaderDataType::Float2,
+                 "a_Position"},
+                {ShaderDataType::Float2,
+                 "a_TexCoord"}};
+
+        m_ScreenVertexBuffer->SetLayout(
+            screenLayout);
+
+        m_ScreenVertexArray->AddVertexBuffer(
+            m_ScreenVertexBuffer);
+
+        m_ScreenVertexArray->SetIndexBuffer(
+            m_ScreenIndexBuffer);
+
+        struct ScreenVertex
+        {
+            float Position[2];
+            float TexCoord[2];
+        };
+
+        const ScreenVertex vertices[] =
+            {
+                {{-1.0f, -1.0f}, {0.0f, 0.0f}},
+                {{1.0f, -1.0f}, {1.0f, 0.0f}},
+                {{1.0f, 1.0f}, {1.0f, 1.0f}},
+                {{-1.0f, 1.0f}, {0.0f, 1.0f}}};
+
+        m_ScreenVertexBuffer->SetData(
+            vertices,
+            sizeof(vertices));
+
+        const uint32_t indices[] =
+            {
+                0, 1, 2,
+                2, 3, 0};
+
+        m_ScreenIndexBuffer->SetData(
+            indices,
+            6);
+    }
+
+    void OpenGLRendererAPI::CreateSpriteShader()
+    {
         const std::string vertexSource =
             LoadShaderSource("Engine/Assets/Shaders/Sprite.vert");
 
@@ -139,7 +206,28 @@ namespace Aurora
         }
 
         m_SpriteShader->Unbind();
-        InvalidateShaderState();
+    }
+
+    void OpenGLRendererAPI::CreateScreenShader()
+    {
+        const std::string vertexSource =
+            LoadShaderSource("Engine/Assets/Shaders/Screen.vert");
+
+        const std::string fragmentSource =
+            LoadShaderSource("Engine/Assets/Shaders/Screen.frag");
+
+        m_ScreenShader =
+            RendererResourceFactory::CreateShader(
+                vertexSource,
+                fragmentSource);
+
+        m_ScreenShader->Bind();
+
+        m_ScreenShader->SetInt(
+            "u_ScreenTexture",
+            0);
+
+        m_ScreenShader->Unbind();
     }
 
     void OpenGLRendererAPI::DrawIndexed(
@@ -169,6 +257,10 @@ namespace Aurora
         m_SpriteVertexArray.reset();
         m_SpriteVertexBuffer.reset();
         m_SpriteIndexBuffer.reset();
+        m_ScreenShader.reset();
+        m_ScreenVertexArray.reset();
+        m_ScreenVertexBuffer.reset();
+        m_ScreenIndexBuffer.reset();
     }
 
     void OpenGLRendererAPI::BeginFrame()
@@ -380,5 +472,24 @@ namespace Aurora
 
         m_State.TextureBindings[slot] =
             texture.get();
+    }
+
+    void OpenGLRendererAPI::DrawFramebuffer(
+        const std::shared_ptr<Texture2D> &texture)
+    {
+        if (!texture)
+            return;
+
+        m_ScreenShader->Bind();
+
+        texture->Bind(0);
+
+        m_ScreenVertexArray->Bind();
+
+        glDrawElements(
+            GL_TRIANGLES,
+            6,
+            GL_UNSIGNED_INT,
+            nullptr);
     }
 }
