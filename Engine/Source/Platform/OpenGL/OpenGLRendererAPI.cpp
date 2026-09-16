@@ -504,6 +504,37 @@ namespace Aurora
             nullptr);
     }
 
+    void OpenGLRendererAPI::DrawFramebuffer(
+        const std::shared_ptr<Texture2D> &texture,
+        const std::shared_ptr<Framebuffer> &target)
+    {
+        if (!texture)
+            return;
+
+        if (!target)
+            return;
+
+        target->Bind();
+
+        BindShader(m_ScreenShader);
+
+        texture->Bind(0);
+
+        m_ScreenVertexArray->Bind();
+
+        glDrawElements(
+            GL_TRIANGLES,
+            6,
+            GL_UNSIGNED_INT,
+            nullptr);
+
+        m_ScreenVertexArray->Unbind();
+
+        m_ScreenShader->Unbind();
+
+        target->Unbind();
+    }
+
     void OpenGLRendererAPI::SetPostProcessEffect(
         PostProcessEffect effect)
     {

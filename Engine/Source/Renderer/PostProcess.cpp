@@ -1,5 +1,6 @@
 #include "Aurora/Renderer/PostProcess.h"
 #include "Aurora/Renderer/RendererAPI.h"
+#include "Aurora/Renderer/RendererResourceFactory.h"
 
 #include <stdexcept>
 
@@ -12,7 +13,13 @@ namespace Aurora
 
     PostProcessSettings PostProcess::s_Settings;
 
-    void PostProcess::Init(RendererAPI *renderer)
+    std::shared_ptr<Framebuffer>
+        PostProcess::s_IntermediateFramebuffer = nullptr;
+
+    void PostProcess::Init(
+        RendererAPI *renderer,
+        uint32_t width,
+        uint32_t height)
     {
         if (!renderer)
         {
@@ -23,12 +30,25 @@ namespace Aurora
         s_Renderer = renderer;
         s_Effect = PostProcessEffect::None;
         s_Settings = PostProcessSettings{};
+
+        FramebufferSpecification specification;
+        specification.Width = width;
+        specification.Height = height;
+        specification.HasDepthStencil = false;
+
+        s_IntermediateFramebuffer =
+            RendererResourceFactory::CreateFramebuffer(
+                specification);
     }
 
     void PostProcess::Shutdown()
     {
+        s_IntermediateFramebuffer.reset();
+
         s_Renderer = nullptr;
+
         s_Effect = PostProcessEffect::None;
+
         s_Settings = PostProcessSettings{};
     }
 
@@ -70,5 +90,20 @@ namespace Aurora
     PostProcess::GetSettings()
     {
         return s_Settings;
+    }
+
+    void PostProcess::Resize(
+        uint32_t width,
+        uint32_t height)
+    {
+        if (!s_IntermediateFramebuffer)
+            return;
+
+        if (width == 0 || height == 0)
+            return;
+
+        s_IntermediateFramebuffer->Resize(
+            width,
+            height);
     }
 }

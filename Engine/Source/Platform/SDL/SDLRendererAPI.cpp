@@ -523,4 +523,12 @@ namespace Aurora
     {
         (void)settings;
     }
+
+    void SDLRendererAPI::DrawFramebuffer(
+        const std::shared_ptr<Texture2D> &texture,
+        const std::shared_ptr<Framebuffer> &target)
+    {
+        (void)texture;
+        (void)target;
+    }
 }

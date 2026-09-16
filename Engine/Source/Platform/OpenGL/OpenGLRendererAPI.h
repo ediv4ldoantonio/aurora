@@ -55,6 +55,10 @@ namespace Aurora
         void DrawFramebuffer(
             const std::shared_ptr<Texture2D> &texture) override;
 
+        void DrawFramebuffer(
+            const std::shared_ptr<Texture2D> &texture,
+            const std::shared_ptr<Framebuffer> &target) override;
+
         void SetPostProcessEffect(
             PostProcessEffect effect) override;
 

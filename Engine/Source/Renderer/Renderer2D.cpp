@@ -58,7 +58,10 @@ namespace Aurora
         RendererResourceFactory::Init(
             s_Renderer->GetBackend());
 
-        PostProcess::Init(s_Renderer);
+        PostProcess::Init(
+            s_Renderer,
+            window.GetWidth(),
+            window.GetHeight());
 
         FramebufferSpecification specification;
 
@@ -290,6 +293,10 @@ namespace Aurora
                 width,
                 height);
         }
+
+        PostProcess::Resize(
+            width,
+            height);
 
         RenderCommand::SetViewport(
             0,
