@@ -6,14 +6,13 @@
 #include "Aurora/Renderer/SpriteBatch.h"
 #include "Aurora/Renderer/RendererBackend.h"
 #include "Aurora/Renderer/VertexArray.h"
-#include "Aurora/Renderer/PostProcessEffect.h"
-#include "Aurora/Renderer/PostProcessSettings.h"
 #include "Aurora/Renderer/Framebuffer.h"
 
 #include <memory>
 
 namespace Aurora
 {
+    class Shader;
 
     class RendererAPI
     {
@@ -65,8 +64,7 @@ namespace Aurora
         virtual void DrawPostProcess(
             const std::shared_ptr<Texture2D> &source,
             const std::shared_ptr<Framebuffer> &target,
-            PostProcessEffect effect,
-            const PostProcessSettings &settings) = 0;
+            const std::shared_ptr<Shader> &shader) = 0;
 
     private:
         static RendererBackend s_Backend;

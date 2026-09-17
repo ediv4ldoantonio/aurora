@@ -580,8 +580,7 @@ namespace Aurora
     void OpenGLRendererAPI::DrawPostProcess(
         const std::shared_ptr<Texture2D> &source,
         const std::shared_ptr<Framebuffer> &target,
-        PostProcessEffect effect,
-        const PostProcessSettings &settings)
+        const std::shared_ptr<Shader> &shader)
     {
         if (!source)
             return;
@@ -589,32 +588,12 @@ namespace Aurora
         if (!target)
             return;
 
-        std::shared_ptr<Shader> shader;
-
-        switch (effect)
-        {
-        case PostProcessEffect::Grayscale:
-            shader = m_GrayscaleShader;
-            break;
-
-        case PostProcessEffect::Invert:
-            shader = m_InvertShader;
-            break;
-
-        case PostProcessEffect::None:
-            return;
-        }
-
         if (!shader)
             return;
 
         target->Bind();
 
         BindShader(shader);
-
-        shader->SetFloat(
-            "u_Brightness",
-            settings.Brightness);
 
         BindTexture(0, source);
 

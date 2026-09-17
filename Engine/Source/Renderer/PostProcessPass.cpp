@@ -4,8 +4,10 @@
 namespace Aurora
 {
     PostProcessPass::PostProcessPass(
-        RendererAPI *renderer)
-        : m_Renderer(renderer)
+        RendererAPI *renderer,
+        const std::shared_ptr<Shader> &shader)
+        : m_Renderer(renderer),
+          m_Shader(shader)
     {
     }
 
@@ -15,11 +17,15 @@ namespace Aurora
         m_Renderer = renderer;
     }
 
+    void PostProcessPass::SetShader(
+        const std::shared_ptr<Shader> &shader)
+    {
+        m_Shader = shader;
+    }
+
     void PostProcessPass::Apply(
         const std::shared_ptr<Texture2D> &source,
-        const std::shared_ptr<Framebuffer> &target,
-        PostProcessEffect effect,
-        const PostProcessSettings &settings)
+        const std::shared_ptr<Framebuffer> &target)
     {
         if (!m_Renderer)
             return;
@@ -30,10 +36,12 @@ namespace Aurora
         if (!target)
             return;
 
+        if (!m_Shader)
+            return;
+
         m_Renderer->DrawPostProcess(
             source,
             target,
-            effect,
-            settings);
+            m_Shader);
     }
 }

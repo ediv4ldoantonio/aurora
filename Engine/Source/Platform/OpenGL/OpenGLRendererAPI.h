@@ -62,8 +62,7 @@ namespace Aurora
         void DrawPostProcess(
             const std::shared_ptr<Texture2D> &source,
             const std::shared_ptr<Framebuffer> &target,
-            PostProcessEffect effect,
-            const PostProcessSettings &settings) override;
+            const std::shared_ptr<Shader> &shader) override;
 
     private:
         void CreateSpriteResources();

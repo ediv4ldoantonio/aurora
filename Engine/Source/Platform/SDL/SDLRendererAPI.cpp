@@ -523,8 +523,7 @@ namespace Aurora
     void SDLRendererAPI::DrawPostProcess(
         const std::shared_ptr<Texture2D> &source,
         const std::shared_ptr<Framebuffer> &target,
-        PostProcessEffect effect,
-        const PostProcessSettings &settings)
+        const std::shared_ptr<Shader> &shader)
     {
     }
 }
