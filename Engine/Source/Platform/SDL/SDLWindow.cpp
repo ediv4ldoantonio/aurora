@@ -88,6 +88,8 @@ namespace Aurora
                 WindowCloseEvent e;
 
                 m_Specification.EventCallback(e);
+
+                break;
             }
 
             case SDL_EVENT_KEY_DOWN:

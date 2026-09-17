@@ -36,12 +36,6 @@ namespace Aurora
         static void Apply(
             const std::shared_ptr<Texture2D> &source);
 
-        static void SetSettings(
-            const PostProcessSettings &settings);
-
-        static const PostProcessSettings &
-        GetSettings();
-
         static void Resize(
             uint32_t width,
             uint32_t height);
@@ -51,14 +45,14 @@ namespace Aurora
         FindPass(
             PostProcessEffect effect);
 
+        static void InitShaders();
+
         static RendererAPI *s_Renderer;
 
         static PostProcessEffect s_Effect;
 
         static std::vector<PostProcessEffect>
             s_Effects;
-
-        static PostProcessSettings s_Settings;
 
         static std::shared_ptr<Framebuffer>
             s_PingFramebuffer;

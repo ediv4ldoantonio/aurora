@@ -1,11 +1,13 @@
 #pragma once
 
 #include "Aurora/Renderer/Framebuffer.h"
+#include "Aurora/Renderer/PostProcessEffect.h"
 #include "Aurora/Renderer/Shader.h"
 #include "Aurora/Renderer/Texture2D.h"
-#include "Aurora/Renderer/PostProcessEffect.h"
 
 #include <memory>
+#include <string>
+#include <unordered_map>
 
 namespace Aurora
 {
@@ -29,6 +31,14 @@ namespace Aurora
 
         PostProcessEffect GetEffect() const;
 
+        void SetFloat(
+            const std::string &name,
+            float value);
+
+        void SetInt(
+            const std::string &name,
+            int value);
+
         void Apply(
             const std::shared_ptr<Texture2D> &source,
             const std::shared_ptr<Framebuffer> &target);
@@ -40,5 +50,11 @@ namespace Aurora
             PostProcessEffect::None;
 
         std::shared_ptr<Shader> m_Shader;
+
+        std::unordered_map<std::string, float>
+            m_FloatUniforms;
+
+        std::unordered_map<std::string, int>
+            m_IntUniforms;
     };
 }

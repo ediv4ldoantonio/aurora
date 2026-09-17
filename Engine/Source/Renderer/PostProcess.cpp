@@ -29,8 +29,6 @@ namespace Aurora
     PostProcessEffect PostProcess::s_Effect =
         PostProcessEffect::None;
 
-    PostProcessSettings PostProcess::s_Settings;
-
     std::shared_ptr<Framebuffer>
         PostProcess::s_PingFramebuffer = nullptr;
 
@@ -57,7 +55,6 @@ namespace Aurora
         s_Renderer = renderer;
 
         s_Effect = PostProcessEffect::None;
-        s_Settings = PostProcessSettings{};
         s_Effects.clear();
 
         FramebufferSpecification specification;
@@ -75,6 +72,11 @@ namespace Aurora
 
         s_AvailablePasses.clear();
 
+        InitShaders();
+    }
+
+    void PostProcess::InitShaders()
+    {
         const std::string fullscreenVertexSource =
             LoadShaderSource("Engine/Assets/Shaders/Screen.vert");
 
@@ -83,6 +85,9 @@ namespace Aurora
 
         const std::string invertFragmentSource =
             LoadShaderSource("Engine/Assets/Shaders/Invert.frag");
+
+        const std::string vignetteFragmentSource =
+            LoadShaderSource("Engine/Assets/Shaders/Vignette.frag");
 
         auto grayscaleShader =
             RendererResourceFactory::CreateShader(
@@ -94,6 +99,29 @@ namespace Aurora
                 fullscreenVertexSource,
                 invertFragmentSource);
 
+        auto vignetteShader =
+            RendererResourceFactory::CreateShader(
+                fullscreenVertexSource,
+                vignetteFragmentSource);
+
+        grayscaleShader->Bind();
+        grayscaleShader->SetInt(
+            "u_ScreenTexture",
+            0);
+        grayscaleShader->Unbind();
+
+        invertShader->Bind();
+        invertShader->SetInt(
+            "u_ScreenTexture",
+            0);
+        invertShader->Unbind();
+
+        vignetteShader->Bind();
+        vignetteShader->SetInt(
+            "u_ScreenTexture",
+            0);
+        vignetteShader->Unbind();
+
         s_AvailablePasses.emplace_back(
             s_Renderer,
             PostProcessEffect::Grayscale,
@@ -103,6 +131,22 @@ namespace Aurora
             s_Renderer,
             PostProcessEffect::Invert,
             std::move(invertShader));
+
+        s_AvailablePasses.emplace_back(
+            s_Renderer,
+            PostProcessEffect::Vignette,
+            std::move(vignetteShader));
+
+        auto *vignettePass =
+            FindPass(
+                PostProcessEffect::Vignette);
+
+        if (vignettePass)
+        {
+            vignettePass->SetFloat(
+                "u_Strength",
+                0.75f);
+        }
     }
 
     void PostProcess::Shutdown()
@@ -118,9 +162,6 @@ namespace Aurora
             PostProcessEffect::None;
 
         s_Effects.clear();
-
-        s_Settings =
-            PostProcessSettings{};
     }
 
     void PostProcess::SetEffect(
@@ -225,18 +266,6 @@ namespace Aurora
 
         s_Renderer->DrawFramebuffer(
             currentSource);
-    }
-
-    void PostProcess::SetSettings(
-        const PostProcessSettings &settings)
-    {
-        s_Settings = settings;
-    }
-
-    const PostProcessSettings &
-    PostProcess::GetSettings()
-    {
-        return s_Settings;
     }
 
     void PostProcess::Resize(

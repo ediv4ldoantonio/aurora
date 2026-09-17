@@ -6,6 +6,7 @@ namespace Aurora
     {
         None = 0,
         Grayscale,
-        Invert
+        Invert,
+        Vignette
     };
 }

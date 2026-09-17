@@ -18,7 +18,7 @@ public:
         auto speed = 10.0f;
 
         if (
-            Aurora::Input::IsKeyPressed(
+            Aurora::Input::IsKeyDown(
                 Aurora::Key::D))
         {
             transform.LocalTransform.Position.x +=
@@ -26,11 +26,39 @@ public:
         }
 
         if (
-            Aurora::Input::IsKeyPressed(
+            Aurora::Input::IsKeyDown(
                 Aurora::Key::A))
         {
             transform.LocalTransform.Position.x +=
                 -speed * dt;
+        }
+
+        if (
+            Aurora::Input::IsKeyDown(
+                Aurora::Key::W))
+        {
+            transform.LocalTransform.Position.y +=
+                speed * dt;
+        }
+
+        if (
+            Aurora::Input::IsKeyDown(
+                Aurora::Key::S))
+        {
+            transform.LocalTransform.Position.y +=
+                -speed * dt;
+        }
+
+        if (Aurora::Input::IsKeyDown(
+                Aurora::Key::E))
+        {
+            transform.LocalTransform.Rotation += speed * dt;
+        }
+
+        if (Aurora::Input::IsKeyDown(
+                Aurora::Key::Q))
+        {
+            transform.LocalTransform.Rotation -= speed * dt;
         }
     }
 };

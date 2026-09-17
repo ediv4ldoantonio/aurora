@@ -47,9 +47,43 @@ namespace Aurora
         if (!m_Shader)
             return;
 
+        m_Shader->Bind();
+
+        for (const auto &[name, value] :
+             m_FloatUniforms)
+        {
+            m_Shader->SetFloat(
+                name,
+                value);
+        }
+
+        for (const auto &[name, value] :
+             m_IntUniforms)
+        {
+            m_Shader->SetInt(
+                name,
+                value);
+        }
+
+        m_Shader->Unbind();
+
         m_Renderer->DrawPostProcess(
             source,
             target,
             m_Shader);
+    }
+
+    void PostProcessPass::SetFloat(
+        const std::string &name,
+        float value)
+    {
+        m_FloatUniforms[name] = value;
+    }
+
+    void PostProcessPass::SetInt(
+        const std::string &name,
+        int value)
+    {
+        m_IntUniforms[name] = value;
     }
 }

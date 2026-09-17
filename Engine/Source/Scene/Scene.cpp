@@ -224,37 +224,37 @@ namespace Aurora
 
     void Scene::UpdateCamera(float dt)
     {
-        constexpr float cameraSpeed = 3000.0f;
+        constexpr float cameraSpeed = 30.0f;
         float zoom = m_Camera.GetZoom();
 
         Vector2 movement(0.0f, 0.0f);
 
-        if (Input::IsKeyPressed(Aurora::Key::J))
+        if (Input::IsKeyDown(Aurora::Key::J))
         {
             movement.x -= cameraSpeed;
         }
 
-        if (Input::IsKeyPressed(Aurora::Key::L))
+        if (Input::IsKeyDown(Aurora::Key::L))
         {
             movement.x += cameraSpeed;
         }
 
-        if (Input::IsKeyPressed(Aurora::Key::I))
+        if (Input::IsKeyDown(Aurora::Key::I))
         {
             movement.y -= cameraSpeed;
         }
 
-        if (Input::IsKeyPressed(Aurora::Key::K))
+        if (Input::IsKeyDown(Aurora::Key::K))
         {
             movement.y += cameraSpeed;
         }
 
-        if (Input::IsKeyPressed(Aurora::Key::U))
+        if (Input::IsKeyDown(Aurora::Key::U))
         {
             zoom -= 1.0f * dt;
         }
 
-        if (Input::IsKeyPressed(Aurora::Key::O))
+        if (Input::IsKeyDown(Aurora::Key::O))
         {
             zoom += 1.0f * dt;
         }
