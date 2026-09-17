@@ -30,11 +30,10 @@ namespace Aurora
         if (!target)
             return;
 
-        m_Renderer->SetPostProcessEffect(effect);
-        m_Renderer->SetPostProcessSettings(settings);
-
-        m_Renderer->DrawFramebuffer(
+        m_Renderer->DrawPostProcess(
             source,
-            target);
+            target,
+            effect,
+            settings);
     }
 }

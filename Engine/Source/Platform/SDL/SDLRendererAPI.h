@@ -61,10 +61,10 @@ namespace Aurora
 
         RendererBackend GetBackend() const override;
 
-        void SetPostProcessEffect(
-            PostProcessEffect effect) override;
-
-        void SetPostProcessSettings(
+        void DrawPostProcess(
+            const std::shared_ptr<Texture2D> &source,
+            const std::shared_ptr<Framebuffer> &target,
+            PostProcessEffect effect,
             const PostProcessSettings &settings) override;
 
     private:

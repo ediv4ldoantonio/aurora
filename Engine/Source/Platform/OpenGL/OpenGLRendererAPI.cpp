@@ -47,6 +47,8 @@ namespace Aurora
         CreateScreenResources();
         CreateSpriteShader();
         CreateScreenShader();
+        CreateGrayscaleShader();
+        CreateInvertShader();
         InvalidateShaderState();
     }
 
@@ -228,16 +230,53 @@ namespace Aurora
             "u_ScreenTexture",
             0);
 
-        m_ScreenShader->SetInt(
-            "u_PostProcessEffect",
-            static_cast<int>(
-                m_PostProcessEffect));
-
-        m_ScreenShader->SetFloat(
-            "u_Brightness",
-            m_PostProcessSettings.Brightness);
-
         m_ScreenShader->Unbind();
+        InvalidateShaderState();
+    }
+
+    void OpenGLRendererAPI::CreateGrayscaleShader()
+    {
+        const std::string vertexSource =
+            LoadShaderSource("Engine/Assets/Shaders/Screen.vert");
+
+        const std::string fragmentSource =
+            LoadShaderSource("Engine/Assets/Shaders/Grayscale.frag");
+
+        m_GrayscaleShader =
+            RendererResourceFactory::CreateShader(
+                vertexSource,
+                fragmentSource);
+
+        BindShader(m_GrayscaleShader);
+
+        m_GrayscaleShader->SetInt(
+            "u_ScreenTexture",
+            0);
+
+        m_GrayscaleShader->Unbind();
+        InvalidateShaderState();
+    }
+
+    void OpenGLRendererAPI::CreateInvertShader()
+    {
+        const std::string vertexSource =
+            LoadShaderSource("Engine/Assets/Shaders/Screen.vert");
+
+        const std::string fragmentSource =
+            LoadShaderSource("Engine/Assets/Shaders/Invert.frag");
+
+        m_InvertShader =
+            RendererResourceFactory::CreateShader(
+                vertexSource,
+                fragmentSource);
+
+        BindShader(m_InvertShader);
+
+        m_InvertShader->SetInt(
+            "u_ScreenTexture",
+            0);
+
+        m_InvertShader->Unbind();
         InvalidateShaderState();
     }
 
@@ -272,6 +311,8 @@ namespace Aurora
         m_ScreenVertexArray.reset();
         m_ScreenVertexBuffer.reset();
         m_ScreenIndexBuffer.reset();
+        m_GrayscaleShader.reset();
+        m_InvertShader.reset();
     }
 
     void OpenGLRendererAPI::BeginFrame()
@@ -536,33 +577,60 @@ namespace Aurora
         target->Unbind();
     }
 
-    void OpenGLRendererAPI::SetPostProcessEffect(
-        PostProcessEffect effect)
-    {
-        m_PostProcessEffect = effect;
-
-        BindShader(m_ScreenShader);
-
-        if (m_ScreenShader)
-        {
-            m_ScreenShader->SetInt(
-                "u_PostProcessEffect",
-                static_cast<int>(m_PostProcessEffect));
-        }
-    }
-
-    void OpenGLRendererAPI::SetPostProcessSettings(
+    void OpenGLRendererAPI::DrawPostProcess(
+        const std::shared_ptr<Texture2D> &source,
+        const std::shared_ptr<Framebuffer> &target,
+        PostProcessEffect effect,
         const PostProcessSettings &settings)
     {
-        m_PostProcessSettings = settings;
+        if (!source)
+            return;
 
-        BindShader(m_ScreenShader);
+        if (!target)
+            return;
 
-        if (m_ScreenShader)
+        std::shared_ptr<Shader> shader;
+
+        switch (effect)
         {
-            m_ScreenShader->SetFloat(
-                "u_Brightness",
-                m_PostProcessSettings.Brightness);
+        case PostProcessEffect::Grayscale:
+            shader = m_GrayscaleShader;
+            break;
+
+        case PostProcessEffect::Invert:
+            shader = m_InvertShader;
+            break;
+
+        case PostProcessEffect::None:
+            return;
         }
+
+        if (!shader)
+            return;
+
+        target->Bind();
+
+        BindShader(shader);
+
+        shader->SetFloat(
+            "u_Brightness",
+            settings.Brightness);
+
+        BindTexture(0, source);
+
+        m_ScreenVertexArray->Bind();
+
+        glDrawElements(
+            GL_TRIANGLES,
+            6,
+            GL_UNSIGNED_INT,
+            nullptr);
+
+        m_ScreenVertexArray->Unbind();
+
+        shader->Unbind();
+        InvalidateShaderState();
+
+        target->Unbind();
     }
 }

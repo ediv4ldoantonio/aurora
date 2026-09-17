@@ -512,23 +512,19 @@ namespace Aurora
         (void)texture;
     }
 
-    void SDLRendererAPI::SetPostProcessEffect(
-        PostProcessEffect effect)
-    {
-        (void)effect;
-    }
-
-    void SDLRendererAPI::SetPostProcessSettings(
-        const PostProcessSettings &settings)
-    {
-        (void)settings;
-    }
-
     void SDLRendererAPI::DrawFramebuffer(
         const std::shared_ptr<Texture2D> &texture,
         const std::shared_ptr<Framebuffer> &target)
     {
         (void)texture;
         (void)target;
+    }
+
+    void SDLRendererAPI::DrawPostProcess(
+        const std::shared_ptr<Texture2D> &source,
+        const std::shared_ptr<Framebuffer> &target,
+        PostProcessEffect effect,
+        const PostProcessSettings &settings)
+    {
     }
 }

@@ -59,10 +59,10 @@ namespace Aurora
             const std::shared_ptr<Texture2D> &texture,
             const std::shared_ptr<Framebuffer> &target) override;
 
-        void SetPostProcessEffect(
-            PostProcessEffect effect) override;
-
-        void SetPostProcessSettings(
+        void DrawPostProcess(
+            const std::shared_ptr<Texture2D> &source,
+            const std::shared_ptr<Framebuffer> &target,
+            PostProcessEffect effect,
             const PostProcessSettings &settings) override;
 
     private:
@@ -73,6 +73,8 @@ namespace Aurora
         void CreateSpriteShader();
 
         void CreateScreenShader();
+        void CreateGrayscaleShader();
+        void CreateInvertShader();
 
         void BindBatchMaterials(
             const SpriteBatch &batch);
@@ -97,8 +99,7 @@ namespace Aurora
         std::shared_ptr<IndexBuffer> m_SpriteIndexBuffer;
         std::shared_ptr<Shader> m_SpriteShader;
 
-        std::shared_ptr<VertexArray>
-            m_ScreenVertexArray;
+        std::shared_ptr<VertexArray> m_ScreenVertexArray;
 
         std::shared_ptr<VertexBuffer>
             m_ScreenVertexBuffer;
@@ -109,11 +110,12 @@ namespace Aurora
         std::shared_ptr<Shader>
             m_ScreenShader;
 
+        std::shared_ptr<Shader>
+            m_GrayscaleShader;
+
+        std::shared_ptr<Shader>
+            m_InvertShader;
+
         OpenGLRendererState m_State;
-
-        PostProcessSettings m_PostProcessSettings;
-
-        PostProcessEffect m_PostProcessEffect =
-            PostProcessEffect::None;
     };
 }

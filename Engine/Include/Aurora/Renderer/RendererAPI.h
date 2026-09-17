@@ -62,10 +62,10 @@ namespace Aurora
             const std::shared_ptr<Texture2D> &texture,
             const std::shared_ptr<Framebuffer> &target) = 0;
 
-        virtual void SetPostProcessEffect(
-            PostProcessEffect effect) = 0;
-
-        virtual void SetPostProcessSettings(
+        virtual void DrawPostProcess(
+            const std::shared_ptr<Texture2D> &source,
+            const std::shared_ptr<Framebuffer> &target,
+            PostProcessEffect effect,
             const PostProcessSettings &settings) = 0;
 
     private:
