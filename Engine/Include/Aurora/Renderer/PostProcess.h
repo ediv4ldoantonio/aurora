@@ -6,6 +6,7 @@
 #include "Aurora/Renderer/Framebuffer.h"
 #include "Aurora/Renderer/PostProcessPass.h"
 
+#include <vector>
 #include <memory>
 
 namespace Aurora
@@ -26,6 +27,12 @@ namespace Aurora
 
         static PostProcessEffect GetEffect();
 
+        static void SetEffects(
+            const std::vector<PostProcessEffect> &effects);
+
+        static const std::vector<PostProcessEffect> &
+        GetEffects();
+
         static void Apply(
             const std::shared_ptr<Texture2D> &source);
 
@@ -43,11 +50,18 @@ namespace Aurora
         static RendererAPI *s_Renderer;
 
         static PostProcessEffect s_Effect;
+
+        static std::vector<PostProcessEffect>
+            s_Effects;
+
         static PostProcessSettings s_Settings;
 
-        static PostProcessPass s_Pass;
+        static std::shared_ptr<Framebuffer>
+            s_PingFramebuffer;
 
         static std::shared_ptr<Framebuffer>
-            s_IntermediateFramebuffer;
+            s_PongFramebuffer;
+
+        static PostProcessPass s_Pass;
     };
 }

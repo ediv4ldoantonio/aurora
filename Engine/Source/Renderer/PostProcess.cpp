@@ -16,7 +16,13 @@ namespace Aurora
     PostProcessPass PostProcess::s_Pass;
 
     std::shared_ptr<Framebuffer>
-        PostProcess::s_IntermediateFramebuffer = nullptr;
+        PostProcess::s_PingFramebuffer = nullptr;
+
+    std::shared_ptr<Framebuffer>
+        PostProcess::s_PongFramebuffer = nullptr;
+
+    std::vector<PostProcessEffect>
+        PostProcess::s_Effects;
 
     void PostProcess::Init(
         RendererAPI *renderer,
@@ -36,20 +42,27 @@ namespace Aurora
 
         s_Effect = PostProcessEffect::None;
         s_Settings = PostProcessSettings{};
+        s_Effects.clear();
 
         FramebufferSpecification specification;
         specification.Width = width;
         specification.Height = height;
         specification.HasDepthStencil = false;
 
-        s_IntermediateFramebuffer =
+        s_PingFramebuffer =
+            RendererResourceFactory::CreateFramebuffer(
+                specification);
+
+        s_PongFramebuffer =
             RendererResourceFactory::CreateFramebuffer(
                 specification);
     }
 
     void PostProcess::Shutdown()
     {
-        s_IntermediateFramebuffer.reset();
+        s_PingFramebuffer.reset();
+
+        s_PongFramebuffer.reset();
 
         s_Pass.SetRenderer(nullptr);
 
@@ -66,6 +79,34 @@ namespace Aurora
         PostProcessEffect effect)
     {
         s_Effect = effect;
+
+        s_Effects.clear();
+
+        if (effect != PostProcessEffect::None)
+            s_Effects.push_back(effect);
+    }
+
+    void PostProcess::SetEffects(
+        const std::vector<PostProcessEffect> &effects)
+    {
+        s_Effects = effects;
+
+        if (s_Effects.empty())
+        {
+            s_Effect =
+                PostProcessEffect::None;
+
+            return;
+        }
+
+        s_Effect =
+            s_Effects.front();
+    }
+
+    const std::vector<PostProcessEffect> &
+    PostProcess::GetEffects()
+    {
+        return s_Effects;
     }
 
     PostProcessEffect PostProcess::GetEffect()
@@ -82,18 +123,56 @@ namespace Aurora
         if (!source)
             return;
 
-        if (!s_IntermediateFramebuffer)
-            return;
+        if (s_Effects.empty())
+        {
+            s_Renderer->DrawFramebuffer(
+                source);
 
-        s_Pass.Apply(
-            source,
-            s_IntermediateFramebuffer,
-            s_Effect,
-            s_Settings);
+            return;
+        }
+
+        if (!s_PingFramebuffer ||
+            !s_PongFramebuffer)
+        {
+            s_Renderer->DrawFramebuffer(
+                source);
+
+            return;
+        }
+
+        std::shared_ptr<Texture2D>
+            currentSource = source;
+
+        bool ping = true;
+
+        for (const auto effect :
+             s_Effects)
+        {
+            if (effect ==
+                PostProcessEffect::None)
+            {
+                continue;
+            }
+
+            const auto &target =
+                ping
+                    ? s_PingFramebuffer
+                    : s_PongFramebuffer;
+
+            s_Pass.Apply(
+                currentSource,
+                target,
+                effect,
+                s_Settings);
+
+            currentSource =
+                target->GetColorAttachment();
+
+            ping = !ping;
+        }
 
         s_Renderer->DrawFramebuffer(
-            s_IntermediateFramebuffer
-                ->GetColorAttachment());
+            currentSource);
     }
 
     void PostProcess::SetSettings(
@@ -112,13 +191,18 @@ namespace Aurora
         uint32_t width,
         uint32_t height)
     {
-        if (!s_IntermediateFramebuffer)
+        if (!s_PingFramebuffer ||
+            !s_PongFramebuffer)
             return;
 
         if (width == 0 || height == 0)
             return;
 
-        s_IntermediateFramebuffer->Resize(
+        s_PingFramebuffer->Resize(
+            width,
+            height);
+
+        s_PongFramebuffer->Resize(
             width,
             height);
     }

@@ -27,6 +27,11 @@ void main()
 
         color.rgb =
             vec3(grayscale);
+    } 
+    else if (u_PostProcessEffect == 2)
+    {
+        color.rgb =
+            vec3(1.0) - color.rgb;
     }
     
     color.rgb += vec3(u_Brightness);
