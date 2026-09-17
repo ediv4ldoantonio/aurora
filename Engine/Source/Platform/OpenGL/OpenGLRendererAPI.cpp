@@ -47,8 +47,6 @@ namespace Aurora
         CreateScreenResources();
         CreateSpriteShader();
         CreateScreenShader();
-        CreateGrayscaleShader();
-        CreateInvertShader();
         InvalidateShaderState();
     }
 
@@ -234,52 +232,6 @@ namespace Aurora
         InvalidateShaderState();
     }
 
-    void OpenGLRendererAPI::CreateGrayscaleShader()
-    {
-        const std::string vertexSource =
-            LoadShaderSource("Engine/Assets/Shaders/Screen.vert");
-
-        const std::string fragmentSource =
-            LoadShaderSource("Engine/Assets/Shaders/Grayscale.frag");
-
-        m_GrayscaleShader =
-            RendererResourceFactory::CreateShader(
-                vertexSource,
-                fragmentSource);
-
-        BindShader(m_GrayscaleShader);
-
-        m_GrayscaleShader->SetInt(
-            "u_ScreenTexture",
-            0);
-
-        m_GrayscaleShader->Unbind();
-        InvalidateShaderState();
-    }
-
-    void OpenGLRendererAPI::CreateInvertShader()
-    {
-        const std::string vertexSource =
-            LoadShaderSource("Engine/Assets/Shaders/Screen.vert");
-
-        const std::string fragmentSource =
-            LoadShaderSource("Engine/Assets/Shaders/Invert.frag");
-
-        m_InvertShader =
-            RendererResourceFactory::CreateShader(
-                vertexSource,
-                fragmentSource);
-
-        BindShader(m_InvertShader);
-
-        m_InvertShader->SetInt(
-            "u_ScreenTexture",
-            0);
-
-        m_InvertShader->Unbind();
-        InvalidateShaderState();
-    }
-
     void OpenGLRendererAPI::DrawIndexed(
         const std::shared_ptr<VertexArray> &vertexArray,
         uint32_t indexCount)
@@ -311,8 +263,6 @@ namespace Aurora
         m_ScreenVertexArray.reset();
         m_ScreenVertexBuffer.reset();
         m_ScreenIndexBuffer.reset();
-        m_GrayscaleShader.reset();
-        m_InvertShader.reset();
     }
 
     void OpenGLRendererAPI::BeginFrame()

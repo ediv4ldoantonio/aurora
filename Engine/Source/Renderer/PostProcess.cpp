@@ -3,17 +3,33 @@
 #include "Aurora/Renderer/RendererResourceFactory.h"
 
 #include <stdexcept>
+#include <fstream>
 
 namespace Aurora
 {
+    namespace
+    {
+        std::string LoadShaderSource(
+            const std::string &path)
+        {
+            std::ifstream file(path);
+
+            if (!file)
+                throw std::runtime_error(
+                    "Failed to open shader source: " + path);
+
+            return std::string(
+                std::istreambuf_iterator<char>(file),
+                std::istreambuf_iterator<char>());
+        }
+    }
+
     RendererAPI *PostProcess::s_Renderer = nullptr;
 
     PostProcessEffect PostProcess::s_Effect =
         PostProcessEffect::None;
 
     PostProcessSettings PostProcess::s_Settings;
-
-    PostProcessPass PostProcess::s_Pass;
 
     std::shared_ptr<Framebuffer>
         PostProcess::s_PingFramebuffer = nullptr;
@@ -23,6 +39,9 @@ namespace Aurora
 
     std::vector<PostProcessEffect>
         PostProcess::s_Effects;
+
+    std::vector<PostProcessPass>
+        PostProcess::s_AvailablePasses;
 
     void PostProcess::Init(
         RendererAPI *renderer,
@@ -36,9 +55,6 @@ namespace Aurora
         }
 
         s_Renderer = renderer;
-
-        s_Pass.SetRenderer(
-            s_Renderer);
 
         s_Effect = PostProcessEffect::None;
         s_Settings = PostProcessSettings{};
@@ -56,20 +72,52 @@ namespace Aurora
         s_PongFramebuffer =
             RendererResourceFactory::CreateFramebuffer(
                 specification);
+
+        s_AvailablePasses.clear();
+
+        const std::string fullscreenVertexSource =
+            LoadShaderSource("Engine/Assets/Shaders/Screen.vert");
+
+        const std::string grayscaleFragmentSource =
+            LoadShaderSource("Engine/Assets/Shaders/Grayscale.frag");
+
+        const std::string invertFragmentSource =
+            LoadShaderSource("Engine/Assets/Shaders/Invert.frag");
+
+        auto grayscaleShader =
+            RendererResourceFactory::CreateShader(
+                fullscreenVertexSource,
+                grayscaleFragmentSource);
+
+        auto invertShader =
+            RendererResourceFactory::CreateShader(
+                fullscreenVertexSource,
+                invertFragmentSource);
+
+        s_AvailablePasses.emplace_back(
+            s_Renderer,
+            PostProcessEffect::Grayscale,
+            std::move(grayscaleShader));
+
+        s_AvailablePasses.emplace_back(
+            s_Renderer,
+            PostProcessEffect::Invert,
+            std::move(invertShader));
     }
 
     void PostProcess::Shutdown()
     {
+        s_AvailablePasses.clear();
+
         s_PingFramebuffer.reset();
-
         s_PongFramebuffer.reset();
-
-        s_Pass.SetRenderer(nullptr);
 
         s_Renderer = nullptr;
 
         s_Effect =
             PostProcessEffect::None;
+
+        s_Effects.clear();
 
         s_Settings =
             PostProcessSettings{};
@@ -154,16 +202,20 @@ namespace Aurora
                 continue;
             }
 
+            auto *pass =
+                FindPass(effect);
+
+            if (!pass)
+                continue;
+
             const auto &target =
                 ping
                     ? s_PingFramebuffer
                     : s_PongFramebuffer;
 
-            s_Pass.Apply(
+            pass->Apply(
                 currentSource,
-                target,
-                effect,
-                s_Settings);
+                target);
 
             currentSource =
                 target->GetColorAttachment();
@@ -205,5 +257,19 @@ namespace Aurora
         s_PongFramebuffer->Resize(
             width,
             height);
+    }
+
+    PostProcessPass *
+    PostProcess::FindPass(
+        PostProcessEffect effect)
+    {
+        for (auto &pass :
+             s_AvailablePasses)
+        {
+            if (pass.GetEffect() == effect)
+                return &pass;
+        }
+
+        return nullptr;
     }
 }

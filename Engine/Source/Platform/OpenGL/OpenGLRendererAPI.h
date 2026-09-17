@@ -66,14 +66,10 @@ namespace Aurora
 
     private:
         void CreateSpriteResources();
-
         void CreateScreenResources();
 
         void CreateSpriteShader();
-
         void CreateScreenShader();
-        void CreateGrayscaleShader();
-        void CreateInvertShader();
 
         void BindBatchMaterials(
             const SpriteBatch &batch);
@@ -99,21 +95,9 @@ namespace Aurora
         std::shared_ptr<Shader> m_SpriteShader;
 
         std::shared_ptr<VertexArray> m_ScreenVertexArray;
-
-        std::shared_ptr<VertexBuffer>
-            m_ScreenVertexBuffer;
-
-        std::shared_ptr<IndexBuffer>
-            m_ScreenIndexBuffer;
-
-        std::shared_ptr<Shader>
-            m_ScreenShader;
-
-        std::shared_ptr<Shader>
-            m_GrayscaleShader;
-
-        std::shared_ptr<Shader>
-            m_InvertShader;
+        std::shared_ptr<VertexBuffer> m_ScreenVertexBuffer;
+        std::shared_ptr<IndexBuffer> m_ScreenIndexBuffer;
+        std::shared_ptr<Shader> m_ScreenShader;
 
         OpenGLRendererState m_State;
     };

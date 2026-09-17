@@ -47,6 +47,10 @@ namespace Aurora
             uint32_t height);
 
     private:
+        static PostProcessPass *
+        FindPass(
+            PostProcessEffect effect);
+
         static RendererAPI *s_Renderer;
 
         static PostProcessEffect s_Effect;
@@ -62,6 +66,7 @@ namespace Aurora
         static std::shared_ptr<Framebuffer>
             s_PongFramebuffer;
 
-        static PostProcessPass s_Pass;
+        static std::vector<PostProcessPass>
+            s_AvailablePasses;
     };
 }

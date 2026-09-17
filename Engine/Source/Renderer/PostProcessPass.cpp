@@ -5,9 +5,11 @@ namespace Aurora
 {
     PostProcessPass::PostProcessPass(
         RendererAPI *renderer,
-        const std::shared_ptr<Shader> &shader)
+        PostProcessEffect effect,
+        std::shared_ptr<Shader> shader)
         : m_Renderer(renderer),
-          m_Shader(shader)
+          m_Effect(effect),
+          m_Shader(std::move(shader))
     {
     }
 
@@ -21,6 +23,12 @@ namespace Aurora
         const std::shared_ptr<Shader> &shader)
     {
         m_Shader = shader;
+    }
+
+    PostProcessEffect
+    PostProcessPass::GetEffect() const
+    {
+        return m_Effect;
     }
 
     void PostProcessPass::Apply(
