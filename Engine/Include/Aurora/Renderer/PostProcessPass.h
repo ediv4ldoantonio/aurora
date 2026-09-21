@@ -4,6 +4,7 @@
 #include "Aurora/Renderer/PostProcessEffect.h"
 #include "Aurora/Renderer/Shader.h"
 #include "Aurora/Renderer/Texture2D.h"
+#include "Aurora/Math/Vector2.h"
 
 #include <memory>
 #include <string>
@@ -39,11 +40,22 @@ namespace Aurora
             const std::string &name,
             int value);
 
-        void Apply(
+        bool Apply(
             const std::shared_ptr<Texture2D> &source,
             const std::shared_ptr<Framebuffer> &target);
 
+        void SetVector2(
+            const std::string &name,
+            const Vector2 &value);
+
+        void SetEnabled(
+            bool enabled);
+
+        bool IsEnabled() const;
+
     private:
+        bool m_Enabled = true;
+
         RendererAPI *m_Renderer = nullptr;
 
         PostProcessEffect m_Effect =
@@ -56,5 +68,8 @@ namespace Aurora
 
         std::unordered_map<std::string, int>
             m_IntUniforms;
+
+        std::unordered_map<std::string, Vector2>
+            m_Vector2Uniforms;
     };
 }

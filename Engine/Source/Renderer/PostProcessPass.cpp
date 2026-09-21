@@ -31,21 +31,24 @@ namespace Aurora
         return m_Effect;
     }
 
-    void PostProcessPass::Apply(
+    bool PostProcessPass::Apply(
         const std::shared_ptr<Texture2D> &source,
         const std::shared_ptr<Framebuffer> &target)
     {
+        if (!m_Enabled)
+            return false;
+
         if (!m_Renderer)
-            return;
+            return false;
 
         if (!source)
-            return;
+            return false;
 
         if (!target)
-            return;
+            return false;
 
         if (!m_Shader)
-            return;
+            return false;
 
         m_Shader->Bind();
 
@@ -65,12 +68,22 @@ namespace Aurora
                 value);
         }
 
+        for (const auto &[name, value] :
+             m_Vector2Uniforms)
+        {
+            m_Shader->SetVector2(
+                name,
+                value);
+        }
+
         m_Shader->Unbind();
 
         m_Renderer->DrawPostProcess(
             source,
             target,
             m_Shader);
+
+        return true;
     }
 
     void PostProcessPass::SetFloat(
@@ -85,5 +98,24 @@ namespace Aurora
         int value)
     {
         m_IntUniforms[name] = value;
+    }
+
+    void PostProcessPass::SetVector2(
+        const std::string &name,
+        const Vector2 &value)
+    {
+        m_Vector2Uniforms[name] =
+            value;
+    }
+
+    void PostProcessPass::SetEnabled(
+        bool enabled)
+    {
+        m_Enabled = enabled;
+    }
+
+    bool PostProcessPass::IsEnabled() const
+    {
+        return m_Enabled;
     }
 }

@@ -144,17 +144,6 @@ namespace Aurora
                 s_Renderer,
                 PostProcessEffect::Vignette,
                 std::move(vignetteShader)));
-
-        auto *vignettePass =
-            FindPass(
-                PostProcessEffect::Vignette);
-
-        if (vignettePass)
-        {
-            vignettePass->SetFloat(
-                "u_Strength",
-                0.75f);
-        }
     }
 
     void PostProcess::Shutdown()
@@ -262,9 +251,13 @@ namespace Aurora
                     ? s_PingFramebuffer
                     : s_PongFramebuffer;
 
-            pass->Apply(
-                currentSource,
-                target);
+            const bool executed =
+                pass->Apply(
+                    currentSource,
+                    target);
+
+            if (!executed)
+                continue;
 
             currentSource =
                 target->GetColorAttachment();
@@ -307,5 +300,75 @@ namespace Aurora
             return nullptr;
 
         return &it->second;
+    }
+
+    bool PostProcess::SetFloat(
+        PostProcessEffect effect,
+        const std::string &name,
+        float value)
+    {
+        auto *pass =
+            FindPass(effect);
+
+        if (!pass)
+            return false;
+
+        pass->SetFloat(
+            name,
+            value);
+
+        return true;
+    }
+
+    bool PostProcess::SetInt(
+        PostProcessEffect effect,
+        const std::string &name,
+        int value)
+    {
+        auto *pass =
+            FindPass(effect);
+
+        if (!pass)
+            return false;
+
+        pass->SetInt(
+            name,
+            value);
+
+        return true;
+    }
+
+    bool PostProcess::SetVector2(
+        PostProcessEffect effect,
+        const std::string &name,
+        const Vector2 &value)
+    {
+        auto *pass =
+            FindPass(effect);
+
+        if (!pass)
+            return false;
+
+        pass->SetVector2(
+            name,
+            value);
+
+        return true;
+    }
+
+    bool PostProcess::SetEnabled(
+        PostProcessEffect effect,
+        bool enabled)
+    {
+        auto *pass =
+            FindPass(effect);
+
+        if (!pass)
+            return false;
+
+        pass->SetEnabled(
+            enabled);
+
+        return true;
     }
 }

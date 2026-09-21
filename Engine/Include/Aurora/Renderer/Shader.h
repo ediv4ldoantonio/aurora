@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Aurora/Math/Vector2.h"
+
 #include <memory>
 #include <string>
 
@@ -31,5 +33,9 @@ namespace Aurora
             float y,
             float z,
             float w) = 0;
+
+        virtual void SetVector2(
+            const std::string &name,
+            const Vector2 &value) = 0;
     };
 }

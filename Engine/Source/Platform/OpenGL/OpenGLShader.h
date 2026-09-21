@@ -36,6 +36,10 @@ namespace Aurora
             float z,
             float w) override;
 
+        void SetVector2(
+            const std::string &name,
+            const Vector2 &value) override;
+
     private:
         int GetUniformLocation(
             const std::string &name) const;

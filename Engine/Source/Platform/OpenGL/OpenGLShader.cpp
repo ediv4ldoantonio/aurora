@@ -212,4 +212,14 @@ namespace Aurora
             z,
             w);
     }
+
+    void OpenGLShader::SetVector2(
+        const std::string &name,
+        const Vector2 &value)
+    {
+        glUniform2f(
+            GetUniformLocation(name),
+            value.x,
+            value.y);
+    }
 }

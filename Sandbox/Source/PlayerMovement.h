@@ -2,7 +2,7 @@
 
 #include "Aurora/Scene/Components/ScriptComponent.h"
 #include "Aurora/Input/Input.h"
-#include <Aurora/Core/Logger.h>
+#include "Aurora/Core/Logger.h"
 #include "Aurora/Scene/Components/TransformComponent.h"
 
 class PlayerMovement : public Aurora::ScriptableEntity
@@ -15,7 +15,7 @@ public:
             GetEntity()
                 .GetComponent<Aurora::TransformComponent>();
 
-        auto speed = 10.0f;
+        const float speed = 10.0f;
 
         if (
             Aurora::Input::IsKeyDown(
