@@ -111,6 +111,14 @@ namespace Aurora
         if (s_SceneFramebuffer)
         {
             s_SceneFramebuffer->Bind();
+
+            RenderCommand::SetViewport(
+                0,
+                0,
+                static_cast<int>(
+                    s_SceneFramebuffer->GetWidth()),
+                static_cast<int>(
+                    s_SceneFramebuffer->GetHeight()));
         }
 
         RenderCommand::Clear();
@@ -156,6 +164,14 @@ namespace Aurora
                 0,
                 s_Window->GetWidth(),
                 s_Window->GetHeight());
+
+            RenderCommand::SetViewport(
+                0,
+                0,
+                static_cast<int>(
+                    s_SceneFramebuffer->GetWidth()),
+                static_cast<int>(
+                    s_SceneFramebuffer->GetHeight()));
 
             PostProcess::Apply(
                 s_SceneFramebuffer->GetColorAttachment());

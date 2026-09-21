@@ -290,11 +290,26 @@ namespace Aurora
         int width,
         int height)
     {
+        if (m_State.HasViewport &&
+            m_State.ViewportX == x &&
+            m_State.ViewportY == y &&
+            m_State.ViewportWidth == width &&
+            m_State.ViewportHeight == height)
+        {
+            return;
+        }
+
         glViewport(
             x,
             y,
             width,
             height);
+
+        m_State.ViewportX = x;
+        m_State.ViewportY = y;
+        m_State.ViewportWidth = width;
+        m_State.ViewportHeight = height;
+        m_State.HasViewport = true;
     }
 
     void OpenGLRendererAPI::DrawSprite(
@@ -509,6 +524,14 @@ namespace Aurora
 
         target->Bind();
 
+        SetViewport(
+            0,
+            0,
+            static_cast<int>(
+                target->GetWidth()),
+            static_cast<int>(
+                target->GetHeight()));
+
         BindShader(m_ScreenShader);
 
         BindTexture(
@@ -546,6 +569,14 @@ namespace Aurora
             return;
 
         target->Bind();
+
+        SetViewport(
+            0,
+            0,
+            static_cast<int>(
+                target->GetWidth()),
+            static_cast<int>(
+                target->GetHeight()));
 
         BindShader(shader);
 

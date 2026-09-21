@@ -43,14 +43,6 @@ namespace Aurora
         glBindFramebuffer(
             GL_FRAMEBUFFER,
             m_RendererID);
-
-        glViewport(
-            0,
-            0,
-            static_cast<GLsizei>(
-                m_Specification.Width),
-            static_cast<GLsizei>(
-                m_Specification.Height));
     }
 
     void OpenGLFramebuffer::Unbind()

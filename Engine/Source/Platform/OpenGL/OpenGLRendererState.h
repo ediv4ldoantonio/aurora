@@ -19,5 +19,12 @@ namespace Aurora
         BlendMode CurrentBlendMode = BlendMode::Opaque;
 
         bool HasBlendMode = false;
+
+        int ViewportX = 0;
+        int ViewportY = 0;
+        int ViewportWidth = 0;
+        int ViewportHeight = 0;
+
+        bool HasViewport = false;
     };
 }
