@@ -484,7 +484,9 @@ namespace Aurora
 
         BindShader(m_ScreenShader);
 
-        texture->Bind(0);
+        BindTexture(
+            0,
+            texture);
 
         m_ScreenVertexArray->Bind();
 
@@ -509,7 +511,9 @@ namespace Aurora
 
         BindShader(m_ScreenShader);
 
-        texture->Bind(0);
+        BindTexture(
+            0,
+            texture);
 
         m_ScreenVertexArray->Bind();
 
