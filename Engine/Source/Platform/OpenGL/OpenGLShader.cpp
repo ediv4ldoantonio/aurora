@@ -173,8 +173,14 @@ namespace Aurora
         const std::string &name,
         int value)
     {
+        const GLint location =
+            GetUniformLocationCached(name);
+
+        if (location == -1)
+            return;
+
         glUniform1i(
-            GetUniformLocation(name),
+            location,
             value);
     }
 
@@ -182,8 +188,14 @@ namespace Aurora
         const std::string &name,
         float value)
     {
+        const GLint location =
+            GetUniformLocationCached(name);
+
+        if (location == -1)
+            return;
+
         glUniform1f(
-            GetUniformLocation(name),
+            location,
             value);
     }
 
@@ -191,8 +203,14 @@ namespace Aurora
         const std::string &name,
         const float *value)
     {
+        const GLint location =
+            GetUniformLocationCached(name);
+
+        if (location == -1)
+            return;
+
         glUniformMatrix4fv(
-            GetUniformLocation(name),
+            location,
             1,
             GL_TRUE,
             value);
@@ -205,8 +223,14 @@ namespace Aurora
         float z,
         float w)
     {
+        const GLint location =
+            GetUniformLocationCached(name);
+
+        if (location == -1)
+            return;
+
         glUniform4f(
-            GetUniformLocation(name),
+            location,
             x,
             y,
             z,
@@ -217,9 +241,36 @@ namespace Aurora
         const std::string &name,
         const Vector2 &value)
     {
+        const GLint location =
+            GetUniformLocationCached(name);
+
+        if (location == -1)
+            return;
+
         glUniform2f(
-            GetUniformLocation(name),
+            location,
             value.x,
             value.y);
+    }
+
+    GLint OpenGLShader::GetUniformLocationCached(
+        const std::string &name)
+    {
+        auto it =
+            m_UniformLocationCache.find(name);
+
+        if (it != m_UniformLocationCache.end())
+            return it->second;
+
+        const GLint location =
+            glGetUniformLocation(
+                m_RendererID,
+                name.c_str());
+
+        m_UniformLocationCache.emplace(
+            name,
+            location);
+
+        return location;
     }
 }

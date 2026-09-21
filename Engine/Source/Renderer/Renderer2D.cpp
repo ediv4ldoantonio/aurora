@@ -63,6 +63,13 @@ namespace Aurora
             window.GetWidth(),
             window.GetHeight());
 
+        PostProcess::SetEffects({PostProcessEffect::Vignette});
+
+        PostProcess::SetFloat(
+            PostProcessEffect::Vignette,
+            "u_Strength",
+            0.75f);
+
         FramebufferSpecification specification;
 
         specification.Width = window.GetWidth();

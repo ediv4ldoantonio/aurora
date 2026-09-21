@@ -3,6 +3,11 @@
 #include "Aurora/Renderer/Shader.h"
 #include "Aurora/Renderer/SpriteBatch.h"
 
+#include <string>
+#include <unordered_map>
+
+#include <glad/gl.h>
+
 namespace Aurora
 {
     class OpenGLShader : public Shader
@@ -48,6 +53,12 @@ namespace Aurora
             uint32_t type,
             const std::string &source);
 
+        GLint GetUniformLocationCached(
+            const std::string &name);
+
         uint32_t m_RendererID = 0;
+
+        std::unordered_map<std::string, GLint>
+            m_UniformLocationCache;
     };
 }
