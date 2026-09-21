@@ -23,6 +23,15 @@ namespace Aurora
         const std::shared_ptr<Shader> &shader)
     {
         m_Shader = shader;
+
+        for (auto &[name, uniform] : m_FloatUniforms)
+            uniform.Dirty = true;
+
+        for (auto &[name, uniform] : m_IntUniforms)
+            uniform.Dirty = true;
+
+        for (auto &[name, uniform] : m_Vector2Uniforms)
+            uniform.Dirty = true;
     }
 
     PostProcessEffect
@@ -52,28 +61,40 @@ namespace Aurora
 
         m_Shader->Bind();
 
-        for (const auto &[name, value] :
-             m_FloatUniforms)
+        for (auto &[name, uniform] : m_FloatUniforms)
         {
+            if (!uniform.Dirty)
+                continue;
+
             m_Shader->SetFloat(
                 name,
-                value);
+                uniform.Value);
+
+            uniform.Dirty = false;
         }
 
-        for (const auto &[name, value] :
-             m_IntUniforms)
+        for (auto &[name, uniform] : m_IntUniforms)
         {
+            if (!uniform.Dirty)
+                continue;
+
             m_Shader->SetInt(
                 name,
-                value);
+                uniform.Value);
+
+            uniform.Dirty = false;
         }
 
-        for (const auto &[name, value] :
-             m_Vector2Uniforms)
+        for (auto &[name, uniform] : m_Vector2Uniforms)
         {
+            if (!uniform.Dirty)
+                continue;
+
             m_Shader->SetVector2(
                 name,
-                value);
+                uniform.Value);
+
+            uniform.Dirty = false;
         }
 
         m_Shader->Unbind();
@@ -90,22 +111,75 @@ namespace Aurora
         const std::string &name,
         float value)
     {
-        m_FloatUniforms[name] = value;
+        auto it =
+            m_FloatUniforms.find(name);
+
+        if (it == m_FloatUniforms.end())
+        {
+            m_FloatUniforms.emplace(
+                name,
+                FloatUniform{
+                    value,
+                    true});
+            return;
+        }
+
+        if (it->second.Value == value)
+            return;
+
+        it->second.Value = value;
+        it->second.Dirty = true;
     }
 
     void PostProcessPass::SetInt(
         const std::string &name,
         int value)
     {
-        m_IntUniforms[name] = value;
+        auto it =
+            m_IntUniforms.find(name);
+
+        if (it == m_IntUniforms.end())
+        {
+            m_IntUniforms.emplace(
+                name,
+                IntUniform{
+                    value,
+                    true});
+            return;
+        }
+
+        if (it->second.Value == value)
+            return;
+
+        it->second.Value = value;
+        it->second.Dirty = true;
     }
 
     void PostProcessPass::SetVector2(
         const std::string &name,
         const Vector2 &value)
     {
-        m_Vector2Uniforms[name] =
-            value;
+        auto it =
+            m_Vector2Uniforms.find(name);
+
+        if (it == m_Vector2Uniforms.end())
+        {
+            m_Vector2Uniforms.emplace(
+                name,
+                Vector2Uniform{
+                    value,
+                    true});
+            return;
+        }
+
+        if (it->second.Value.x == value.x &&
+            it->second.Value.y == value.y)
+        {
+            return;
+        }
+
+        it->second.Value = value;
+        it->second.Dirty = true;
     }
 
     void PostProcessPass::SetEnabled(

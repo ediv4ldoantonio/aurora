@@ -63,13 +63,31 @@ namespace Aurora
 
         std::shared_ptr<Shader> m_Shader;
 
-        std::unordered_map<std::string, float>
+        struct FloatUniform
+        {
+            float Value = 0.0f;
+            bool Dirty = true;
+        };
+
+        struct IntUniform
+        {
+            int Value = 0;
+            bool Dirty = true;
+        };
+
+        struct Vector2Uniform
+        {
+            Vector2 Value{};
+            bool Dirty = true;
+        };
+
+        std::unordered_map<std::string, FloatUniform>
             m_FloatUniforms;
 
-        std::unordered_map<std::string, int>
+        std::unordered_map<std::string, IntUniform>
             m_IntUniforms;
 
-        std::unordered_map<std::string, Vector2>
+        std::unordered_map<std::string, Vector2Uniform>
             m_Vector2Uniforms;
     };
 }
