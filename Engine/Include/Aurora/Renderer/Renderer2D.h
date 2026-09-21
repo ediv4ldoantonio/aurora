@@ -13,6 +13,7 @@
 
 #include <vector>
 #include <memory>
+#include <cstring>
 
 namespace Aurora
 {
@@ -49,6 +50,9 @@ namespace Aurora
 
     private:
         static void FlushBatch();
+
+        static Matrix4 s_LastViewProjectionMatrix;
+        static bool s_HasViewProjectionMatrix;
 
         static RendererAPI *s_Renderer;
         static GraphicsContext *s_GraphicsContext;

@@ -34,10 +34,14 @@ namespace Aurora
     RenderQueue Renderer2D::s_RenderQueue;
 
     uint32_t Renderer2D::s_BatchCount = 0;
+
     uint32_t Renderer2D::s_BatchBreakCount = 0;
 
     std::shared_ptr<Framebuffer>
         Renderer2D::s_SceneFramebuffer = nullptr;
+
+    Matrix4 Renderer2D::s_LastViewProjectionMatrix;
+    bool Renderer2D::s_HasViewProjectionMatrix = false;
 
     void Renderer2D::Init(Window &window)
     {
@@ -87,6 +91,8 @@ namespace Aurora
         s_Renderer = nullptr;
         s_GraphicsContext = nullptr;
         s_Window = nullptr;
+
+        s_HasViewProjectionMatrix = false;
     }
 
     void Renderer2D::BeginFrame()
@@ -109,10 +115,28 @@ namespace Aurora
 
         RenderCommand::Clear();
 
-        if (s_Camera)
+        if (s_Camera && s_Renderer)
         {
-            s_Renderer->SetViewProjection(
-                s_Camera->GetViewProjectionMatrix());
+            const Matrix4 viewProjection =
+                s_Camera->GetViewProjectionMatrix();
+
+            const bool changed =
+                !s_HasViewProjectionMatrix ||
+                std::memcmp(
+                    viewProjection.GetData(),
+                    s_LastViewProjectionMatrix.GetData(),
+                    sizeof(float) * 16) != 0;
+
+            if (changed)
+            {
+                s_Renderer->SetViewProjection(
+                    viewProjection);
+
+                s_LastViewProjectionMatrix =
+                    viewProjection;
+
+                s_HasViewProjectionMatrix = true;
+            }
         }
     }
 
@@ -193,6 +217,8 @@ namespace Aurora
         Camera2D *camera)
     {
         s_Camera = camera;
+
+        s_HasViewProjectionMatrix = false;
 
         if (!s_Camera)
             return;
