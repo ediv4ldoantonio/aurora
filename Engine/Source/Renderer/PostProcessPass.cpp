@@ -24,6 +24,8 @@ namespace Aurora
     {
         m_Shader = shader;
 
+        m_ScreenTextureUniformInitialized = false;
+
         for (auto &[name, uniform] : m_FloatUniforms)
             uniform.Dirty = true;
 
@@ -58,6 +60,8 @@ namespace Aurora
 
         if (!m_Shader)
             return false;
+
+        InitializeScreenTextureUniform();
 
         m_Shader->Bind();
 
@@ -191,5 +195,24 @@ namespace Aurora
     bool PostProcessPass::IsEnabled() const
     {
         return m_Enabled;
+    }
+
+    void PostProcessPass::InitializeScreenTextureUniform()
+    {
+        if (m_ScreenTextureUniformInitialized)
+            return;
+
+        if (!m_Shader)
+            return;
+
+        m_Shader->Bind();
+
+        m_Shader->SetInt(
+            "u_ScreenTexture",
+            0);
+
+        m_Shader->Unbind();
+
+        m_ScreenTextureUniformInitialized = true;
     }
 }

@@ -53,8 +53,11 @@ namespace Aurora
 
         bool IsEnabled() const;
 
+        void InitializeScreenTextureUniform();
+
     private:
         bool m_Enabled = true;
+        bool m_ScreenTextureUniformInitialized = false;
 
         RendererAPI *m_Renderer = nullptr;
 
