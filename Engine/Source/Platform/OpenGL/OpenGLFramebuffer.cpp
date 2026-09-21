@@ -67,6 +67,12 @@ namespace Aurora
         if (width == 0 || height == 0)
             return;
 
+        if (width == m_Specification.Width &&
+            height == m_Specification.Height)
+        {
+            return;
+        }
+
         m_Specification.Width = width;
         m_Specification.Height = height;
 
