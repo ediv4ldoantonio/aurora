@@ -242,7 +242,7 @@ namespace Aurora
                 "DrawIndexed received null VertexArray");
         }
 
-        vertexArray->Bind();
+        BindVertexArray(vertexArray);
 
         glDrawElements(
             GL_TRIANGLES,
@@ -333,7 +333,7 @@ namespace Aurora
         ApplyBlendMode(
             batch.GetBlendMode());
 
-        m_SpriteVertexArray->Bind();
+        BindVertexArray(m_SpriteVertexArray);
 
         glDrawElements(
             GL_TRIANGLES,
@@ -482,13 +482,47 @@ namespace Aurora
             throw std::out_of_range(
                 "OpenGL texture slot out of range");
 
-        if (m_State.TextureBindings[slot] == texture.get())
+        if (m_State.TextureBindings[slot] == texture)
             return;
 
         texture->Bind(slot);
 
-        m_State.TextureBindings[slot] =
-            texture.get();
+        m_State.TextureBindings[slot] = texture;
+    }
+
+    void OpenGLRendererAPI::BindVertexArray(
+        const std::shared_ptr<VertexArray> &vertexArray)
+    {
+        if (!vertexArray)
+            return;
+
+        if (m_State.CurrentVertexArray ==
+            vertexArray.get())
+        {
+            return;
+        }
+
+        vertexArray->Bind();
+
+        m_State.CurrentVertexArray =
+            vertexArray.get();
+    }
+
+    void OpenGLRendererAPI::UnbindVertexArray(
+        const std::shared_ptr<VertexArray> &vertexArray)
+    {
+        if (!vertexArray)
+            return;
+
+        if (m_State.CurrentVertexArray !=
+            vertexArray.get())
+        {
+            return;
+        }
+
+        vertexArray->Unbind();
+
+        m_State.CurrentVertexArray = nullptr;
     }
 
     void OpenGLRendererAPI::DrawFramebuffer(
@@ -503,7 +537,8 @@ namespace Aurora
             0,
             texture);
 
-        m_ScreenVertexArray->Bind();
+        BindVertexArray(
+            m_ScreenVertexArray);
 
         glDrawElements(
             GL_TRIANGLES,
@@ -538,7 +573,8 @@ namespace Aurora
             0,
             texture);
 
-        m_ScreenVertexArray->Bind();
+        BindVertexArray(
+            m_ScreenVertexArray);
 
         glDrawElements(
             GL_TRIANGLES,
@@ -546,7 +582,8 @@ namespace Aurora
             GL_UNSIGNED_INT,
             nullptr);
 
-        m_ScreenVertexArray->Unbind();
+        UnbindVertexArray(
+            m_ScreenVertexArray);
 
         m_ScreenShader->Unbind();
         InvalidateShaderState();
@@ -582,7 +619,8 @@ namespace Aurora
 
         BindTexture(0, source);
 
-        m_ScreenVertexArray->Bind();
+        BindVertexArray(
+            m_ScreenVertexArray);
 
         glDrawElements(
             GL_TRIANGLES,
@@ -590,7 +628,8 @@ namespace Aurora
             GL_UNSIGNED_INT,
             nullptr);
 
-        m_ScreenVertexArray->Unbind();
+        UnbindVertexArray(
+            m_ScreenVertexArray);
 
         shader->Unbind();
         InvalidateShaderState();

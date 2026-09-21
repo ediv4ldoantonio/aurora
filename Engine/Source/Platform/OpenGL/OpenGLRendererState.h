@@ -4,17 +4,20 @@
 
 #include <cstdint>
 #include <array>
+#include <memory>
 
 namespace Aurora
 {
     class Shader;
     class Texture2D;
+    class VertexArray;
 
     struct OpenGLRendererState
     {
         const Shader *CurrentShader = nullptr;
+        const VertexArray *CurrentVertexArray = nullptr;
 
-        std::array<const Texture2D *, 16> TextureBindings{};
+        std::array<std::shared_ptr<Texture2D>, 16> TextureBindings{};
 
         BlendMode CurrentBlendMode = BlendMode::Opaque;
 

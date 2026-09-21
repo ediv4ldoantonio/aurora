@@ -67,6 +67,8 @@ namespace Aurora
             window.GetWidth(),
             window.GetHeight());
 
+        PostProcess::SetEffects({PostProcessEffect::Invert, PostProcessEffect::Grayscale});
+
         FramebufferSpecification specification;
 
         specification.Width = window.GetWidth();
