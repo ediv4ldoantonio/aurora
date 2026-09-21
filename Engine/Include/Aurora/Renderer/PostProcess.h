@@ -8,6 +8,7 @@
 
 #include <vector>
 #include <memory>
+#include <unordered_map>
 
 namespace Aurora
 {
@@ -60,7 +61,9 @@ namespace Aurora
         static std::shared_ptr<Framebuffer>
             s_PongFramebuffer;
 
-        static std::vector<PostProcessPass>
-            s_AvailablePasses;
+        static std::unordered_map<
+            PostProcessEffect,
+            PostProcessPass>
+            s_Passes;
     };
 }

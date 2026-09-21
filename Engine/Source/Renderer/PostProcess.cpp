@@ -38,8 +38,10 @@ namespace Aurora
     std::vector<PostProcessEffect>
         PostProcess::s_Effects;
 
-    std::vector<PostProcessPass>
-        PostProcess::s_AvailablePasses;
+    std::unordered_map<
+        PostProcessEffect,
+        PostProcessPass>
+        PostProcess::s_Passes;
 
     void PostProcess::Init(
         RendererAPI *renderer,
@@ -70,7 +72,7 @@ namespace Aurora
             RendererResourceFactory::CreateFramebuffer(
                 specification);
 
-        s_AvailablePasses.clear();
+        s_Passes.clear();
 
         InitShaders();
     }
@@ -122,20 +124,26 @@ namespace Aurora
             0);
         vignetteShader->Unbind();
 
-        s_AvailablePasses.emplace_back(
-            s_Renderer,
+        s_Passes.emplace(
             PostProcessEffect::Grayscale,
-            std::move(grayscaleShader));
+            PostProcessPass(
+                s_Renderer,
+                PostProcessEffect::Grayscale,
+                std::move(grayscaleShader)));
 
-        s_AvailablePasses.emplace_back(
-            s_Renderer,
+        s_Passes.emplace(
             PostProcessEffect::Invert,
-            std::move(invertShader));
+            PostProcessPass(
+                s_Renderer,
+                PostProcessEffect::Invert,
+                std::move(invertShader)));
 
-        s_AvailablePasses.emplace_back(
-            s_Renderer,
+        s_Passes.emplace(
             PostProcessEffect::Vignette,
-            std::move(vignetteShader));
+            PostProcessPass(
+                s_Renderer,
+                PostProcessEffect::Vignette,
+                std::move(vignetteShader)));
 
         auto *vignettePass =
             FindPass(
@@ -151,7 +159,7 @@ namespace Aurora
 
     void PostProcess::Shutdown()
     {
-        s_AvailablePasses.clear();
+        s_Passes.clear();
 
         s_PingFramebuffer.reset();
         s_PongFramebuffer.reset();
@@ -292,13 +300,12 @@ namespace Aurora
     PostProcess::FindPass(
         PostProcessEffect effect)
     {
-        for (auto &pass :
-             s_AvailablePasses)
-        {
-            if (pass.GetEffect() == effect)
-                return &pass;
-        }
+        auto it =
+            s_Passes.find(effect);
 
-        return nullptr;
+        if (it == s_Passes.end())
+            return nullptr;
+
+        return &it->second;
     }
 }
