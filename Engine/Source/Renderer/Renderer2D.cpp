@@ -81,6 +81,8 @@ namespace Aurora
     {
         PostProcess::Shutdown();
 
+        s_Statistics = {};
+
         s_SpriteBatch.Clear();
         s_RenderQueue.Clear();
 
@@ -312,7 +314,7 @@ namespace Aurora
             return;
 
         ++s_Statistics.BatchCount;
-        ++s_Statistics.DrawCalls;
+        ++s_Statistics.SpriteDrawCalls;
 
         s_Statistics.VertexCount +=
             static_cast<uint32_t>(

@@ -51,7 +51,7 @@ namespace Aurora
         struct Statistics
         {
             uint32_t SpriteCount = 0;
-            uint32_t DrawCalls = 0;
+            uint32_t SpriteDrawCalls = 0;
             uint32_t BatchCount = 0;
             uint32_t BatchBreakCount = 0;
             uint32_t VertexCount = 0;
