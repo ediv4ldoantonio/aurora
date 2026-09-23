@@ -60,6 +60,8 @@ namespace Aurora
 
         static const Statistics &GetStatistics();
 
+        static float GetAverageSpritesPerDrawCall();
+
     private:
         static void FlushBatch();
 

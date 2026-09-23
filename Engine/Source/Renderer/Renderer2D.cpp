@@ -370,4 +370,13 @@ namespace Aurora
     {
         return s_Statistics;
     }
+
+    float Renderer2D::GetAverageSpritesPerDrawCall()
+    {
+        if (s_Statistics.SpriteDrawCalls == 0)
+            return 0.0f;
+
+        return static_cast<float>(s_Statistics.SpriteCount) /
+               static_cast<float>(s_Statistics.SpriteDrawCalls);
+    }
 }
