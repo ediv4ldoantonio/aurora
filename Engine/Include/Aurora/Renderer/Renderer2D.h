@@ -14,6 +14,8 @@
 #include <vector>
 #include <memory>
 #include <cstring>
+#include <string>
+#include <sstream>
 
 namespace Aurora
 {
@@ -61,6 +63,8 @@ namespace Aurora
         static const Statistics &GetStatistics();
 
         static float GetAverageSpritesPerDrawCall();
+
+        static std::string GetStatisticsReport();
 
     private:
         static void FlushBatch();

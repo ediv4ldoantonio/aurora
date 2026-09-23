@@ -379,4 +379,27 @@ namespace Aurora
         return static_cast<float>(s_Statistics.SpriteCount) /
                static_cast<float>(s_Statistics.SpriteDrawCalls);
     }
+
+    std::string Renderer2D::GetStatisticsReport()
+    {
+        std::ostringstream stream;
+
+        stream
+            << "Renderer2D Statistics"
+            << " | Sprites: " << s_Statistics.SpriteCount
+            << " | Sprite Draw Calls: "
+            << s_Statistics.SpriteDrawCalls
+            << " | Batches: "
+            << s_Statistics.BatchCount
+            << " | Batch Breaks: "
+            << s_Statistics.BatchBreakCount
+            << " | Vertices: "
+            << s_Statistics.VertexCount
+            << " | Indices: "
+            << s_Statistics.IndexCount
+            << " | Avg Sprites/Draw Call: "
+            << GetAverageSpritesPerDrawCall();
+
+        return stream.str();
+    }
 }
