@@ -533,23 +533,6 @@ namespace Aurora
             vertexArray.get();
     }
 
-    void OpenGLRendererAPI::UnbindVertexArray(
-        const std::shared_ptr<VertexArray> &vertexArray)
-    {
-        if (!vertexArray)
-            return;
-
-        if (m_State.CurrentVertexArray !=
-            vertexArray.get())
-        {
-            return;
-        }
-
-        vertexArray->Unbind();
-
-        m_State.CurrentVertexArray = nullptr;
-    }
-
     void OpenGLRendererAPI::DrawFramebuffer(
         const std::shared_ptr<Texture2D> &texture)
     {
@@ -607,9 +590,6 @@ namespace Aurora
             GL_UNSIGNED_INT,
             nullptr);
 
-        UnbindVertexArray(
-            m_ScreenVertexArray);
-
         target->Unbind();
     }
 
@@ -653,9 +633,6 @@ namespace Aurora
             6,
             GL_UNSIGNED_INT,
             nullptr);
-
-        UnbindVertexArray(
-            m_ScreenVertexArray);
 
         target->Unbind();
     }

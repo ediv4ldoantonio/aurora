@@ -92,9 +92,6 @@ namespace Aurora
         void BindVertexArray(
             const std::shared_ptr<VertexArray> &vertexArray);
 
-        void UnbindVertexArray(
-            const std::shared_ptr<VertexArray> &vertexArray);
-
         std::shared_ptr<VertexArray> m_SpriteVertexArray;
         std::shared_ptr<VertexBuffer> m_SpriteVertexBuffer;
         std::shared_ptr<IndexBuffer> m_SpriteIndexBuffer;
