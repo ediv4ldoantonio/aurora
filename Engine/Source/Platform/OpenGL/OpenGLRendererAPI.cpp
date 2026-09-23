@@ -639,6 +639,10 @@ namespace Aurora
 
         BindShader(shader);
 
+        shader->Bind();
+
+        m_State.CurrentShader = shader.get();
+
         BindTexture(0, source);
 
         BindVertexArray(
