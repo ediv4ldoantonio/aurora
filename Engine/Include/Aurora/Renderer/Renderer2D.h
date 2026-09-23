@@ -48,6 +48,18 @@ namespace Aurora
             uint32_t width,
             uint32_t height);
 
+        struct Statistics
+        {
+            uint32_t SpriteCount = 0;
+            uint32_t DrawCalls = 0;
+            uint32_t BatchCount = 0;
+            uint32_t BatchBreakCount = 0;
+            uint32_t VertexCount = 0;
+            uint32_t IndexCount = 0;
+        };
+
+        static const Statistics &GetStatistics();
+
     private:
         static void FlushBatch();
 
@@ -63,10 +75,9 @@ namespace Aurora
         static SpriteBatch s_SpriteBatch;
         static RenderQueue s_RenderQueue;
 
-        static uint32_t s_BatchCount;
-        static uint32_t s_BatchBreakCount;
-
         static std::shared_ptr<Framebuffer> s_SceneFramebuffer;
+
+        static Statistics s_Statistics;
     };
 
 }

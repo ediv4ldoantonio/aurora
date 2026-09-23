@@ -33,15 +33,14 @@ namespace Aurora
 
     RenderQueue Renderer2D::s_RenderQueue;
 
-    uint32_t Renderer2D::s_BatchCount = 0;
-
-    uint32_t Renderer2D::s_BatchBreakCount = 0;
-
     std::shared_ptr<Framebuffer>
         Renderer2D::s_SceneFramebuffer = nullptr;
 
     Matrix4 Renderer2D::s_LastViewProjectionMatrix;
     bool Renderer2D::s_HasViewProjectionMatrix = false;
+
+    Renderer2D::Statistics
+        Renderer2D::s_Statistics;
 
     void Renderer2D::Init(Window &window)
     {
@@ -100,8 +99,7 @@ namespace Aurora
         if (!s_Renderer)
             return;
 
-        s_BatchCount = 0;
-        s_BatchBreakCount = 0;
+        s_Statistics = {};
 
         s_RenderQueue.Clear();
         s_SpriteBatch.Clear();
@@ -227,6 +225,8 @@ namespace Aurora
 
         s_RenderQueue.Submit(
             command);
+
+        s_Statistics.SpriteCount++;
     }
 
     void Renderer2D::SetCamera(
@@ -276,7 +276,7 @@ namespace Aurora
             if (!s_SpriteBatch.CanBatchWith(
                     command.Batch))
             {
-                ++s_BatchBreakCount;
+                ++s_Statistics.BatchBreakCount;
 
                 FlushBatch();
             }
@@ -285,7 +285,7 @@ namespace Aurora
                     command.MaterialInstance))
             {
 
-                ++s_BatchBreakCount;
+                ++s_Statistics.BatchBreakCount;
 
                 FlushBatch();
             }
@@ -311,7 +311,16 @@ namespace Aurora
         if (s_SpriteBatch.GetVertices().empty())
             return;
 
-        ++s_BatchCount;
+        ++s_Statistics.BatchCount;
+        ++s_Statistics.DrawCalls;
+
+        s_Statistics.VertexCount +=
+            static_cast<uint32_t>(
+                s_SpriteBatch.GetVertices().size());
+
+        s_Statistics.IndexCount +=
+            static_cast<uint32_t>(
+                s_SpriteBatch.GetIndexCount());
 
         s_Renderer->DrawSpriteBatch(
             s_SpriteBatch);
@@ -352,5 +361,11 @@ namespace Aurora
                 {static_cast<float>(width),
                  static_cast<float>(height)});
         }
+    }
+
+    const Renderer2D::Statistics &
+    Renderer2D::GetStatistics()
+    {
+        return s_Statistics;
     }
 }
