@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Aurora/Renderer/BlendMode.h"
+#include "Aurora/Math/Matrix4.h"
 
 #include <cstdint>
 #include <array>
@@ -36,5 +37,8 @@ namespace Aurora
         float ClearColorA = 0.0f;
 
         bool HasClearColor = false;
+
+        Matrix4 ViewProjection;
+        bool HasViewProjection = false;
     };
 }

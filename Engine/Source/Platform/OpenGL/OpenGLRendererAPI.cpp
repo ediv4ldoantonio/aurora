@@ -179,6 +179,8 @@ namespace Aurora
                 vertexSource,
                 fragmentSource);
 
+        m_State.HasViewProjection = false;
+
         m_SpriteShader->Bind();
 
         for (int i = 0; i < 16; ++i)
@@ -387,11 +389,25 @@ namespace Aurora
                 "Sprite shader is not initialized");
         }
 
+        if (m_State.HasViewProjection &&
+            std::memcmp(
+                viewProjection.GetData(),
+                m_State.ViewProjection.GetData(),
+                sizeof(float) * 16) == 0)
+        {
+            return;
+        }
+
         BindShader(m_SpriteShader);
 
         m_SpriteShader->SetMatrix4(
             "u_ViewProjection",
             viewProjection.GetData());
+
+        m_State.ViewProjection =
+            viewProjection;
+
+        m_State.HasViewProjection = true;
     }
 
     void OpenGLRendererAPI::BindBatchMaterials(
