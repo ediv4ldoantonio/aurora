@@ -37,12 +37,6 @@ namespace Aurora
 
         m_State = {};
 
-        glClearColor(
-            0.1f,
-            0.1f,
-            0.1f,
-            1.0f);
-
         CreateSpriteResources();
         CreateScreenResources();
         CreateSpriteShader();
@@ -273,15 +267,46 @@ namespace Aurora
     {
     }
 
-    void OpenGLRendererAPI::Clear(const Color &color)
+    void OpenGLRendererAPI::Clear(
+        const Color &color)
     {
-        glClearColor(
-            color.R / 255.0f,
-            color.G / 255.0f,
-            color.B / 255.0f,
-            color.A / 255.0f);
+        const float red =
+            color.R / 255.0f;
 
-        glClear(GL_COLOR_BUFFER_BIT);
+        const float green =
+            color.G / 255.0f;
+
+        const float blue =
+            color.B / 255.0f;
+
+        const float alpha =
+            color.A / 255.0f;
+
+        const bool colorChanged =
+            !m_State.HasClearColor ||
+            m_State.ClearColorR != red ||
+            m_State.ClearColorG != green ||
+            m_State.ClearColorB != blue ||
+            m_State.ClearColorA != alpha;
+
+        if (colorChanged)
+        {
+            glClearColor(
+                red,
+                green,
+                blue,
+                alpha);
+
+            m_State.ClearColorR = red;
+            m_State.ClearColorG = green;
+            m_State.ClearColorB = blue;
+            m_State.ClearColorA = alpha;
+
+            m_State.HasClearColor = true;
+        }
+
+        glClear(
+            GL_COLOR_BUFFER_BIT);
     }
 
     void OpenGLRendererAPI::SetViewport(

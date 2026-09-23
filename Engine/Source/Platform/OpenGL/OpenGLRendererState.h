@@ -29,5 +29,12 @@ namespace Aurora
         int ViewportHeight = 0;
 
         bool HasViewport = false;
+
+        float ClearColorR = 0.0f;
+        float ClearColorG = 0.0f;
+        float ClearColorB = 0.0f;
+        float ClearColorA = 0.0f;
+
+        bool HasClearColor = false;
     };
 }
