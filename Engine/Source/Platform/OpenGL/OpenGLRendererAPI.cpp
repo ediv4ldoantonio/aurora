@@ -610,9 +610,6 @@ namespace Aurora
         UnbindVertexArray(
             m_ScreenVertexArray);
 
-        m_ScreenShader->Unbind();
-        InvalidateShaderState();
-
         target->Unbind();
     }
 
@@ -655,9 +652,6 @@ namespace Aurora
 
         UnbindVertexArray(
             m_ScreenVertexArray);
-
-        shader->Unbind();
-        InvalidateShaderState();
 
         target->Unbind();
     }
