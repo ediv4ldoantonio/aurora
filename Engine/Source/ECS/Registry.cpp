@@ -49,4 +49,9 @@ namespace Aurora
 
         m_PendingDestroy.erase(entity);
     }
+
+    size_t Registry::EntityCount() const
+    {
+        return m_Entities.size();
+    }
 }

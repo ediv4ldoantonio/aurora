@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Aurora/Assets/Asset.h"
+
 #include <memory>
 #include <string>
 
@@ -11,7 +13,7 @@ namespace Aurora
         uint32_t Height = 0;
     };
 
-    class Texture2D
+    class Texture2D : public Asset
     {
     public:
         virtual ~Texture2D() = default;
@@ -27,6 +29,11 @@ namespace Aurora
         virtual bool IsLoaded() const = 0;
 
         virtual const std::string &GetPath() const = 0;
+
+        AssetType GetType() const override
+        {
+            return AssetType::Texture2D;
+        }
 
         static std::shared_ptr<Texture2D>
         Create(const std::string &path);

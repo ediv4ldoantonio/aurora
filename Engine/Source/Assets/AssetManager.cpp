@@ -1,21 +1,17 @@
 #include "Aurora/Assets/AssetManager.h"
+#include "Aurora/Core/Logger.h"
 
 namespace Aurora
 {
-    std::shared_ptr<Texture2D>
-    AssetManager::LoadTexture(
-        const std::string &path)
+    bool AssetManager::Unload(const std::string &key)
     {
-        auto it = m_Textures.find(path);
+        return m_Assets.erase(key) > 0;
+    }
 
-        if (it != m_Textures.end())
-            return it->second;
-
-        auto texture =
-            Texture2D::Create(path);
-
-        m_Textures[path] = texture;
-
-        return texture;
+    void AssetManager::Clear()
+    {
+        if (!m_Assets.empty())
+            AURORA_LOG_TRACE("AssetManager: releasing {} asset(s)", m_Assets.size());
+        m_Assets.clear();
     }
 }

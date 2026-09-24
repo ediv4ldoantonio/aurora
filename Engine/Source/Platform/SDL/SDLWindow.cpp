@@ -17,8 +17,9 @@ namespace Aurora
         AURORA_LOG_INFO("Initializing SDL video subsystem");
         SDL_Init(SDL_INIT_VIDEO);
 
-        SDL_WindowFlags flags =
-            SDL_WINDOW_RESIZABLE;
+        Uint32 flags = 0;
+        if (specification.Resizable)
+            flags |= SDL_WINDOW_RESIZABLE;
 
         if (m_Specification.Backend ==
             RendererBackend::OpenGL)
@@ -177,5 +178,10 @@ namespace Aurora
         SDL_GL_SetAttribute(
             SDL_GL_DEPTH_SIZE,
             24);
+    }
+
+    void SDLWindow::SetTitle(const std::string &title)
+    {
+        SDL_SetWindowTitle(m_Window, title.c_str());
     }
 }

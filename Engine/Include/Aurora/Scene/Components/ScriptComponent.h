@@ -3,8 +3,10 @@
 #include "Aurora/Scene/Components/Component.h"
 #include "ScriptableEntity.h"
 
-#include <functional>
 #include <memory>
+#include <functional>
+#include <tuple>
+#include <utility>
 
 namespace Aurora
 {
@@ -16,13 +18,19 @@ namespace Aurora
             std::unique_ptr<ScriptableEntity>()>
             InstantiateScript;
 
-        template <typename T>
-        void Bind()
+        template <typename T, typename... Args>
+        void Bind(Args &&...args)
         {
             InstantiateScript =
-                []()
+                [args = std::make_tuple(std::forward<Args>(args)...)]() mutable
             {
-                return std::make_unique<T>();
+                return std::apply(
+                    [](auto &&...args)
+                    {
+                        return std::make_unique<T>(
+                            std::forward<decltype(args)>(args)...);
+                    },
+                    args);
             };
         }
     };

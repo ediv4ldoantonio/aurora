@@ -46,6 +46,8 @@ namespace Aurora
 
         void DestroyEntity(EntityID entity);
 
+        size_t EntityCount() const;
+
     private:
         template <typename T>
         ComponentPool<T> &GetPool();

@@ -27,6 +27,11 @@ namespace Aurora
             return m_ID;
         }
 
+        Scene *GetScene() const
+        {
+            return m_Scene;
+        }
+
         bool IsValid() const;
 
         template <typename T, typename... Args>
@@ -38,6 +43,8 @@ namespace Aurora
 
         template <typename T>
         bool HasComponent();
+
+        Entity GetParent() const;
 
         operator bool() const
         {

@@ -4,7 +4,6 @@
 #include "Aurora/Renderer/RendererResourceFactory.h"
 #include "Aurora/Renderer/PostProcess.h"
 #include "Aurora/Core/Logger.h"
-#include "Aurora/Core/Assert.h"
 #include "Aurora/Core/Window.h"
 
 #include <algorithm>
@@ -80,6 +79,8 @@ namespace Aurora
     void Renderer2D::Shutdown()
     {
         PostProcess::Shutdown();
+
+        s_Renderer->Shutdown();
 
         s_Statistics = {};
 

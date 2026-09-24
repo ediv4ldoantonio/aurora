@@ -28,6 +28,8 @@ namespace Aurora
 
         unsigned int GetHeight() const override;
 
+        void SetTitle(const std::string &title) override;
+
     private:
         static void ConfigureOpenGLAttributes();
 

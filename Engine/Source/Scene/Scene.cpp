@@ -266,4 +266,10 @@ namespace Aurora
         m_Camera.SetPosition(
             m_Camera.GetPosition() + movement * dt);
     }
+
+    size_t Scene::GetEntityCount() const
+    {
+        return m_Registry.EntityCount();
+    }
+
 }

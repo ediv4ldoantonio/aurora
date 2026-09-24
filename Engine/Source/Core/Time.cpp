@@ -4,42 +4,60 @@
 namespace Aurora
 {
 
-    float Time::s_DeltaTime = 0.0f;
+    namespace
+    {
+        using Clock = std::chrono::high_resolution_clock;
 
-    float Time::s_CurrentTime = 0.0f;
+        Clock::time_point s_Start = Clock::now();
+        Clock::time_point s_Last = s_Start;
+
+        float s_Delta = 0.0f;
+        float s_FPS = 0.0f;
+        uint64_t s_Frames = 0;
+    }
+
+    void Time::Init()
+    {
+        s_Start = s_Last = Clock::now();
+        s_Delta = 0.0f;
+        s_FPS = 0.0f;
+        s_Frames = 0;
+    }
 
     float Time::DeltaTime()
     {
-        return s_DeltaTime;
-    }
-
-    float Time::CurrentTime()
-    {
-        return s_CurrentTime;
+        return s_Delta;
     }
 
     void Time::Update()
     {
-        using namespace std::chrono;
+        const auto now = Clock::now();
 
-        static auto startTime =
-            high_resolution_clock::now();
+        s_Delta = std::chrono::duration<float>(now - s_Last).count();
 
-        static auto lastTime = startTime;
+        s_Last = now;
 
-        auto currentTime =
-            high_resolution_clock::now();
+        ++s_Frames;
 
-        float delta =
-            duration<float>(
-                currentTime - lastTime)
-                .count();
+        if (s_Delta > 0.0f)
+        {
+            const float instant = 1.0f / s_Delta;
+            s_FPS = (s_FPS == 0.0f) ? instant : s_FPS + (instant - s_FPS) * 0.05f; // exponential smoothing
+        }
+    }
 
-        Time::s_DeltaTime = delta;
-        Time::s_CurrentTime = duration<float>(
-                                  currentTime - startTime)
-                                  .count();
+    double Time::GetElapsedTime()
+    {
+        return std::chrono::duration<double>(Clock::now() - s_Start).count();
+    }
 
-        lastTime = currentTime;
+    uint64_t Time::GetFrameCount()
+    {
+        return s_Frames;
+    }
+
+    float Time::GetFPS()
+    {
+        return s_FPS;
     }
 }

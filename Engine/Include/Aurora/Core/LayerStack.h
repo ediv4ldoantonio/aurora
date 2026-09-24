@@ -16,6 +16,7 @@ namespace Aurora
         ~LayerStack();
 
         void PushLayer(std::unique_ptr<Layer>);
+        void PushOverlay(std::unique_ptr<Layer> overlay);
 
         std::vector<std::unique_ptr<Layer>>::iterator begin()
         {
@@ -33,8 +34,11 @@ namespace Aurora
         void OnEvent(
             Event &event);
 
+        void Clear();
+
     private:
         std::vector<std::unique_ptr<Layer>> m_Layers;
+        unsigned int m_LayerInsertIndex = 0;
     };
 
 }

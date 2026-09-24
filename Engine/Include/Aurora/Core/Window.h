@@ -12,6 +12,7 @@ namespace Aurora
 {
     using EventCallbackFn =
         std::function<void(Event &)>;
+
     struct WindowSpecification
     {
 
@@ -19,6 +20,9 @@ namespace Aurora
 
         unsigned int Width;
         unsigned int Height;
+
+        bool VSync = true;
+        bool Resizable = true;
 
         EventCallbackFn EventCallback;
 
@@ -46,6 +50,8 @@ namespace Aurora
 
         virtual void SetEventCallback(
             const EventCallbackFn &callback) = 0;
+
+        virtual void SetTitle(const std::string &title) = 0;
 
     private:
         WindowSpecification m_Data;

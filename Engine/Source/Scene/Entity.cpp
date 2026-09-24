@@ -1,6 +1,7 @@
 #include "Aurora/ECS/Registry.h"
 #include "Aurora/Scene/Scene.h"
 #include "Aurora/Scene/Entity.h"
+#include "Aurora/Scene/Components/RelationshipComponent.h"
 
 namespace Aurora
 {
@@ -19,6 +20,14 @@ namespace Aurora
     {
         return m_Registry != nullptr &&
                m_Scene != nullptr;
+    }
+
+    Entity Entity::GetParent() const
+    {
+        if (!IsValid() || !m_Registry->HasComponent<RelationshipComponent>(m_ID))
+            return {};
+
+        return m_Registry->GetComponent<RelationshipComponent>(m_ID).Parent;
     }
 
     void Entity::Destroy()

@@ -1,23 +1,24 @@
 #pragma once
 
+#include <cstdint>
+
 namespace Aurora
 {
-
     class Time
     {
         friend class Application;
 
     public:
-        static float DeltaTime();
-
-        static float CurrentTime();
-
+        static void Init();
         static void Update();
 
-    private:
-        static float s_DeltaTime;
+        static float DeltaTime();
 
-        static float s_CurrentTime;
+        static float GetFPS();
+
+        static double GetElapsedTime();
+
+        static uint64_t GetFrameCount();
     };
 
 }

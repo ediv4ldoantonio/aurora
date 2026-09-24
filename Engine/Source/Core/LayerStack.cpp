@@ -5,21 +5,25 @@ namespace Aurora
 
     LayerStack::~LayerStack()
     {
-        for (auto it = m_Layers.rbegin();
-             it != m_Layers.rend();
-             ++it)
-        {
-            (*it)->OnDetach();
-        }
+        Clear();
     }
 
-    void LayerStack::PushLayer(
-        std::unique_ptr<Layer> layer)
+    void LayerStack::PushLayer(std::unique_ptr<Layer> layer)
     {
-        layer->OnAttach();
-
-        m_Layers.push_back(
+        m_Layers.emplace(
+            m_Layers.begin() + m_LayerInsertIndex,
             std::move(layer));
+
+        ++m_LayerInsertIndex;
+
+        layer->OnAttach();
+    }
+
+    void LayerStack::PushOverlay(std::unique_ptr<Layer> overlay)
+    {
+        m_Layers.emplace_back(std::move(overlay));
+
+        overlay->OnAttach();
     }
 
     void LayerStack::OnEvent(
@@ -38,4 +42,13 @@ namespace Aurora
         }
     }
 
+    void LayerStack::Clear()
+    {
+        for (auto it = m_Layers.rbegin();
+             it != m_Layers.rend();
+             ++it)
+        {
+            (*it)->OnDetach();
+        }
+    }
 }

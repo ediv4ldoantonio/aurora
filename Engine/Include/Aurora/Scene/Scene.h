@@ -43,10 +43,15 @@ namespace Aurora
 
         Entity GetEntityByUUID(UUID uuid);
 
+        size_t GetEntityCount() const;
+
         Camera2D &
         GetCamera();
 
         void UpdateCamera(float dt);
+
+        template <typename... Components>
+        View<Components...> GetAllEntitiesWith();
 
     private:
         Camera2D m_Camera;
@@ -58,3 +63,5 @@ namespace Aurora
     };
 
 }
+
+#include "Aurora/Scene/Scene.inl"

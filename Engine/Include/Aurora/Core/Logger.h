@@ -4,6 +4,7 @@
 #include <string>
 #include <string_view>
 #include <utility>
+#include <cstdlib>
 
 namespace Aurora
 {
@@ -76,3 +77,18 @@ namespace Aurora
 #define AURORA_LOG_WARN(...) ::Aurora::Logger::Warn(__VA_ARGS__)
 #define AURORA_LOG_ERROR(...) ::Aurora::Logger::Error(__VA_ARGS__)
 #define AURORA_LOG_CRITICAL(...) ::Aurora::Logger::Critical(__VA_ARGS__)
+
+#ifndef AURORA_DISABLE_ASSERTS
+#define AURORA_ASSERT(condition, ...)                                                            \
+    do                                                                                           \
+    {                                                                                            \
+        if (!(condition))                                                                        \
+        {                                                                                        \
+            AURORA_LOG_CRITICAL("Assertion failed: {} ({}:{})", #condition, __FILE__, __LINE__); \
+            AURORA_LOG_CRITICAL(__VA_ARGS__);                                                    \
+            std::abort();                                                                        \
+        }                                                                                        \
+    } while (false)
+#else
+#define AURORA_ASSERT(condition, ...) ((void)0)
+#endif

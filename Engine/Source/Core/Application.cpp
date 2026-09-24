@@ -10,9 +10,12 @@
 
 namespace Aurora
 {
-    Application::Application()
-        : m_Running(true)
+    Application *Application::s_Instance = nullptr;
+
+    Application::Application(const ApplicationSpecification &specification)
+        : m_Running(true), m_Specification(specification)
     {
+
         Initialize();
     }
 
@@ -23,6 +26,8 @@ namespace Aurora
 
     void Application::Run()
     {
+        Time::Init();
+
         AURORA_LOG_INFO("Starting application loop");
 
         while (m_Running)
@@ -47,18 +52,27 @@ namespace Aurora
 
     void Application::Initialize()
     {
+        AURORA_ASSERT(s_Instance == nullptr, "Only one Application may exist at a time");
+        s_Instance = this;
+
+        AURORA_LOG_INFO("Aurora Engine starting: ", m_Specification.Name);
+
         Logger::Initialize();
         Logger::SetLevel(LogLevel::Trace);
-        AURORA_LOG_INFO("Starting Aurora application");
 
         WindowSpecification spec;
 
-        spec.Title =
-            "Aurora Sandbox";
+        spec.Title = m_Specification.Name;
 
-        spec.Width = 1280;
+        spec.Width = m_Specification.Width;
 
-        spec.Height = 720;
+        spec.Height = m_Specification.Height;
+
+        spec.Resizable = m_Specification.Resizable;
+
+        spec.VSync = m_Specification.VSync;
+
+        spec.Resizable = m_Specification.Resizable;
 
         spec.Backend =
             RendererBackend::OpenGL;
@@ -72,15 +86,21 @@ namespace Aurora
                 OnEvent(event);
             });
 
-        AURORA_LOG_INFO("Created window: ", spec.Title, " (", spec.Width, "x", spec.Height, ")");
-
         Renderer2D::Init(
             *m_Window);
+
+        Time::Init();
     }
 
     void Application::Shutdown()
     {
         AURORA_LOG_INFO("Shutting down Aurora application");
+
+        Renderer2D::Shutdown();
+        m_LayerStack.Clear();
+        m_Window.reset();
+        m_AssetManager.Clear();
+        s_Instance = nullptr;
         Logger::Shutdown();
     }
 
@@ -114,4 +134,24 @@ namespace Aurora
             });
     }
 
+    Application &Application::Get()
+    {
+        AURORA_ASSERT(s_Instance != nullptr, "Application has not been created");
+        return *s_Instance;
+    }
+
+    bool Application::Exists()
+    {
+        return s_Instance != nullptr;
+    }
+
+    AssetManager &Application::GetAssetManager()
+    {
+        return m_AssetManager;
+    }
+
+    Window &Application::GetWindow()
+    {
+        return *m_Window;
+    }
 }

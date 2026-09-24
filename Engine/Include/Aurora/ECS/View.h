@@ -22,6 +22,9 @@ namespace Aurora
 
         std::vector<Entity> GetEntities();
 
+        template <typename Func>
+        void Each(Func &&func);
+
     private:
         template <typename... Required>
         bool HasAllComponents(Entity entity)
