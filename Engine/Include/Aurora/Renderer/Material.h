@@ -1,6 +1,7 @@
 #pragma once
 
 #include "Aurora/Core/UUID.h"
+#include "Aurora/Math/Vector2.h"
 #include "Aurora/Renderer/BlendMode.h"
 #include "Aurora/Renderer/Color.h"
 
@@ -32,6 +33,12 @@ namespace Aurora
         const Color &
         GetTint() const;
 
+        void SetScale(
+            const Vector2 &scale);
+
+        const Vector2 &
+        GetScale() const;
+
         void SetBlendMode(
             BlendMode mode);
 
@@ -45,6 +52,9 @@ namespace Aurora
         std::shared_ptr<Texture2D> m_Texture;
 
         Color m_Tint;
+
+        Vector2 m_Scale =
+            Vector2::One();
 
         BlendMode m_BlendMode =
             BlendMode::Opaque;

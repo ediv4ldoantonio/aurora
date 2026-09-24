@@ -198,9 +198,6 @@ namespace Aurora
         command.Position =
             transform.WorldTransform.Position;
 
-        command.Size =
-            transform.WorldTransform.Scale;
-
         command.Rotation =
             transform.WorldTransform.Rotation;
 
@@ -210,6 +207,16 @@ namespace Aurora
                 "SpriteComponent has no MaterialInstance. Skipping draw call.");
             return;
         }
+
+        const Vector2 &entityScale =
+            transform.WorldTransform.Scale;
+
+        const Vector2 &materialScale =
+            sprite.MaterialInstance->GetScale();
+
+        command.Size = {
+            entityScale.x * materialScale.x,
+            entityScale.y * materialScale.y};
 
         command.MaterialInstance =
             sprite.MaterialInstance.get();

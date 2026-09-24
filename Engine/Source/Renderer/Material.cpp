@@ -41,6 +41,18 @@ namespace Aurora
         return m_Tint;
     }
 
+    void Material::SetScale(
+        const Vector2 &scale)
+    {
+        m_Scale = scale;
+    }
+
+    const Vector2 &
+    Material::GetScale() const
+    {
+        return m_Scale;
+    }
+
     void Material::SetBlendMode(
         BlendMode mode)
     {

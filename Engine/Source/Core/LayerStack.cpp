@@ -14,16 +14,15 @@ namespace Aurora
             m_Layers.begin() + m_LayerInsertIndex,
             std::move(layer));
 
+        m_Layers[m_LayerInsertIndex]->OnAttach();
         ++m_LayerInsertIndex;
-
-        layer->OnAttach();
     }
 
     void LayerStack::PushOverlay(std::unique_ptr<Layer> overlay)
     {
         m_Layers.emplace_back(std::move(overlay));
 
-        overlay->OnAttach();
+        m_Layers.back()->OnAttach();
     }
 
     void LayerStack::OnEvent(

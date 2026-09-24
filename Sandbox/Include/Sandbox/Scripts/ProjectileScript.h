@@ -41,11 +41,11 @@ namespace Sandbox
                 color.R,
                 color.G,
                 color.B,
-                1.0f - t * t});
+                static_cast<uint8_t>(255.0f * (1.0f - t * t))});
 
             const float s = 0.6f + 0.6f * t;
 
-            tc.LocalTransform.Scale = {s, s};
+            tc.LocalTransform.Scale = {40.0f * s, 40.0f * s};
         }
 
     private:

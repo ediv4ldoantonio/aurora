@@ -34,8 +34,8 @@ namespace Sandbox
         std::unique_ptr<Scene> m_Scene;
         Entity m_Player;
 
-        std::shared_ptr<Material> m_CrateMaterial = nullptr;
-        std::shared_ptr<Material> m_OrbMaterial = nullptr;
+        std::shared_ptr<Texture2D> m_CrateTexture = nullptr;
+        std::shared_ptr<Texture2D> m_OrbTexture = nullptr;
 
         float m_TitleTimer = 0.0f;
     };

@@ -10,7 +10,8 @@ namespace Aurora
     enum class AssetType
     {
         None = 0,
-        Texture2D
+        Texture2D,
+        Shader
     };
 
     class Asset

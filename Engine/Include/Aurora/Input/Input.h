@@ -25,6 +25,10 @@ namespace Aurora
         static void ProcessEvent(
             Event &event);
 
+        static void EndFrame();
+
+        static void Reset();
+
     private:
         static bool s_CurrentKeys[512];
 

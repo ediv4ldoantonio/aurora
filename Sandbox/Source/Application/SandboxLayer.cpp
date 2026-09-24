@@ -18,6 +18,18 @@
 
 namespace Sandbox
 {
+    namespace
+    {
+        std::shared_ptr<Material> CreateMaterialInstance(
+            const std::shared_ptr<Texture2D> &source)
+        {
+            if (!source)
+                return nullptr;
+
+            return std::make_shared<Material>(source);
+        }
+    }
+
     SandboxLayer::SandboxLayer() : Layer("Sandbox")
     {
     }
@@ -28,13 +40,11 @@ namespace Sandbox
 
         AssetManager &assets = Application::Get().GetAssetManager();
 
-        m_CrateMaterial =
-            std::make_shared<Material>(assets.Load<Texture2D>(dir + "/Textures/crate.png"));
+        m_CrateTexture = assets.LoadShared<Texture2D>(dir + "/Textures/crate.png");
 
-        m_OrbMaterial =
-            std::make_shared<Material>(assets.Load<Texture2D>(dir + "/Textures/orb.png"));
+        m_OrbTexture = assets.LoadShared<Texture2D>(dir + "/Textures/orb.png");
 
-        if (!m_CrateMaterial || !m_OrbMaterial)
+        if (!m_CrateTexture || !m_OrbTexture)
             AURORA_LOG_WARN("Sandbox material missing in '{}': sprites will render as flat colors", dir);
 
         m_Scene = std::make_unique<Scene>();
@@ -96,6 +106,7 @@ namespace Sandbox
 
     void SandboxLayer::OnRender()
     {
+        m_Scene->OnRender();
     }
 
     void SandboxLayer::OnEvent(Event &event)
@@ -116,7 +127,7 @@ namespace Sandbox
 
         // Background: a checkerboard of dim crates on layer -10.
         constexpr int Half = 14;
-        constexpr float Tile = 96.0f;
+        constexpr float Tile = 92.0f;
         for (int y = -Half; y <= Half; ++y)
         {
             for (int x = -Half; x <= Half; ++x)
@@ -130,9 +141,11 @@ namespace Sandbox
 
                 const float v = dark ? 0.22f : 0.32f;
 
-                m_CrateMaterial->SetTint(Color(v * 0.8f, v * 0.9f, v * 1.4f, 1.0f));
+                auto material = CreateMaterialInstance(m_CrateTexture);
 
-                auto &s = tile.AddComponent<SpriteComponent>(m_CrateMaterial);
+                material->SetTint(Color(v * 0.8f * 255.0f, v * 0.9f * 255.0f, v * 1.4f * 255.0f, 255.0f));
+
+                auto &s = tile.AddComponent<SpriteComponent>(material);
 
                 s.Layer = -10;
             }
@@ -148,9 +161,10 @@ namespace Sandbox
             e.GetComponent<TransformComponent>().LocalTransform.Position = Vector2{420.0f, 0.0f}.Rotated(a);
             e.GetComponent<TransformComponent>().LocalTransform.Scale = {64.0f, 64.0f};
 
-            m_CrateMaterial->SetTint(Color(1.0f, 0.55f + 0.03f * i, 0.35f, 1.0f));
+            auto material = CreateMaterialInstance(m_CrateTexture);
+            material->SetTint(Color(255.0f, 0.55f + 0.03f * i * 255.0f, 0.35f * 255.0f, 255.0f));
 
-            auto &s = e.AddComponent<SpriteComponent>(m_CrateMaterial);
+            auto &s = e.AddComponent<SpriteComponent>(material);
 
             s.Layer = 0;
 
@@ -160,10 +174,11 @@ namespace Sandbox
         // The player, with a ring of orbiting orbs parented to it.
         m_Player = m_Scene->CreateEntity("Player");
         {
-            m_CrateMaterial->SetTint(Color(0.6f, 0.9f, 1.0f, 1.0f));
+            auto material = CreateMaterialInstance(m_CrateTexture);
+            material->SetTint(Color(0.6f * 255.0f, 0.9f * 255.0f, 255.0f, 255.0f));
             m_Player.GetComponent<TransformComponent>().LocalTransform.Scale = {72.0f, 72.0f};
 
-            auto &s = m_Player.AddComponent<SpriteComponent>(m_CrateMaterial);
+            auto &s = m_Player.AddComponent<SpriteComponent>(material);
 
             s.Layer = 1;
 
@@ -179,9 +194,10 @@ namespace Sandbox
 
             transform.LocalTransform.Scale = Vector2{56.0f, 56.0f};
 
-            m_OrbMaterial->SetTint(Color(0.4f + 0.1f * i, 0.9f - 0.1f * i, 1.0f, 1.0f));
+            auto material = CreateMaterialInstance(m_OrbTexture);
+            material->SetTint(Color(0.4f + 0.1f * i * 255.0f, 0.9f - 0.1f * i * 255.0f, 255.0f, 255.0f));
 
-            auto &s = orb.AddComponent<SpriteComponent>(m_OrbMaterial);
+            auto &s = orb.AddComponent<SpriteComponent>(material);
 
             s.Layer = 2;
 

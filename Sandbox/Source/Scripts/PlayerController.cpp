@@ -7,6 +7,7 @@
 #include <Aurora/Input/KeyCodes.h>
 #include <Aurora/Assets/AssetManager.h>
 #include <Aurora/Core/Application.h>
+#include <Aurora/Renderer/Texture2D.h>
 
 #include <string>
 
@@ -22,8 +23,7 @@ namespace Sandbox
 
         AssetManager &assets = Application::Get().GetAssetManager();
 
-        m_OrbMaterial =
-            std::make_shared<Material>(assets.Load<Texture2D>(dir + "/Textures/orb.png"));
+        m_OrbTexture = assets.LoadShared<Texture2D>(dir + "/Textures/orb.png");
     }
 
     void PlayerController::OnUpdate(float dt)
@@ -35,9 +35,9 @@ namespace Sandbox
         if (Input::IsKeyDown(Key::D) || Input::IsKeyDown(Key::Right))
             dir.x += 1.0f;
         if (Input::IsKeyDown(Key::W) || Input::IsKeyDown(Key::Up))
-            dir.y -= 1.0f; // +Y is down
+            dir.y += 1.0f; // +Y is down
         if (Input::IsKeyDown(Key::S) || Input::IsKeyDown(Key::Down))
-            dir.y += 1.0f;
+            dir.y -= 1.0f;
 
         auto &tc = GetEntity().GetComponent<TransformComponent>();
 
@@ -63,27 +63,31 @@ namespace Sandbox
         Scene *scene = GetEntity().GetScene();
 
         constexpr int Count = 16;
+        constexpr float Tau = 6.28318530718f;
 
-        for (int i = 0; i < Count; ++i)
-        {
-            const float angle = (static_cast<float>(i) / Count) * Tau;
+        // for (int i = 0; i < Count; ++i)
+        // {
+        //     const float angle = (static_cast<float>(i) / Count) * Tau;
 
-            const Vector2 dir = Vector2{1.0f, 0.0f}.Rotated(angle);
+        //     const Vector2 dir = Vector2{1.0f, 0.0f}.Rotated(angle);
 
-            Entity e = scene->CreateEntity("Projectile");
+        //     Entity e = scene->CreateEntity("Projectile");
 
-            auto &transform = e.GetComponent<TransformComponent>();
+        //     auto &transform = e.GetComponent<TransformComponent>();
 
-            transform.LocalTransform.Position = origin;
-            transform.LocalTransform.Scale = {40.0f, 40.0f};
+        //     transform.LocalTransform.Position = origin;
 
-            m_OrbMaterial->SetTint(Color(1.0f, 0.8f, 0.3f, 1.0f));
+        //     transform.LocalTransform.Scale = {40.0f, 40.0f};
 
-            auto &sprite = e.AddComponent<SpriteComponent>(m_OrbMaterial);
+        //     auto material = std::make_shared<Material>(m_OrbTexture);
 
-            sprite.Layer = 5;
+        //     material->SetTint(Color(255.0f, 0.8f * 255, 0.3f * 255, 255.0f));
 
-            e.AddComponent<ScriptComponent>().Bind<ProjectileScript>(dir * 380.0f, 1.2f);
-        }
+        //     auto &sprite = e.AddComponent<SpriteComponent>(material);
+
+        //     sprite.Layer = 5;
+
+        //     e.AddComponent<ScriptComponent>().Bind<ProjectileScript>(dir * 380.0f, 1.2f);
+        // }
     }
 }

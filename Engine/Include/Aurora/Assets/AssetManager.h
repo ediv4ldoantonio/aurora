@@ -42,6 +42,22 @@ namespace Aurora
             return raw;
         }
 
+        template <typename T>
+        std::shared_ptr<T> LoadShared(const std::string &path)
+        {
+            static_assert(std::is_base_of_v<Asset, T>, "T must derive from Asset");
+
+            if (auto it = m_Assets.find(path); it != m_Assets.end())
+                return std::dynamic_pointer_cast<T>(it->second);
+
+            std::shared_ptr<T> asset = T::Create(path);
+            if (!asset)
+                return nullptr;
+
+            m_Assets.emplace(path, asset);
+            return asset;
+        }
+
         // Registers an already-created asset under `key`. Replaces any existing asset with that key.
         template <typename T>
         T *Add(const std::string &key, std::shared_ptr<T> asset)

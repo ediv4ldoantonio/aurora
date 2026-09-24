@@ -47,7 +47,10 @@ namespace Aurora
                 transform.LocalTransform.Rotation;
 
             transform.WorldTransform.Scale =
-                parentTransform.WorldTransform.Scale;
+                {parentTransform.WorldTransform.Scale.x *
+                     transform.LocalTransform.Scale.x,
+                 parentTransform.WorldTransform.Scale.y *
+                     transform.LocalTransform.Scale.y};
         }
         else
         {

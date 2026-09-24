@@ -24,7 +24,8 @@ namespace Aurora
 
             // Gentle pulse.
             const float pulse = 0.85f + 0.15f * std::sin(m_Angle * 3.0f);
-            tc.LocalTransform.Scale = {pulse, pulse};
+            constexpr float RelativeSize = 56.0f / 72.0f;
+            tc.LocalTransform.Scale = {RelativeSize * pulse, RelativeSize * pulse};
         }
 
     private:
