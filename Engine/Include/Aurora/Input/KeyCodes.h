@@ -5,7 +5,7 @@
 namespace Aurora
 {
     using KeyCode = uint16_t;
-
+    inline constexpr uint16_t KeyCodeCount = 512;
     namespace Key
     {
         // Unknown

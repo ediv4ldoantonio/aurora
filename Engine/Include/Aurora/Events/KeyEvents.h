@@ -10,15 +10,16 @@ namespace Aurora
     {
 
     public:
-        KeyPressedEvent(
-            KeyCode keycode)
-            : m_KeyCode(keycode)
-        {
-        }
+        KeyPressedEvent(KeyCode key, bool isRepeat) : m_KeyCode(key), m_IsRepeat(isRepeat) {}
 
         KeyCode GetKeyCode() const
         {
             return m_KeyCode;
+        }
+
+        bool IsRepeat() const
+        {
+            return m_IsRepeat;
         }
 
         EVENT_CLASS_TYPE(KeyPressed)
@@ -26,6 +27,7 @@ namespace Aurora
 
     private:
         KeyCode m_KeyCode;
+        bool m_IsRepeat;
     };
 
     class KeyReleasedEvent : public Event

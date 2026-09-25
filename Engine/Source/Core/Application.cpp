@@ -8,6 +8,8 @@
 #include "Aurora/Events/ApplicationEvents.h"
 #include "Aurora/Events/EventDispatcher.h"
 
+#include <algorithm>
+
 namespace Aurora
 {
     Application *Application::s_Instance = nullptr;
@@ -35,23 +37,22 @@ namespace Aurora
     {
         Time::Init();
 
-        AURORA_LOG_INFO("Starting application loop");
-
         while (m_Running)
         {
             Time::Update();
 
-            Input::Update();
+            const float dt = std::min(Time::DeltaTime(), MaxDeltaTime);
 
             m_Window->OnUpdate();
 
             for (auto &layer : m_LayerStack)
             {
-                layer->OnUpdate(
-                    Time::DeltaTime());
+                layer->OnUpdate(dt);
 
                 layer->OnRender();
             }
+
+            Input::EndFrame();
         }
 
         AURORA_LOG_INFO("Application loop exited");
@@ -62,7 +63,7 @@ namespace Aurora
         AURORA_ASSERT(s_Instance == nullptr, "Only one Application may exist at a time");
         s_Instance = this;
 
-        AURORA_LOG_INFO("Aurora Engine starting: ", m_Specification.Name);
+        AURORA_LOG_INFO("Aurora Engine starting: {}", m_Specification.Name);
 
         Logger::SetLevel(LogLevel::Trace);
 
@@ -96,6 +97,7 @@ namespace Aurora
             *m_Window);
 
         Time::Init();
+        Input::Reset();
     }
 
     void Application::Shutdown()

@@ -1,51 +1,72 @@
 #include "Aurora/Input/Input.h"
 #include "Aurora/Input/KeyCodes.h"
 #include "Aurora/Events/KeyEvents.h"
+#include "Aurora/Events/MouseEvents.h"
 #include "Aurora/Events/Event.h"
 #include "Aurora/Events/EventDispatcher.h"
 
 #include <cstring>
+#include <array>
 
 namespace Aurora
 {
-
-    bool Input::s_CurrentKeys[512] = {};
-    bool Input::s_PreviousKeys[512] = {};
-
-    bool Input::IsKeyPressed(KeyCode key)
+    namespace
     {
-        int index = static_cast<int>(key);
+        struct InputState
+        {
+            std::array<bool, KeyCodeCount> Down{};
+            std::array<bool, KeyCodeCount> Pressed{};
+            std::array<bool, KeyCodeCount> Released{};
 
-        return s_CurrentKeys[index] &&
-               !s_PreviousKeys[index];
+            std::array<bool, MouseButtonCount> MouseDown{};
+            std::array<bool, MouseButtonCount> MousePressed{};
+            std::array<bool, MouseButtonCount> MouseReleased{};
+        };
+
+        InputState s_State;
+
+        bool InRange(KeyCode key)
+        {
+            return static_cast<uint16_t>(key) < KeyCodeCount;
+        }
+
+        bool InRange(MouseButton button)
+        {
+            return static_cast<size_t>(button) < MouseButtonCount;
+        }
     }
 
     bool Input::IsKeyDown(KeyCode key)
     {
-        return s_CurrentKeys[static_cast<int>(key)];
+        return InRange(key) && s_State.Down[static_cast<size_t>(key)];
+    }
+
+    bool Input::IsKeyPressed(KeyCode key)
+    {
+        return InRange(key) && s_State.Pressed[static_cast<size_t>(key)];
     }
 
     bool Input::IsKeyReleased(KeyCode key)
     {
-        int index = static_cast<int>(key);
-
-        return !s_CurrentKeys[index] &&
-               s_PreviousKeys[index];
+        return InRange(key) && s_State.Released[static_cast<size_t>(key)];
     }
 
-    void Input::SetKey(
-        KeyCode key,
-        bool pressed)
+    bool Input::IsMouseButtonDown(MouseButton button)
     {
-        s_CurrentKeys[static_cast<int>(key)] = pressed;
+        return InRange(button) &&
+               s_State.MouseDown[static_cast<size_t>(button)];
     }
 
-    void Input::Update()
+    bool Input::IsMouseButtonPressed(MouseButton button)
     {
-        std::memcpy(
-            s_PreviousKeys,
-            s_CurrentKeys,
-            sizeof(s_CurrentKeys));
+        return InRange(button) &&
+               s_State.MousePressed[static_cast<size_t>(button)];
+    }
+
+    bool Input::IsMouseButtonReleased(MouseButton button)
+    {
+        return InRange(button) &&
+               s_State.MouseReleased[static_cast<size_t>(button)];
     }
 
     void Input::ProcessEvent(
@@ -57,7 +78,13 @@ namespace Aurora
         dispatcher.Dispatch<KeyPressedEvent>(
             [](KeyPressedEvent &e)
             {
-                s_CurrentKeys[(int)e.GetKeyCode()] = true;
+                if (!InRange(e.GetKeyCode()) || e.IsRepeat())
+                    return false;
+
+                const auto idx = static_cast<size_t>(e.GetKeyCode());
+
+                s_State.Down[idx] = true;
+                s_State.Pressed[idx] = true;
 
                 return true;
             });
@@ -65,10 +92,58 @@ namespace Aurora
         dispatcher.Dispatch<KeyReleasedEvent>(
             [](KeyReleasedEvent &e)
             {
-                s_CurrentKeys[(int)e.GetKeyCode()] = false;
+                if (!InRange(e.GetKeyCode()))
+                    return false;
+
+                const auto idx = static_cast<size_t>(e.GetKeyCode());
+
+                s_State.Down[idx] = false;
+                s_State.Released[idx] = true;
+                return true;
+            });
+
+        dispatcher.Dispatch<MouseButtonPressedEvent>(
+            [](MouseButtonPressedEvent &e)
+            {
+                if (!InRange(e.GetMouseButton()))
+                    return false;
+
+                const auto idx =
+                    static_cast<size_t>(e.GetMouseButton());
+
+                s_State.MouseDown[idx] = true;
+                s_State.MousePressed[idx] = true;
+
+                return true;
+            });
+
+        dispatcher.Dispatch<MouseButtonReleasedEvent>(
+            [](MouseButtonReleasedEvent &e)
+            {
+                if (!InRange(e.GetMouseButton()))
+                    return false;
+
+                const auto idx =
+                    static_cast<size_t>(e.GetMouseButton());
+
+                s_State.MouseDown[idx] = false;
+                s_State.MouseReleased[idx] = true;
 
                 return true;
             });
     }
 
+    void Input::EndFrame()
+    {
+        s_State.Pressed.fill(false);
+        s_State.Released.fill(false);
+
+        s_State.MousePressed.fill(false);
+        s_State.MouseReleased.fill(false);
+    }
+
+    void Input::Reset()
+    {
+        s_State = InputState{};
+    }
 }

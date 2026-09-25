@@ -64,5 +64,7 @@ namespace Aurora
         bool m_Running;
 
         static Application *s_Instance;
+
+        static constexpr float MaxDeltaTime = 0.1f;
     };
 }

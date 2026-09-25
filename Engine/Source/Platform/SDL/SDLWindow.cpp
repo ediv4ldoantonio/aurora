@@ -97,7 +97,8 @@ namespace Aurora
             {
                 KeyPressedEvent keyEvent(
                     SDLKeyToAurora(
-                        sdlEvent.key.key));
+                        sdlEvent.key.key),
+                    sdlEvent.key.repeat != 0);
 
                 m_Specification.EventCallback(
                     keyEvent);
