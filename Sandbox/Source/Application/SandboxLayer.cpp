@@ -62,6 +62,7 @@ namespace Sandbox
 
         if (Input::IsKeyPressed(Key::Escape))
             Application::Get().Shutdown();
+
         if (Input::IsKeyPressed(Key::R))
             BuildScene();
 
@@ -123,11 +124,12 @@ namespace Sandbox
 
         for (Entity e : all)
             if (e.IsValid() && !e.GetParent().IsValid())
-                m_Scene->DestroyEntity(e);
+                e.Destroy();
 
         // Background: a checkerboard of dim crates on layer -10.
         constexpr int Half = 14;
         constexpr float Tile = 92.0f;
+
         for (int y = -Half; y <= Half; ++y)
         {
             for (int x = -Half; x <= Half; ++x)
@@ -186,6 +188,7 @@ namespace Sandbox
         }
 
         constexpr int Orbiters = 6;
+
         for (int i = 0; i < Orbiters; ++i)
         {
             Entity orb = m_Scene->CreateEntity("Orbiter");

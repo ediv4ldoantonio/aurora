@@ -21,7 +21,14 @@ namespace Aurora
 
     Application::~Application()
     {
-        Shutdown();
+        AURORA_LOG_INFO("Shutting down Aurora application");
+
+        m_LayerStack.Clear();
+        m_AssetManager.Clear();
+        Renderer2D::Shutdown();
+        m_Window.reset();
+
+        s_Instance = nullptr;
     }
 
     void Application::Run()
@@ -57,7 +64,6 @@ namespace Aurora
 
         AURORA_LOG_INFO("Aurora Engine starting: ", m_Specification.Name);
 
-        Logger::Initialize();
         Logger::SetLevel(LogLevel::Trace);
 
         WindowSpecification spec;
@@ -94,14 +100,7 @@ namespace Aurora
 
     void Application::Shutdown()
     {
-        AURORA_LOG_INFO("Shutting down Aurora application");
-
-        Renderer2D::Shutdown();
-        m_LayerStack.Clear();
-        m_Window.reset();
-        m_AssetManager.Clear();
-        s_Instance = nullptr;
-        Logger::Shutdown();
+        m_Running = false;
     }
 
     void Application::OnEvent(
@@ -116,7 +115,7 @@ namespace Aurora
         dispatcher.Dispatch<WindowCloseEvent>(
             [this](WindowCloseEvent &)
             {
-                m_Running = false;
+                Shutdown();
 
                 AURORA_LOG_INFO("Closing application because the window requested shutdown");
 

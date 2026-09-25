@@ -65,29 +65,29 @@ namespace Sandbox
         constexpr int Count = 16;
         constexpr float Tau = 6.28318530718f;
 
-        // for (int i = 0; i < Count; ++i)
-        // {
-        //     const float angle = (static_cast<float>(i) / Count) * Tau;
+        for (int i = 0; i < Count; ++i)
+        {
+            const float angle = (static_cast<float>(i) / Count) * Tau;
 
-        //     const Vector2 dir = Vector2{1.0f, 0.0f}.Rotated(angle);
+            const Vector2 dir = Vector2{1.0f, 0.0f}.Rotated(angle);
 
-        //     Entity e = scene->CreateEntity("Projectile");
+            Entity e = scene->CreateEntity("Projectile");
 
-        //     auto &transform = e.GetComponent<TransformComponent>();
+            auto &transform = e.GetComponent<TransformComponent>();
 
-        //     transform.LocalTransform.Position = origin;
+            transform.LocalTransform.Position = origin;
 
-        //     transform.LocalTransform.Scale = {40.0f, 40.0f};
+            transform.LocalTransform.Scale = {40.0f, 40.0f};
 
-        //     auto material = std::make_shared<Material>(m_OrbTexture);
+            auto material = std::make_shared<Material>(m_OrbTexture);
 
-        //     material->SetTint(Color(255.0f, 0.8f * 255, 0.3f * 255, 255.0f));
+            material->SetTint(Color(255.0f, 0.8f * 255, 0.3f * 255, 255.0f));
 
-        //     auto &sprite = e.AddComponent<SpriteComponent>(material);
+            auto &sprite = e.AddComponent<SpriteComponent>(material);
 
-        //     sprite.Layer = 5;
+            sprite.Layer = 5;
 
-        //     e.AddComponent<ScriptComponent>().Bind<ProjectileScript>(dir * 380.0f, 1.2f);
-        // }
+            e.AddComponent<ScriptComponent>().Bind<ProjectileScript>(dir * 380.0f, 1.2f);
+        }
     }
 }

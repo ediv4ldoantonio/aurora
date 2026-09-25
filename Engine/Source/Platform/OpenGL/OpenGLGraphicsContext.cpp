@@ -69,21 +69,21 @@ namespace Aurora
                 glGetString(GL_RENDERER));
 
         AURORA_LOG_TRACE(
-            "OpenGL Version: ",
+            "OpenGL Version: {}",
             version ? version : "unknown");
 
         AURORA_LOG_TRACE(
-            "OpenGL Vendor: ",
+            "OpenGL Vendor: {}",
             vendor ? vendor : "unknown");
 
         AURORA_LOG_TRACE(
-            "OpenGL Renderer: ",
+            "OpenGL Renderer: {}",
             renderer ? renderer : "unknown");
 
         if (!SDL_GL_SetSwapInterval(1))
         {
             AURORA_LOG_WARN(
-                "Failed to enable VSync: ",
+                "Failed to enable VSync: {}",
                 SDL_GetError());
         }
 
@@ -106,7 +106,7 @@ namespace Aurora
         if (!SDL_GL_SwapWindow(m_Window))
         {
             AURORA_LOG_ERROR(
-                "Failed to swap OpenGL buffers: ",
+                "Failed to swap OpenGL buffers: {}",
                 SDL_GetError());
         }
     }

@@ -17,9 +17,7 @@ namespace Aurora
              m_Registry->GetEntities())
         {
 
-            Entity entity(
-                id,
-                m_Registry);
+            Entity entity(id, m_Registry, m_Scene);
 
             if (
                 HasAllComponents<Components...>(entity))

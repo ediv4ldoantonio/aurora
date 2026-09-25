@@ -69,7 +69,7 @@ namespace Aurora
 
         Registry *m_Registry = nullptr;
 
-        Scene *m_Scene;
+        Scene *m_Scene = nullptr;
     };
 
 }

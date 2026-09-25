@@ -48,11 +48,17 @@ namespace Aurora
 
         size_t EntityCount() const;
 
+        void SetScene(Scene *scene) { m_Scene = scene; }
+
+        Scene *GetScene() const { return m_Scene; }
+
     private:
         template <typename T>
         ComponentPool<T> &GetPool();
 
     private:
+        Scene *m_Scene = nullptr;
+
         EntityID m_NextEntityID = 1;
 
         std::vector<EntityID> m_Entities;

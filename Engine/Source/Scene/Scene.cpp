@@ -23,6 +23,8 @@ namespace Aurora
 
     Scene::Scene()
     {
+        m_Registry.SetScene(this);
+
         m_Camera.SetPosition(
             {0.0f, 0.0f});
 
@@ -127,13 +129,16 @@ namespace Aurora
 
     void Scene::DestroyEntity(Entity entity)
     {
-        m_DestroyQueue.push_back(entity);
+        m_DestroyQueue.push_back(entity.GetID());
     }
 
     void Scene::ProcessDestroyQueue()
     {
         for (EntityID id : m_DestroyQueue)
         {
+            if (!m_Registry.IsPendingDestroy(id))
+                continue;
+
             Entity entity(
                 id,
                 &m_Registry,

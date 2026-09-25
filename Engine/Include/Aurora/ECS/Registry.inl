@@ -73,7 +73,7 @@ namespace Aurora
     {
 
         return View<Components...>(
-            this);
+            this, m_Scene);
     }
 
 }
