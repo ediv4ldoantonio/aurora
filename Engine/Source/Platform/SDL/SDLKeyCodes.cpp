@@ -263,4 +263,20 @@ namespace Aurora
             return Key::Unknown;
         }
     }
+
+    bool TryGetMouseButton(
+        uint8_t button,
+        MouseButton &result)
+    {
+        if (button < SDL_BUTTON_LEFT ||
+            button > SDL_BUTTON_X2)
+        {
+            return false;
+        }
+
+        result = static_cast<MouseButton>(
+            button - SDL_BUTTON_LEFT);
+
+        return true;
+    }
 }

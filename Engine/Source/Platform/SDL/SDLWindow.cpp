@@ -1,12 +1,11 @@
-#include "SDLWindow.h"
-#include "Aurora/Events/ApplicationEvents.h"
-
 #include "Aurora/Input/Input.h"
 #include "Aurora/Core/Logger.h"
+#include "Aurora/Events/ApplicationEvents.h"
 #include "Aurora/Events/KeyEvents.h"
+
+#include "SDLWindow.h"
 #include "SDLKeyCodes.h"
 #include "Aurora/Renderer/GraphicsContext.h"
-
 #include <SDL3/SDL.h>
 
 namespace Aurora
@@ -115,6 +114,42 @@ namespace Aurora
 
                 m_Specification.EventCallback(
                     keyEvent);
+
+                break;
+            }
+            case SDL_EVENT_MOUSE_BUTTON_DOWN:
+            {
+                MouseButton button;
+
+                if (!TryGetMouseButton(
+                        sdlEvent.button.button,
+                        button))
+                {
+                    break;
+                }
+
+                MouseButtonPressedEvent mouseEvent(button);
+
+                m_Specification.EventCallback(
+                    mouseEvent);
+
+                break;
+            }
+            case SDL_EVENT_MOUSE_BUTTON_UP:
+            {
+                MouseButton button;
+
+                if (!TryGetMouseButton(
+                        sdlEvent.button.button,
+                        button))
+                {
+                    break;
+                }
+
+                MouseButtonReleasedEvent mouseEvent(button);
+
+                m_Specification.EventCallback(
+                    mouseEvent);
 
                 break;
             }
