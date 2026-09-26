@@ -23,6 +23,7 @@ namespace Aurora
             std::array<bool, MouseButtonCount> MouseReleased{};
 
             Vector2 MousePosition{};
+            Vector2 MouseScrollDelta{};
         };
 
         InputState s_State;
@@ -74,6 +75,11 @@ namespace Aurora
     Vector2 Input::GetMousePosition()
     {
         return s_State.MousePosition;
+    }
+
+    Vector2 Input::GetMouseScrollDelta()
+    {
+        return s_State.MouseScrollDelta;
     }
 
     void Input::ProcessEvent(
@@ -147,6 +153,13 @@ namespace Aurora
 
                 return true;
             });
+
+        dispatcher.Dispatch<MouseScrolledEvent>(
+            [](MouseScrolledEvent &e)
+            {
+                s_State.MouseScrollDelta += e.GetOffset();
+                return true;
+            });
     }
 
     void Input::EndFrame()
@@ -156,6 +169,8 @@ namespace Aurora
 
         s_State.MousePressed.fill(false);
         s_State.MouseReleased.fill(false);
+
+        s_State.MouseScrollDelta = {};
     }
 
     void Input::Reset()

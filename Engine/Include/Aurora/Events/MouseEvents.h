@@ -77,4 +77,26 @@ namespace Aurora
     private:
         Vector2 m_Position;
     };
+
+    class MouseScrolledEvent : public Event
+    {
+    public:
+        MouseScrolledEvent(const Vector2 &offset)
+            : m_Offset(offset)
+        {
+        }
+
+        const Vector2 &GetOffset() const
+        {
+            return m_Offset;
+        }
+
+        EVENT_CLASS_TYPE(MouseScrolled)
+        EVENT_CLASS_CATEGORY(
+            EventCategoryMouse |
+            EventCategoryInput)
+
+    private:
+        Vector2 m_Offset;
+    };
 }

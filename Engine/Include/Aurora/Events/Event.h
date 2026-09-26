@@ -18,6 +18,7 @@ namespace Aurora
         MouseButtonPressed,
         MouseButtonReleased,
         MouseMoved,
+        MouseScrolled,
     };
 
     enum EventCategory

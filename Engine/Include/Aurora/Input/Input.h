@@ -25,7 +25,9 @@ namespace Aurora
         static bool IsMouseButtonPressed(MouseButton button);
         static bool IsMouseButtonDown(MouseButton button);
         static bool IsMouseButtonReleased(MouseButton button);
+
         static Vector2 GetMousePosition();
+        static Vector2 GetMouseScrollDelta();
     };
 
 }

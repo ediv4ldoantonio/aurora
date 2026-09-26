@@ -59,7 +59,6 @@ namespace Sandbox
 
     void SandboxLayer::OnUpdate(float dt)
     {
-
         if (Input::IsKeyPressed(Key::Escape))
             Application::Get().Shutdown();
 
