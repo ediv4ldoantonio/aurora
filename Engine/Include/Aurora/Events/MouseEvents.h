@@ -1,8 +1,9 @@
 #pragma once
 
-#include "Event.h"
+#include "Aurora/Math/Vector2.h"
 #include "Aurora/Input/MouseCodes.h"
 
+#include "Event.h"
 namespace Aurora
 {
     class MouseButtonPressedEvent : public Event
@@ -51,5 +52,29 @@ namespace Aurora
 
     private:
         MouseButton m_MouseButton;
+    };
+
+    class MouseMovedEvent : public Event
+    {
+    public:
+        MouseMovedEvent(
+            const Vector2 &position)
+            : m_Position(position)
+        {
+        }
+
+        const Vector2 &GetPosition() const
+        {
+            return m_Position;
+        }
+
+        EVENT_CLASS_TYPE(MouseMoved)
+
+        EVENT_CLASS_CATEGORY(
+            EventCategoryMouse |
+            EventCategoryInput)
+
+    private:
+        Vector2 m_Position;
     };
 }

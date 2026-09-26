@@ -153,6 +153,15 @@ namespace Aurora
 
                 break;
             }
+            case SDL_EVENT_MOUSE_MOTION:
+            {
+                MouseMovedEvent mouseEvent({sdlEvent.motion.x, sdlEvent.motion.y});
+
+                m_Specification.EventCallback(
+                    mouseEvent);
+
+                break;
+            }
             case SDL_EVENT_WINDOW_RESIZED:
             {
                 m_Specification.Width =

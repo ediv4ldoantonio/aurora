@@ -21,6 +21,8 @@ namespace Aurora
             std::array<bool, MouseButtonCount> MouseDown{};
             std::array<bool, MouseButtonCount> MousePressed{};
             std::array<bool, MouseButtonCount> MouseReleased{};
+
+            Vector2 MousePosition{};
         };
 
         InputState s_State;
@@ -67,6 +69,11 @@ namespace Aurora
     {
         return InRange(button) &&
                s_State.MouseReleased[static_cast<size_t>(button)];
+    }
+
+    Vector2 Input::GetMousePosition()
+    {
+        return s_State.MousePosition;
     }
 
     void Input::ProcessEvent(
@@ -128,6 +135,15 @@ namespace Aurora
 
                 s_State.MouseDown[idx] = false;
                 s_State.MouseReleased[idx] = true;
+
+                return true;
+            });
+
+        dispatcher.Dispatch<MouseMovedEvent>(
+            [](MouseMovedEvent &e)
+            {
+                s_State.MousePosition =
+                    e.GetPosition();
 
                 return true;
             });

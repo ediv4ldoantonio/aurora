@@ -7,7 +7,6 @@ namespace Aurora
 
     enum class EventType
     {
-
         None = 0,
 
         WindowClose,
@@ -18,6 +17,7 @@ namespace Aurora
 
         MouseButtonPressed,
         MouseButtonReleased,
+        MouseMoved,
     };
 
     enum EventCategory
