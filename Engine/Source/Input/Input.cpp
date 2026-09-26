@@ -15,10 +15,7 @@ namespace Aurora
     {
         struct InputState
         {
-            std::array<
-                std::vector<KeyCode>,
-                static_cast<size_t>(InputAction::ActionCount)>
-                s_ActionBindings;
+            InputActionMap s_ActionMap;
 
             std::array<bool, KeyCodeCount> Down{};
             std::array<bool, KeyCodeCount> Pressed{};
@@ -188,33 +185,27 @@ namespace Aurora
         InputAction action,
         KeyCode key)
     {
-        auto &bindings =
-            s_State.s_ActionBindings[static_cast<size_t>(action)];
-
-        for (const auto boundKey : bindings)
-        {
-            if (boundKey == key)
-                return;
-        }
-
-        bindings.push_back(key);
+        s_State.s_ActionMap.Bind(
+            action,
+            key);
     }
 
     void Input::ClearActionBindings(
         InputAction action)
     {
-        s_State.s_ActionBindings[static_cast<size_t>(action)].clear();
+        s_State.s_ActionMap.Clear(
+            action);
     }
 
-    bool Input::IsActionDown(
+    bool Input::IsActionPressed(
         InputAction action)
     {
         const auto &bindings =
-            s_State.s_ActionBindings[static_cast<size_t>(action)];
+            s_State.s_ActionMap.GetBindings(action);
 
         for (const auto key : bindings)
         {
-            if (IsKeyDown(key))
+            if (IsKeyPressed(key))
                 return true;
         }
 
@@ -225,7 +216,7 @@ namespace Aurora
         InputAction action)
     {
         const auto &bindings =
-            s_State.s_ActionBindings[static_cast<size_t>(action)];
+            s_State.s_ActionMap.GetBindings(action);
 
         for (const auto key : bindings)
         {
@@ -240,7 +231,7 @@ namespace Aurora
         InputAction action)
     {
         const auto &bindings =
-            s_State.s_ActionBindings[static_cast<size_t>(action)];
+            s_State.s_ActionMap.GetBindings(action);
 
         for (const auto key : bindings)
         {
@@ -249,5 +240,20 @@ namespace Aurora
         }
 
         return false;
+    }
+
+    void Input::SetupDefaultBindings()
+    {
+        s_State.s_ActionMap.Clear(InputAction::MoveUp);
+        s_State.s_ActionMap.Clear(InputAction::MoveDown);
+        s_State.s_ActionMap.Clear(InputAction::MoveLeft);
+        s_State.s_ActionMap.Clear(InputAction::MoveRight);
+        s_State.s_ActionMap.Clear(InputAction::Jump);
+
+        s_State.s_ActionMap.Bind(InputAction::MoveUp, Key::Up);
+        s_State.s_ActionMap.Bind(InputAction::MoveDown, Key::Down);
+        s_State.s_ActionMap.Bind(InputAction::MoveLeft, Key::Left);
+        s_State.s_ActionMap.Bind(InputAction::MoveRight, Key::Right);
+        s_State.s_ActionMap.Bind(InputAction::Jump, Key::Space);
     }
 }

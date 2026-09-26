@@ -2,6 +2,8 @@
 
 #include "Aurora/Events/Event.h"
 #include "Aurora/Math/Vector2.h"
+
+#include "InputActionMap.h"
 #include "KeyCodes.h"
 #include "MouseCodes.h"
 
@@ -9,16 +11,6 @@
 
 namespace Aurora
 {
-    enum class InputAction : uint8_t
-    {
-        MoveUp = 0,
-        MoveDown,
-        MoveLeft,
-        MoveRight,
-        Jump,
-        ActionCount
-    };
-
     class Input
     {
 
@@ -56,6 +48,8 @@ namespace Aurora
 
         static bool IsActionReleased(
             InputAction action);
+
+        static void SetupDefaultBindings();
     };
 
 }
