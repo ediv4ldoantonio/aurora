@@ -7,6 +7,7 @@
 
 #include <cstring>
 #include <array>
+#include <vector>
 
 namespace Aurora
 {
@@ -14,6 +15,11 @@ namespace Aurora
     {
         struct InputState
         {
+            std::array<
+                std::vector<KeyCode>,
+                static_cast<size_t>(InputAction::ActionCount)>
+                s_ActionBindings;
+
             std::array<bool, KeyCodeCount> Down{};
             std::array<bool, KeyCodeCount> Pressed{};
             std::array<bool, KeyCodeCount> Released{};
@@ -176,5 +182,72 @@ namespace Aurora
     void Input::Reset()
     {
         s_State = InputState{};
+    }
+
+    void Input::BindAction(
+        InputAction action,
+        KeyCode key)
+    {
+        auto &bindings =
+            s_State.s_ActionBindings[static_cast<size_t>(action)];
+
+        for (const auto boundKey : bindings)
+        {
+            if (boundKey == key)
+                return;
+        }
+
+        bindings.push_back(key);
+    }
+
+    void Input::ClearActionBindings(
+        InputAction action)
+    {
+        s_State.s_ActionBindings[static_cast<size_t>(action)].clear();
+    }
+
+    bool Input::IsActionDown(
+        InputAction action)
+    {
+        const auto &bindings =
+            s_State.s_ActionBindings[static_cast<size_t>(action)];
+
+        for (const auto key : bindings)
+        {
+            if (IsKeyDown(key))
+                return true;
+        }
+
+        return false;
+    }
+
+    bool Input::IsActionPressed(
+        InputAction action)
+    {
+        const auto &bindings =
+            s_State.s_ActionBindings[static_cast<size_t>(action)];
+
+        for (const auto key : bindings)
+        {
+            if (IsKeyPressed(key))
+                return true;
+        }
+
+        return false;
+    }
+
+    bool Input::IsActionReleased(
+        InputAction action)
+    {
+        const auto &bindings =
+            s_State.s_ActionBindings[static_cast<size_t>(action)];
+
+        for (const auto key : bindings)
+        {
+            if (IsKeyReleased(key))
+                return true;
+        }
+
+        return false;
     }
 }

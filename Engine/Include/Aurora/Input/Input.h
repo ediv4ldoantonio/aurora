@@ -5,8 +5,20 @@
 #include "KeyCodes.h"
 #include "MouseCodes.h"
 
+#include <cstdint>
+
 namespace Aurora
 {
+    enum class InputAction : uint8_t
+    {
+        MoveUp = 0,
+        MoveDown,
+        MoveLeft,
+        MoveRight,
+        Jump,
+        ActionCount
+    };
+
     class Input
     {
 
@@ -28,6 +40,22 @@ namespace Aurora
 
         static Vector2 GetMousePosition();
         static Vector2 GetMouseScrollDelta();
+
+        static void BindAction(
+            InputAction action,
+            KeyCode key);
+
+        static void ClearActionBindings(
+            InputAction action);
+
+        static bool IsActionDown(
+            InputAction action);
+
+        static bool IsActionPressed(
+            InputAction action);
+
+        static bool IsActionReleased(
+            InputAction action);
     };
 
 }
