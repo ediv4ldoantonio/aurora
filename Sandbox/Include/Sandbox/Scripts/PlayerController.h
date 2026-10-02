@@ -26,5 +26,7 @@ namespace Sandbox
         Vector2 m_Velocity{0.0f, 0.0f};
 
         std::shared_ptr<Texture2D> m_OrbTexture = nullptr;
+
+        const std::string AssetDir = AURORA_SANDBOX_ASSET_DIR;
     };
 }

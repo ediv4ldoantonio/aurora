@@ -8,6 +8,7 @@
 #include <Aurora/Assets/AssetManager.h>
 #include <Aurora/Core/Application.h>
 #include <Aurora/Renderer/Texture2D.h>
+#include <Aurora/Audio/Audio.h>
 
 #include <string>
 
@@ -19,11 +20,9 @@ namespace Sandbox
 
     void PlayerController::OnCreate()
     {
-        const std::string dir = AURORA_SANDBOX_ASSET_DIR;
-
         AssetManager &assets = Application::Get().GetAssetManager();
 
-        m_OrbTexture = assets.LoadShared<Texture2D>(dir + "/Textures/orb.png");
+        m_OrbTexture = assets.LoadShared<Texture2D>(AssetDir + "/Textures/orb.png");
     }
 
     void PlayerController::OnUpdate(float dt)
@@ -55,7 +54,10 @@ namespace Sandbox
         }
 
         if (Input::IsKeyPressed(Key::Space))
+        {
+            Audio::PlayWAV(AssetDir + "/Audio/bullet.wav");
             FireBurst(tc.WorldTransform.Position);
+        }
     }
 
     void PlayerController::FireBurst(Vector2 origin)
