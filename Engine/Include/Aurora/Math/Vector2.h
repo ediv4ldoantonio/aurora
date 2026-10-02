@@ -58,30 +58,6 @@ namespace Aurora
             return {0.0f, 1.0f};
         }
 
-        Vector2 operator+(
-            const Vector2 &other) const
-        {
-            return Vector2(
-                x + other.x,
-                y + other.y);
-        }
-
-        Vector2 operator-(
-            const Vector2 &other) const
-        {
-            return Vector2(
-                x - other.x,
-                y - other.y);
-        }
-
-        Vector2 operator*(
-            float value) const
-        {
-            return Vector2(
-                x * value,
-                y * value);
-        }
-
         constexpr Vector2 &operator+=(Vector2 o)
         {
             x += o.x;
@@ -141,6 +117,13 @@ namespace Aurora
         }
 
         static float Distance(Vector2 a, Vector2 b) { return (a - b).Length(); }
+
+        friend constexpr Vector2 operator+(Vector2 a, Vector2 b) { return {a.x + b.x, a.y + b.y}; }
+        friend constexpr Vector2 operator-(Vector2 a, Vector2 b) { return {a.x - b.x, a.y - b.y}; }
+        friend constexpr Vector2 operator*(Vector2 a, Vector2 b) { return {a.x * b.x, a.y * b.y}; }
+        friend constexpr Vector2 operator*(Vector2 a, float s) { return {a.x * s, a.y * s}; }
+        friend constexpr Vector2 operator*(float s, Vector2 a) { return {a.x * s, a.y * s}; }
+        friend constexpr Vector2 operator/(Vector2 a, float s) { return {a.x / s, a.y / s}; }
     };
 
 }

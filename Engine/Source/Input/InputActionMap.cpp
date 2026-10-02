@@ -18,6 +18,14 @@ namespace Aurora
         bindings.push_back(key);
     }
 
+    void InputActionMap::Rebind(
+        InputAction action,
+        KeyCode key)
+    {
+        Clear(action);
+        Bind(action, key);
+    }
+
     void InputActionMap::Clear(
         InputAction action)
     {

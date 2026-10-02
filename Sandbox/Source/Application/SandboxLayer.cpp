@@ -163,7 +163,7 @@ namespace Sandbox
             e.GetComponent<TransformComponent>().LocalTransform.Scale = {64.0f, 64.0f};
 
             auto material = CreateMaterialInstance(m_CrateTexture);
-            material->SetTint(Color(255.0f, 0.55f + 0.03f * i * 255.0f, 0.35f * 255.0f, 255.0f));
+            material->SetTint(Color(255.0f, (0.55f + 0.03f * i) * 255.0f, 0.35f * 255.0f, 255.0f));
 
             auto &s = e.AddComponent<SpriteComponent>(material);
 
@@ -197,7 +197,7 @@ namespace Sandbox
             transform.LocalTransform.Scale = Vector2{56.0f, 56.0f};
 
             auto material = CreateMaterialInstance(m_OrbTexture);
-            material->SetTint(Color(0.4f + 0.1f * i * 255.0f, 0.9f - 0.1f * i * 255.0f, 255.0f, 255.0f));
+            material->SetTint(Color((0.4f + 0.1f * i) * 255.0f, (0.9f - 0.1f * i) * 255.0f, 255.0f, 255.0f));
 
             auto &s = orb.AddComponent<SpriteComponent>(material);
 

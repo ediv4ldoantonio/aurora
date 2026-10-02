@@ -190,6 +190,15 @@ namespace Aurora
             key);
     }
 
+    void Input::RebindAction(
+        InputAction action,
+        KeyCode key)
+    {
+        s_State.s_ActionMap.Rebind(
+            action,
+            key);
+    }
+
     void Input::ClearActionBindings(
         InputAction action)
     {
@@ -212,7 +221,7 @@ namespace Aurora
         return false;
     }
 
-    bool Input::IsActionPressed(
+    bool Input::IsActionDown(
         InputAction action)
     {
         const auto &bindings =
@@ -220,7 +229,7 @@ namespace Aurora
 
         for (const auto key : bindings)
         {
-            if (IsKeyPressed(key))
+            if (IsKeyDown(key))
                 return true;
         }
 

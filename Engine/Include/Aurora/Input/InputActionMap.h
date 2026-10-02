@@ -24,6 +24,10 @@ namespace Aurora
             InputAction action,
             KeyCode key);
 
+        void Rebind(
+            InputAction action,
+            KeyCode key);
+
         void Clear(
             InputAction action);
 
