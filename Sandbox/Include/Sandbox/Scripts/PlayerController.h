@@ -28,7 +28,8 @@ namespace Sandbox
 
         std::shared_ptr<Texture2D> m_OrbTexture = nullptr;
 
-        AudioClip *m_fireAudioClip = nullptr;
+        AudioClip *m_bulletAudioClip = nullptr;
+        AudioClip *m_swordAudioClip = nullptr;
 
         const std::string AssetDir = AURORA_SANDBOX_ASSET_DIR;
     };

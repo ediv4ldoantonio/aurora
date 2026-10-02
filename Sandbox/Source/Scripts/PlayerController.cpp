@@ -23,7 +23,8 @@ namespace Sandbox
         AssetManager &assets = Application::Get().GetAssetManager();
 
         m_OrbTexture = assets.LoadShared<Texture2D>(AssetDir + "/Textures/orb.png");
-        m_fireAudioClip = assets.Load<AudioClip>(AssetDir + "/Audio/bullet.wav");
+        m_bulletAudioClip = assets.Load<AudioClip>(AssetDir + "/Audio/bullet.wav");
+        m_swordAudioClip = assets.Load<AudioClip>(AssetDir + "/Audio/sword.wav");
     }
 
     void PlayerController::OnUpdate(float dt)
@@ -56,7 +57,7 @@ namespace Sandbox
 
         if (Input::IsKeyPressed(Key::Space))
         {
-            Audio::Play(m_fireAudioClip);
+            Audio::Play(m_bulletAudioClip);
 
             FireBurst(tc.WorldTransform.Position);
         }

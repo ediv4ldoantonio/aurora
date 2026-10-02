@@ -2,14 +2,37 @@
 #include "Aurora/Core/Logger.h"
 
 #include <SDL3/SDL.h>
+#include <array>
 
 namespace Aurora
 {
     namespace
     {
         SDL_AudioDeviceID s_AudioDevice = 0;
-        SDL_AudioStream *s_AudioStream = nullptr;
+
+        std::array<
+            SDL_AudioStream *,
+            Audio::MaxSimultaneousSounds>
+            s_AudioStreams{};
+
         bool s_Initialized = false;
+
+        SDL_AudioStream *FindAvailableStream()
+        {
+            for (auto *stream : s_AudioStreams)
+            {
+                if (!stream)
+                    continue;
+
+                if (SDL_GetAudioStreamAvailable(
+                        stream) == 0)
+                {
+                    return stream;
+                }
+            }
+
+            return nullptr;
+        }
     }
 
     bool Audio::Init()
@@ -27,10 +50,36 @@ namespace Aurora
                 SDL_AUDIO_DEVICE_DEFAULT_PLAYBACK,
                 nullptr);
 
-        s_AudioStream =
-            SDL_CreateAudioStream(
+        for (auto &stream : s_AudioStreams)
+        {
+            stream = SDL_CreateAudioStream(
                 nullptr,
                 nullptr);
+
+            if (!stream)
+            {
+                for (auto *createdStream : s_AudioStreams)
+                {
+                    if (createdStream)
+                    {
+                        SDL_DestroyAudioStream(
+                            createdStream);
+                    }
+                }
+
+                s_AudioStreams.fill(nullptr);
+
+                SDL_CloseAudioDevice(
+                    s_AudioDevice);
+
+                s_AudioDevice = 0;
+
+                SDL_QuitSubSystem(
+                    SDL_INIT_AUDIO);
+
+                return false;
+            }
+        }
 
         if (s_AudioDevice == 0)
         {
@@ -40,27 +89,22 @@ namespace Aurora
             return false;
         }
 
-        if (!s_AudioStream)
-        {
-            SDL_CloseAudioDevice(
-                s_AudioDevice);
-
-            s_AudioDevice = 0;
-
-            SDL_QuitSubSystem(
-                SDL_INIT_AUDIO);
-
-            return false;
-        }
-
-        if (!SDL_BindAudioStream(
+        if (!SDL_BindAudioStreams(
                 s_AudioDevice,
-                s_AudioStream))
+                s_AudioStreams.data(),
+                static_cast<int>(
+                    s_AudioStreams.size())))
         {
-            SDL_DestroyAudioStream(
-                s_AudioStream);
+            for (auto *stream : s_AudioStreams)
+            {
+                if (stream)
+                {
+                    SDL_DestroyAudioStream(
+                        stream);
+                }
+            }
 
-            s_AudioStream = nullptr;
+            s_AudioStreams.fill(nullptr);
 
             SDL_CloseAudioDevice(
                 s_AudioDevice);
@@ -91,12 +135,15 @@ namespace Aurora
             s_AudioDevice = 0;
         }
 
-        if (s_AudioStream)
+        for (auto *&stream : s_AudioStreams)
         {
-            SDL_DestroyAudioStream(
-                s_AudioStream);
+            if (stream)
+            {
+                SDL_DestroyAudioStream(
+                    stream);
 
-            s_AudioStream = nullptr;
+                stream = nullptr;
+            }
         }
 
         SDL_QuitSubSystem(
@@ -114,8 +161,15 @@ namespace Aurora
         AudioClip *clip)
     {
         if (!s_Initialized ||
-            !s_AudioStream ||
             !clip)
+        {
+            return false;
+        }
+
+        SDL_AudioStream *stream =
+            FindAvailableStream();
+
+        if (!stream)
         {
             return false;
         }
@@ -133,7 +187,7 @@ namespace Aurora
             clip->GetSampleRate();
 
         if (!SDL_SetAudioStreamFormat(
-                s_AudioStream,
+                stream,
                 &sourceSpec,
                 nullptr))
         {
@@ -141,10 +195,10 @@ namespace Aurora
         }
 
         SDL_ClearAudioStream(
-            s_AudioStream);
+            stream);
 
         if (!SDL_PutAudioStreamData(
-                s_AudioStream,
+                stream,
                 clip->GetData(),
                 static_cast<int>(
                     clip->GetDataSize())))
@@ -153,6 +207,6 @@ namespace Aurora
         }
 
         return SDL_FlushAudioStream(
-            s_AudioStream);
+            stream);
     }
 }
