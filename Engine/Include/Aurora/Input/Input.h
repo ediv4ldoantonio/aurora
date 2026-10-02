@@ -7,6 +7,7 @@
 #include "KeyCodes.h"
 #include "MouseCodes.h"
 
+#include <string>
 #include <cstdint>
 
 namespace Aurora
@@ -52,6 +53,12 @@ namespace Aurora
 
         static bool IsActionReleased(
             InputAction action);
+
+        static bool SaveActionMap(
+            const std::string &path);
+
+        static bool LoadActionMap(
+            const std::string &path);
 
         static void SetupDefaultBindings();
     };

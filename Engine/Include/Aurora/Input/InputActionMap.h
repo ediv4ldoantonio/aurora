@@ -1,6 +1,8 @@
 #pragma once
 
 #include "Aurora/Input/KeyCodes.h"
+
+#include <string>
 #include <array>
 #include <cstdint>
 #include <vector>
@@ -33,6 +35,12 @@ namespace Aurora
 
         const std::vector<KeyCode> &GetBindings(
             InputAction action) const;
+
+        bool SaveToFile(
+            const std::string &path) const;
+
+        bool LoadFromFile(
+            const std::string &path);
 
     private:
         std::array<

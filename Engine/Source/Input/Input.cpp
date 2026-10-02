@@ -265,4 +265,18 @@ namespace Aurora
         s_State.s_ActionMap.Bind(InputAction::MoveRight, Key::Right);
         s_State.s_ActionMap.Bind(InputAction::Jump, Key::Space);
     }
+
+    bool Input::SaveActionMap(
+        const std::string &path)
+    {
+        return s_State.s_ActionMap.SaveToFile(
+            path);
+    }
+
+    bool Input::LoadActionMap(
+        const std::string &path)
+    {
+        return s_State.s_ActionMap.LoadFromFile(
+            path);
+    }
 }
