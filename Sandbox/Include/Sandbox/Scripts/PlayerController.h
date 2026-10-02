@@ -3,6 +3,7 @@
 #include <Aurora/Math/Vector2.h>
 #include <Aurora/Core/Time.h>
 #include <Aurora/Renderer/Material.h>
+#include <Aurora/Audio/AudioClip.h>
 
 #include <cmath>
 #include <memory>
@@ -26,6 +27,8 @@ namespace Sandbox
         Vector2 m_Velocity{0.0f, 0.0f};
 
         std::shared_ptr<Texture2D> m_OrbTexture = nullptr;
+
+        AudioClip *m_fireAudioClip = nullptr;
 
         const std::string AssetDir = AURORA_SANDBOX_ASSET_DIR;
     };

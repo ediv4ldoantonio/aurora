@@ -110,24 +110,32 @@ namespace Aurora
         return s_Initialized;
     }
 
-    bool Audio::PlayWAV(
-        const std::string &path)
+    bool Audio::Play(
+        AudioClip *clip)
     {
         if (!s_Initialized ||
-            !s_AudioStream)
+            !s_AudioStream ||
+            !clip)
         {
             return false;
         }
 
-        SDL_AudioSpec wavSpec{};
-        Uint8 *wavBuffer = nullptr;
-        Uint32 wavLength = 0;
+        SDL_AudioSpec sourceSpec{};
 
-        if (!SDL_LoadWAV(
-                path.c_str(),
-                &wavSpec,
-                &wavBuffer,
-                &wavLength))
+        sourceSpec.format =
+            static_cast<SDL_AudioFormat>(
+                clip->GetFormat());
+
+        sourceSpec.channels =
+            clip->GetChannels();
+
+        sourceSpec.freq =
+            clip->GetSampleRate();
+
+        if (!SDL_SetAudioStreamFormat(
+                s_AudioStream,
+                &sourceSpec,
+                nullptr))
         {
             return false;
         }
@@ -135,16 +143,14 @@ namespace Aurora
         SDL_ClearAudioStream(
             s_AudioStream);
 
-        const bool putSuccess =
-            SDL_PutAudioStreamData(
+        if (!SDL_PutAudioStreamData(
                 s_AudioStream,
-                wavBuffer,
-                static_cast<int>(wavLength));
-
-        SDL_free(wavBuffer);
-
-        if (!putSuccess)
+                clip->GetData(),
+                static_cast<int>(
+                    clip->GetDataSize())))
+        {
             return false;
+        }
 
         return SDL_FlushAudioStream(
             s_AudioStream);

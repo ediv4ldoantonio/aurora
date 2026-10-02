@@ -23,6 +23,7 @@ namespace Sandbox
         AssetManager &assets = Application::Get().GetAssetManager();
 
         m_OrbTexture = assets.LoadShared<Texture2D>(AssetDir + "/Textures/orb.png");
+        m_fireAudioClip = assets.Load<AudioClip>(AssetDir + "/Audio/bullet.wav");
     }
 
     void PlayerController::OnUpdate(float dt)
@@ -34,7 +35,7 @@ namespace Sandbox
         if (Input::IsKeyDown(Key::D) || Input::IsKeyDown(Key::Right))
             dir.x += 1.0f;
         if (Input::IsKeyDown(Key::W) || Input::IsKeyDown(Key::Up))
-            dir.y += 1.0f; // +Y is down
+            dir.y += 1.0f;
         if (Input::IsKeyDown(Key::S) || Input::IsKeyDown(Key::Down))
             dir.y -= 1.0f;
 
@@ -55,7 +56,8 @@ namespace Sandbox
 
         if (Input::IsKeyPressed(Key::Space))
         {
-            Audio::PlayWAV(AssetDir + "/Audio/bullet.wav");
+            Audio::Play(m_fireAudioClip);
+
             FireBurst(tc.WorldTransform.Position);
         }
     }
