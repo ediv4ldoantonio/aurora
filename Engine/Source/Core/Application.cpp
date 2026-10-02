@@ -7,6 +7,7 @@
 #include "Aurora/Renderer/RendererAPI.h"
 #include "Aurora/Events/ApplicationEvents.h"
 #include "Aurora/Events/EventDispatcher.h"
+#include "Aurora/Audio/Audio.h"
 
 #include <algorithm>
 
@@ -28,6 +29,7 @@ namespace Aurora
         m_LayerStack.Clear();
         m_AssetManager.Clear();
         Renderer2D::Shutdown();
+        Audio::Shutdown();
         m_Window.reset();
 
         s_Instance = nullptr;
@@ -92,6 +94,11 @@ namespace Aurora
             {
                 OnEvent(event);
             });
+
+        if (!Audio::Init())
+        {
+            AURORA_LOG_ERROR("Failed to initialize audio subsystem");
+        }
 
         Renderer2D::Init(
             *m_Window);
