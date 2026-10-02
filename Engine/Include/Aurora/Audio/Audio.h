@@ -1,5 +1,7 @@
 #pragma once
 
+#include "Aurora/Audio/AudioClip.h"
+
 #include <string>
 
 namespace Aurora
@@ -13,5 +15,8 @@ namespace Aurora
 
         static bool PlayWAV(
             const std::string &path);
+
+        static bool Play(
+            AudioClip *clip);
     };
 }

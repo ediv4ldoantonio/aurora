@@ -11,7 +11,8 @@ namespace Aurora
     {
         None = 0,
         Texture2D,
-        Shader
+        Shader,
+        AudioClip
     };
 
     class Asset
